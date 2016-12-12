@@ -10,7 +10,6 @@ public class Main {
 		ForecastDisplay obser2 = new ForecastDisplay(observable);
 		observable.setMeasurements(22.2f,33.3f,44.4f);
 
-
 		// JButton
 	}
 }

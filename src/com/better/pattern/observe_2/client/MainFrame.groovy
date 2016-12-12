@@ -1,9 +1,15 @@
-package com.better.pattern.observe_2.before
+package com.better.pattern.observe_2.client
 
+import com.better.pattern.observe_2.before.CarDisplay
+import com.better.pattern.observe_2.before.PhoneDisplay
+import com.better.pattern.observe_2.before.Wheel
 import groovy.swing.SwingBuilder
 
-import javax.swing.*
-import java.awt.*
+import javax.swing.BorderFactory
+import javax.swing.JFrame
+import javax.swing.WindowConstants
+import java.awt.BorderLayout
+import java.awt.Color
 
 /**
  * Created by zhaoyu on 2016/12/12.
@@ -19,6 +25,7 @@ class MainFrame extends JFrame {
     def audio
 
     def initWheel() {
+
         car = new CarDisplay()
         phone = new PhoneDisplay()
 
@@ -44,7 +51,7 @@ class MainFrame extends JFrame {
                             button(text: "Clean", actionPerformed: { messageTextArea.setText(null) })
                             button(text: "增加压力", actionPerformed: { addPressure() })
                             button(text: "增加磨损", actionPerformed: { addFret() })
-                            
+
                         }
                     }
                 }
