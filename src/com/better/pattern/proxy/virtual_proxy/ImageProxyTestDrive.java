@@ -23,6 +23,7 @@ public class ImageProxyTestDrive {
         cds.put("Android", "http://p0.so.qhmsg.com/bdr/_240_/t018a848aa56176d12f.jpg");
         cds.put("Apple", "http://p4.so.qhmsg.com/bdr/_240_/t0176500b93f814e41e.jpg");
         cds.put("Java", "http://p1.so.qhmsg.com/bdr/_240_/t019b81688d404169eb.jpg");
+        cds.put("妹子", "http://p4.so.qhmsg.com/t016fd0e87798d39134.jpg");
 
         URL initialURL = new URL((String) cds.get("Android"));
         menuBar = new JMenuBar();
