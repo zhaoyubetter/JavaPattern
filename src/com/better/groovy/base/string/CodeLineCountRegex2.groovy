@@ -23,7 +23,7 @@ class CodeLineCountRegex2 {
     def explainLine = 0
     def codeLine = 0
     def spaceLine = 0
-    def begin = false
+    def regex_begin = false       // 是否注释2开始了
 
     def codeLineCount(File file) {
         if (file.exists()) {
@@ -39,11 +39,11 @@ class CodeLineCountRegex2 {
 
     def anylise(file) {
         file.each { line ->
-            if (begin) {
+            if (regex_begin) {
                 explainLine++
                 if ((line =~ regex2_end).matches()) {
                     explainLine++
-                    begin = false
+                    regex_begin = false
                 }
             } else {
                 if ((line =~ regex1).matches()) {
@@ -51,7 +51,7 @@ class CodeLineCountRegex2 {
                 } else if ((line =~ regex2).matches()) {
                     explainLine++
                 } else if ((line =~ regex2_start).matches()) {
-                    begin = true;
+                    regex_begin = true
                 } else if ((line =~ regex_space).matches()) {
                     spaceLine++
                 } else {
