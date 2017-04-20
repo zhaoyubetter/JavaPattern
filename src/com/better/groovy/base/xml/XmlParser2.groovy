@@ -1,6 +1,5 @@
 package com.better.groovy.base.xml
 
-import groovy.xml.MarkupBuilder
 
 /**
  * Created by zhaoyu on 2017/4/17.

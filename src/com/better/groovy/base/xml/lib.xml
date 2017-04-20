@@ -1,0 +1,20 @@
+<library>
+  <book>
+    <author>小明</author>
+    <title>Groovy</title>
+    <publisher>清华大学</publisher>
+    <isbn number='11111' />
+  </book>
+  <book>
+    <author>小明</author>
+    <title>Android开发</title>
+    <publisher>人民大学</publisher>
+    <isbn number='22222' />
+  </book>
+  <book>
+    <author>小张</author>
+    <title>Java并发</title>
+    <publisher>湖南大学</publisher>
+    <isbn number='33333' />
+  </book>
+</library>

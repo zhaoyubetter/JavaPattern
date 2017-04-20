@@ -1,0 +1,17 @@
+<tables>
+  <table name='Book'>
+    <filed name='title' type='text' />
+    <filed name='isbn' type='text' />
+    <filed name='price' type='int' />
+    <filed name='author' type='id' />
+    <filed name='publisher' type='id' />
+  </table>
+  <table name='Author'>
+    <filed name='surname' type='text' />
+    <filed name='forename' type='text' />
+  </table>
+  <table name='Publisher'>
+    <filed name='name' type='text' />
+    <filed name='url' type='text' />
+  </table>
+</tables>
