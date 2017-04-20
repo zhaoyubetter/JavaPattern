@@ -1,4 +1,4 @@
-package com.better.groovy.base.string
+package com.better.groovy.app
 
 /**
  * Created by zhaoyu on 2017/4/17.
