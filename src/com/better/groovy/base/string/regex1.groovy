@@ -1,10 +1,12 @@
 package com.better.groovy.base.string
 
+import com.better.groovy.app.CodeLineCountRegex2
+
 /**
  * Created by zhaoyu on 2017/4/17.
  */
 
-def file = new File("/Users/zhaoyu/Documents/Java/Pattern/src/com/better/groovy/base/CharTimes.groovy")
+def file = new File("/Users/zhaoyu/Documents/Java/Pattern/src/com/better/")
 
 if(file.exists()) {
     println("文件存在")
