@@ -7,28 +7,55 @@ import groovy.xml.QName
  * Created by zhaoyu on 2017/4/19.
  */
 class AndroidTools {
-    def xmlFilePath
-    def idFiledItemMap = []
+    def findViewItemMap = []
     def idValuePattern = ~/.*\/(.+)/
 
+    def fieldFormat = 'private %s %s;\n'      // define
+    def findViewFormat = '%s %s = (%s) %sfindViewById(%s);\n' // findViewById
+
     /**
-     * findViewById
+     * 返回findViewById字符串
      * @param xmlFilePath
      */
-    def findViewById(xmlFilePath) {
-        //xmlFilePath = "file:///Users/zhaoyu/Documents/basenet/app/src/main/res/layout/activity_okhttp_cache.xml"
-        xmlFilePath = 'file:///Users/zhaoyu/Documents/Java/Pattern/src/com/better/groovy/base/xml/1.xml'
+    def getFindViewString(xmlFilePath) {
+        if (findViewItemMap == null || findViewItemMap.size() == 0) {
+            anylise(xmlFilePath)
+        }
+
+        def sb = new StringBuilder()
+        findViewItemMap.each { it ->
+            sb.append(String.format(findViewFormat, it[0], it[1], it[0], "", "R.id." + it[1]))
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * 获取字段定义字符串
+     * @param xmlFilePath
+     * @return
+     */
+    def getFieldString(xmlFilePath) {
+        if (findViewItemMap == null || findViewItemMap.size() == 0) {
+            anylise(xmlFilePath)
+        }
+
+        def sb = new StringBuilder()
+        findViewItemMap.each { it ->
+            sb.append(String.format(fieldFormat, it[0], it[1]));
+        }
+        sb.toString()
+    }
+
+    /**
+     * 解析xml
+     * @param xmlFilePath
+     * @return
+     */
+    private def anylise(xmlFilePath) {
         def parser = new XmlParser()
         def doc = parser.parse(xmlFilePath)
         eachXmlNode(doc, 0)
-
-
-        def sb = new StringBuilder()
-        idFiledItemMap.each { it ->
-            sb.append(String.format("%s %s = %sfindViewById(%s)\n", it[0], it[1], "", "R.id." + it[1]))
-        }
-
-        println(sb)
     }
 
     def eachXmlNode(Node node, int level) {
@@ -39,11 +66,11 @@ class AndroidTools {
             }
             if (findAttr) {
                 def mather = findAttr.value =~ idValuePattern
-                idFiledItemMap << [node.name(), mather[0][1]]
+                findViewItemMap << [node.name(), mather[0][1]]
             }
         }
 
-        // 是否有孩子，有，递归
+        // 递归执行
         if (node.children()) {
             node.children().each { it ->
                 eachXmlNode(it, level++)
@@ -52,6 +79,11 @@ class AndroidTools {
     }
 
     public static void main(String[] args) {
-        def tools = new AndroidTools().findViewById();
+        //xmlFilePath = "file:///Users/zhaoyu/Documents/basenet/app/src/main/res/layout/activity_okhttp_cache.xml"
+        def xmlFilePath = 'file:///Users/zhaoyu/Documents/Java/Pattern/src/com/better/groovy/base/xml/1.xml'
+        def tools = new AndroidTools();
+        println(tools.getFieldString(xmlFilePath));
+        println()
+        println(tools.getFindViewString(xmlFilePath))
     }
 }
