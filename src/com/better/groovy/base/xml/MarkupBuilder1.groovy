@@ -22,7 +22,7 @@ def data = [
         '33333': ['Java并发', '小张', '湖南大学']
 ]
 
-def mB2 = new MarkupBuilder(new File('lib.xml').newPrintWriter())
+def mB2 = new MarkupBuilder(new File('customers.xml').newPrintWriter())
 def lib = mB2.library() {
     data.each { bk ->
         mB2.book() {
