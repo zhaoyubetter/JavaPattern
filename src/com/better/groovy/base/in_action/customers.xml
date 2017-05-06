@@ -1,0 +1,12 @@
+<customers>
+    <corporate>
+        <customer name="Bill Gates" company="MicroSoft"/>
+        <customer name="Steve Jobs" company="Apple"/>
+        <customer name="Json" company="Sun"/>
+    </corporate>
+
+    <consumer>
+        <customer name="Better"/>
+        <customer name="John"/>
+    </consumer>
+</customers>
