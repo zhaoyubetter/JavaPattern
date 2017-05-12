@@ -22,6 +22,7 @@ class AndroidTools {
             anylise(xmlFilePath)
         }
 
+
         def sb = new StringBuilder()
         findViewItemMap.each { it ->
             sb.append(String.format(findViewFormat, it[0], it[1], it[0], "", "R.id." + it[1]))

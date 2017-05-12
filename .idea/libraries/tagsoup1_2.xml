@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="tagsoup1.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/lib/tagsoup1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

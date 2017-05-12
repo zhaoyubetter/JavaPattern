@@ -1,6 +1,6 @@
 package com.better.groovy.base.string
 
-import com.better.groovy.app.CodeLineCountRegex2
+import com.better.groovy.app.lineCount.CodeLineCountRegex2
 
 /**
  * Created by zhaoyu on 2017/4/17.
@@ -12,7 +12,7 @@ if(file.exists()) {
     println("文件存在")
 
     CodeLineCountRegex2 regex2 = new CodeLineCountRegex2()
-    regex2.codeLineCount(file)
+    regex2.start(file)
 
 
     println("行数：${regex2.codeLine}")

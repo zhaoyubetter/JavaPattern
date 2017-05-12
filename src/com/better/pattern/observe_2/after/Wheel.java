@@ -1,7 +1,6 @@
 package com.better.pattern.observe_2.after;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 轮胎subject类
@@ -12,8 +11,15 @@ public class Wheel implements Subject {
     private int pressure;       // 气压
     private int fret;           // 磨损度
 
+    public int getHeight() {
+        return height;
+    }
+
+    private int height;
+
     private List<Observer> observers = new ArrayList<>();
 
+    private Map<String, List<Observer>> maps = new HashMap();
 
     /**
      * 数据改变了，此方法将调用

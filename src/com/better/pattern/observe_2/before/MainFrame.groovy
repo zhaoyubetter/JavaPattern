@@ -22,10 +22,10 @@ class MainFrame extends JFrame {
         car = new CarDisplay()
         phone = new PhoneDisplay()
 
-        // audio = new AudioDisplay()
+         audio = new AudioDisplay()
 
         wheel = new Wheel(car, phone)
-        //wheel.setAudio(audio)
+        wheel.setAudio(audio)
 
     }
 

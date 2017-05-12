@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Class-Path: codeCount\ant-1.9.4.jar codeCount\ant-antlr-1.9.4.jar code
+ Count\ant-junit-1.9.4.jar codeCount\ant-launcher-1.9.4.jar codeCount\
+ bsf-2.4.0.jar codeCount\commons-cli-1.2.jar codeCount\commons-logging
+ -1.2.jar codeCount\gpars-1.2.1.jar codeCount\groovy-2.4.7.jar codeCou
+ nt\groovy-ant-2.4.7.jar codeCount\groovy-bsf-2.4.7.jar codeCount\groo
+ vy-console-2.4.7.jar codeCount\groovy-docgenerator-2.4.7.jar codeCoun
+ t\groovy-groovydoc-2.4.7.jar codeCount\groovy-groovysh-2.4.7.jar code
+ Count\groovy-jmx-2.4.7.jar codeCount\groovy-json-2.4.7.jar codeCount\
+ groovy-jsr223-2.4.7.jar codeCount\groovy-nio-2.4.7.jar codeCount\groo
+ vy-servlet-2.4.7.jar codeCount\groovy-sql-2.4.7.jar codeCount\groovy-
+ swing-2.4.7.jar codeCount\groovy-templates-2.4.7.jar codeCount\groovy
+ -test-2.4.7.jar codeCount\groovy-testng-2.4.7.jar codeCount\groovy-xm
+ l-2.4.7.jar codeCount\hamcrest-core-1.3.jar codeCount\ivy-2.4.0.jar c
+ odeCount\jansi-1.11.jar codeCount\jcommander-1.47.jar codeCount\jline
+ -2.12.jar codeCount\jsp-api-2.0.jar codeCount\jsr166y-1.7.0.jar codeC
+ ount\junit-4.12.jar codeCount\multiverse-core-0.7.0.jar codeCount\qdo
+ x-1.12.1.jar codeCount\servlet-api-2.4.jar codeCount\testng-6.8.13.ja
+ r codeCount\xmlpull-1.1.3.1.jar codeCount\xstream-1.4.7.jar codeCount
+ \junit-4.12.jar codeCount\hamcrest-core-1.3.jar
+Main-Class: com.better.groovy.app.lineCount.Main
+
