@@ -1,3 +1,5 @@
+import java.util.regex.Matcher
+
 /*
  功能说明：
 1. 从分离的模块中（独立git库）从
@@ -12,12 +14,13 @@
 class StringFinder {
 
     // 正则匹配java文件内的string
-    def JAVA_REGX = ~/R.string.(.+?)[;)}, ]/        // R.string.aaabb
+    def JAVA_REGX = ~/(R\.string\.(.+?))[;)},\s]/        // R.string.aaabb
     // 正则匹配xml文件内的string
-    def XML_REGX = ~/@(\+?)string\/(.+ ?)/          // @+id/string.xxxx
+    def XML_REGX = ~/(@string\/(.+?))"/          // @+id/string.xxxx
 
     private File appResDir
     private boolean isStop
+    private Map<String, String> moduleStringMap = new HashMap<>()
 
     /**
      * 主方法一，获取模块内的 strings.xml
@@ -26,7 +29,9 @@ class StringFinder {
      * @return
      */
     def exportModuleStringXml(String moduleDir, String appResDir) {
-        File file = new File(dir)
+        moduleStringMap.clear()
+
+        File file = new File(moduleDir)
         if (!file.exists() || !file.isDirectory()) {
             throw new RuntimeException("the Aodule ${dir} Directory is wrong!")
         }
@@ -36,42 +41,45 @@ class StringFinder {
         if (!tappResDir.exists() || !tappResDir.isDirectory()) {
             throw new RuntimeException("the App  ${dir} Res Directory is wrong!")
         }
-        innerModuleStringXml(file, file)
+        innerModuleStringXml(file)
+
+        // 拿到模块中所有的 String key
+        moduleStringMap.each {it -> println(it.key)}
     }
 
-    private innerModuleStringXml(File file, File target) {
-        if (!isStop) {
-            return
-        }
+    private innerModuleStringXml(File file) {
         if (file.exists()) {
             if (file.isDirectory()) {
-                // .java, .xml, .kt
-                file.listFiles({ File pathname -> return pathname.name.endsWith(".java") || pathname.name.endsWith(".xml") || pathname.name.endsWith(".kt")
-                })?.each { current -> innerModuleStringXml(current, target) }
+                file.eachFile { it -> innerModuleStringXml(it) }
             } else {
                 anyliseModule(file)
             }
-        }
-
-        // 判断递归是否结束
-        if (file == target) {
-            isStop = true
         }
     }
 
     private anyliseModule(File file) {
         String fileName = file.name
+        def regex = null
         if (fileName.endsWith(".java") || fileName.endsWith(".kt")) {
-            file.each { line ->
-                if((line =~ JAVA_REGX).matches()) {
+            regex = JAVA_REGX
+        } else if (fileName.endsWith(".xml")) { // xml
+            regex = XML_REGX
+        }
 
+        if (regex != null) {
+            file.each { line ->
+                Matcher matcher = line =~ regex
+                while (matcher.find()) {
+                    // XXX to R.string.XXX || XXX to @string/XXX
+                    moduleStringMap.put(matcher.group(2), matcher.group(1))
                 }
             }
-        } else { // xml
-
         }
     }
 
-//    def exportModuleStringXml(String locale) {
-//    }
+    // 测试
+    static void main(args) {
+        def moduleDir = "/Users/zhaoyu/Documents/github/KotlinAndroidDemo/widget/src/main/"
+        new StringFinder().exportModuleStringXml(moduleDir, moduleDir)
+    }
 }
