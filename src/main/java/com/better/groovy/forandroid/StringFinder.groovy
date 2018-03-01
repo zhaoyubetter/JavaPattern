@@ -44,7 +44,7 @@ class StringFinder {
         innerModuleStringXml(file)
 
         // 拿到模块中所有的 String key
-        moduleStringMap.each {it -> println(it.key)}
+        moduleStringMap.each {it -> println(it.key + "  --> " + it.value)}
     }
 
     private innerModuleStringXml(File file) {
