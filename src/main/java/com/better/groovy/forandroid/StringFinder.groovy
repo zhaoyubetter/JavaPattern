@@ -18,19 +18,19 @@ class StringFinder {
     // 正则匹配xml文件内的string
     def XML_REGX = ~/(@string\/(.+?))"/          // @+id/string.xxxx
 
-    private File appResDir
-    private boolean isStop
-    private Map<String, String> moduleStringMap = new HashMap<>()
+    def xml_header = '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n'
+    def xml_footer = "\r\n<resources>"
+    def string_res_item_template = "<string name=\"%s\">%s</string>\r\n"
 
+    // ==== 字符串资源
+    def string_res_locale = ""  // -en
     // 字符串资源目录
-    private final String string_res = "values%s"
+    def string_res = "values%s"
 
     // xml文件过滤器
     private final xmlFileFilter = new FileFilter() {
         @Override
-        boolean accept(File pathname) {
-            return pathname.name.endsWith(".xml")
-        }
+        boolean accept(File pathname) { return pathname.name.endsWith(".xml") }
     }
 
     /**
@@ -40,39 +40,47 @@ class StringFinder {
      * @return
      */
     def exportModuleStringXml(String moduleDir, String appResDir) {
-        moduleStringMap.clear()
-
-        File file = new File(moduleDir)
-        if (!file.exists() || !file.isDirectory()) {
+        Map<String, String> moduleStringMap = new HashMap<>()
+        File moduleDirFile = new File(moduleDir)
+        if (!moduleDirFile.exists() || !moduleDirFile.isDirectory()) {
             throw new RuntimeException("the Aodule ${dir} Directory is wrong!")
         }
 
         // app 主工程资源目录，默认values
-//        File tappResDir = new File(appResDir)
-//        this.appResDir = tappResDir;
-//        if (!tappResDir.exists() || !tappResDir.isDirectory()) {
-//            throw new RuntimeException("the App  ${dir} Res Directory is wrong!")
-//        }
-//        innerModuleStringXml(file)
+        File tappResDir = new File(appResDir)
+        if (!tappResDir.exists() || !tappResDir.isDirectory()) {
+            throw new RuntimeException("the App  ${dir} Res Directory is wrong!")
+        }
 
-        // 1.=== 拿到模块中所有的 String key
-        moduleStringMap.each { it -> println(it.key + "  --> " + it.value) }
-
-        // 2.=== 从主app/res中查找 ===
-        exportPartStringFromApp(moduleStringMap, appResDir)
+        // 1.=== 模块中（ XXX to R.string.XXX || XXX to @string/XXX）
+        exportInnerModuleStringXml(moduleDirFile, moduleDirFile, moduleStringMap)
+        // 2.=== 主app/res中 （XXX to value）  ===
+        Map<String, String> appStringResMap = exportPartStringFromApp(appResDir)
+        // 3.==== 集合处理（交集） ===
+        Set<String> retainSet = new HashSet<>(moduleStringMap.keySet())
+        retainSet.retainAll(appStringResMap.keySet())
+        // 4.==== 输出结果
+        def sb = new StringBuilder(xml_header)
+        retainSet.each { it -> sb.append(String.format(string_res_item_template, it, appStringResMap.get(it))) }
+        sb.append(xml_footer)
+        println(sb.toString())
     }
 
-    private innerModuleStringXml(File file) {
+    private exportInnerModuleStringXml(File file, File target, map) {
         if (file.exists()) {
             if (file.isDirectory()) {
-                file.eachFile { it -> innerModuleStringXml(it) }
+                file.eachFile { it -> exportInnerModuleStringXml(it, target, map) }
             } else {
-                anyliseModule(file)
+                anyliseModule(file, map)
             }
+        }
+
+        if (file == target) {    // 递归结束
+            return map
         }
     }
 
-    private anyliseModule(File file) {
+    private anyliseModule(File file, Map<String, String> moduleStringMap) {
         String fileName = file.name
         def regex = null
         if (fileName.endsWith(".java") || fileName.endsWith(".kt")) {
@@ -92,8 +100,8 @@ class StringFinder {
         }
     }
 
-    private def exportPartStringFromApp(Map<String, String> moduleStringMap, String appResFolder) {
-        File stringFolder = new File(appResFolder, String.format(string_res, ""))
+    private def exportPartStringFromApp(String appResFolder) {
+        File stringFolder = new File(appResFolder, String.format(string_res, string_res_locale))
         LinkedList<File> allFiles = new LinkedList<>()      // 所有资源文计
         LinkedList<File> allFolder = new LinkedList<>()     // 文件夹
         stringFolder.eachFile { it ->
@@ -121,26 +129,18 @@ class StringFinder {
         Map<String, String> stringMap = new HashMap<>()
         xmlResFiles.each { it ->
             def root = new XmlParser(false, false).parse(it.absolutePath)
-            // 闭包的递归， 先定义，再赋值
-            def eachNode
-            eachNode = { node ->
-                // 所有孩子-》节点-》遍历
-                node.children().each { child ->
-                    println(child)
-//                    if(child.attributes().containKey("string")) {
-//                        println(node.attributes()["string"])
-//                    }
-                }
-                node.value()?.each {eachNode.call(it)}
+            // 直接获取string节点
+            root."string"?.each { node ->
+                stringMap.put(node.attribute('name'), node.text())
             }
-            eachNode.call(root)
         }
+        stringMap
     }
 
-// 测试
+    // 测试
     static void main(args) {
-        def moduleDir = "D:\\git.jd\\mae.aura.flowcenter\\aura-flowcenter"
-        def appResDir = "D:\\git.jd\\jdme_android\\app\\src\\main\\res"
+        def moduleDir = "/Users/zhaoyu/Documents/github/KotlinAndroidDemo/widget/src/main/res"
+        def appResDir = "/Users/zhaoyu/Documents/github/KotlinAndroidDemo/widget/src/main/res"
         new StringFinder().exportModuleStringXml(moduleDir, appResDir)
     }
 
