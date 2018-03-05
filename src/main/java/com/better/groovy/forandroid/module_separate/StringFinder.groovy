@@ -1,6 +1,9 @@
+package com.better.groovy.forandroid.module_separate
+
 import java.util.regex.Matcher
 
-/*
+/**
+String 资源文件 分离工具
  功能说明：
 1. 从分离的模块中（独立git库）从
    java，layout文件中找出所有 R.string.xxx，（后续考虑kotlin）
@@ -9,6 +12,8 @@ import java.util.regex.Matcher
    a. 将  [模块名_strings.xml]，匹配主工程的 所有 strings_其他语言.xml, 有对应的key拿过来，没有，直接拿本文件的；
    b. 将a步骤中的 strings，组合成 [模块名_strings_语言.xml]
 
+ TODO:
+ 3. 测试没问题时，考虑将 strings key 整体重命名
  */
 
 class StringFinder {
@@ -23,7 +28,7 @@ class StringFinder {
     def string_res_item_template = "<string name=\"%s\">%s</string>\r\n"
 
     // ==== 字符串资源
-    def string_res_locale = ""  // -en
+    def string_res_locale = ""  // (-en 为英文资源，对应 values-en)
     // 字符串资源目录
     def string_res = "values%s"
 
@@ -31,6 +36,14 @@ class StringFinder {
     private final xmlFileFilter = new FileFilter() {
         @Override
         boolean accept(File pathname) { return pathname.name.endsWith(".xml") }
+    }
+
+    /**
+     * 对外方法，设置 资源后缀 ，如-en，表示从 values-en中获取
+     * @param locale
+     */
+    def setResoureLocale(String locale) {
+        string_res_locale = locale
     }
 
     /**
@@ -139,9 +152,10 @@ class StringFinder {
 
     // 测试
     static void main(args) {
-        def moduleDir = "/Users/zhaoyu/Documents/github/KotlinAndroidDemo/widget/src/main/res"
-        def appResDir = "/Users/zhaoyu/Documents/github/KotlinAndroidDemo/widget/src/main/res"
-        new StringFinder().exportModuleStringXml(moduleDir, appResDir)
+        def moduleDir = Tools.MODULE_DIR
+        def appResDir = Tools.APP_RES_DIR
+        def stringFinder = new StringFinder()
+        stringFinder.setResoureLocale("-en")
+        stringFinder.exportModuleStringXml(moduleDir, appResDir)
     }
-
 }
