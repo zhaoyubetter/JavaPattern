@@ -91,8 +91,8 @@ class ResReName {
         // 修改 java 源代码部分的 R.layout.XXX，有些哥们变态这样写 R. layout.  XXX 都是支持的
         //replaceSrcDir(srcDir, layoutNameSet, java_regx)
         // 修改资源文件中，资源文件不会出现空格现象
-        //LayoutRename.replaceResDir(resDir, layoutNameSet, xml_regx)
-        LayoutRename.renameLayoutFile(resDir)
+        //LayoutRenameTools.replaceResDir(resDir, layoutNameSet, xml_regx)
+        LayoutRenameTools.renameLayoutFile(resDir)
         println("----- 修改layout资源结束")
     }
 
