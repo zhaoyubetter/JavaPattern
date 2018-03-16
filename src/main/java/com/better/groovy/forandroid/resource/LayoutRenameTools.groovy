@@ -5,7 +5,9 @@ import com.better.groovy.forandroid.module_separate.Tools
 import java.util.regex.Matcher
 
 /**
- layout 文件中的资源重命名
+ layout 文件内容引用名称的重命名与layout文件名的rename
+ * 1. 内容：   @layout/XXX ---> @layout/前缀_XXX
+ * 2. 文件名： xxx.xml  ---> 前缀_xxx.xml
 
  <pre>
  1. <ViewStub  android:layout="@layout/mae_widget_frame_error_container" />
@@ -20,8 +22,8 @@ final class LayoutRenameTools {
      * 文件重命名
      * @param file 资源文件目录
      */
-    static void renameLayoutFile(File file) {
-        File[] layoutDirs = file.listFiles(new Tools.DirNamePrefixFilter("layout"))
+    static void renameFile(File file) {
+        File[] layoutDirs = file.listFiles(new ResReName.DirNamePrefixFilter("layout"))
         // 遍历
         layoutDirs?.each { layoutDir ->
             layoutDir.eachFile { it ->
@@ -56,43 +58,9 @@ final class LayoutRenameTools {
         layoutDirs?.each { layoutDir ->
             layoutDir.eachFile { it ->
                 if (it.name.endsWith(".xml")) {     // 只处理xml文件
-                    handleResFile(it, set, regx)
+                    ResReName.handleResFile(it, set, regx)
                 }
             }
-        }
-    }
-
-    // def xml_regx = ~/(@layout\/(w+?))"/
-    private static void handleResFile(File file, Set<String> set, regex) {
-        boolean hasUpdate = false                 // 是否有修改
-        StringBuilder sb = new StringBuilder()    // 文件内容
-        file.each { line ->
-            Matcher matcher = line =~ regex
-            StringBuffer tSb = new StringBuffer()
-            while (matcher.find()) {
-                String oldResName = matcher.group(2)
-                if (set.contains(oldResName)) {
-                    String newResName = ResReName.NEW_FREFIX + oldResName
-                    if (oldResName.startsWith(ResReName.OLD_FREFIX)) {
-                        newResName = ResReName.NEW_FREFIX + oldResName.substring(ResReName.OLD_FREFIX.length())
-                    }
-                    matcher.appendReplacement(tSb, "\$1$newResName") // 拼接 保留$1分组,替换组2
-                } else {
-                    matcher.find()               // 继续下一次查找，避免死循环
-                }
-            }
-            if (tSb.length() > 0) {              // 如果包含了，则重新赋值line，并拼接余下部分
-                matcher.appendTail(tSb)
-                hasUpdate = true
-                line = tSb.toString()
-            }
-
-            sb.append(line).append("\r\n")
-        }
-
-        // 有修改了，才重新写入文件
-        if (hasUpdate) {
-            file.write(sb.toString())
         }
     }
 
