@@ -27,11 +27,11 @@ import java.util.regex.Matcher
  2.values: string、string-array、attr、color、dimens、style
  ---------------------------------------------------------------
  values   类型         源代码中                xml 资源中
- a. string:            R.string.XXX         @string/XXX  与其值        <string name="empty">@string/xxx</string>
- b. color              R.color.XXX          @color/XXX   与其值        <color name="color">@color/xxx</string>
- c. dimens             R.dimen.XXX          @dimen/XXX   与其值        <dimens name="xx_16">@dimens/xxx</string>
- d. style              R.style.XXX          @style/XXX   与其parent    <style name="DialogLightDatePicker" parent="@style/XXX">
- e. arrays:            R.array.XXX
+ a. string:            R.string.XXX         xml 中修改name @string/XXX  与 其值不改（如：<string name="empty">@string/xxx</string>）
+ b. color              R.color.XXX          xml 中修改name @color/XXX   与 其值不改
+ c. dimens             R.dimen.XXX          xml 中修改name @dimen/XXX   与 其值不改
+ d. style              R.style.XXX          xml 中修改name @style/XXX   与其parent不改
+ e. arrays:            R.array.XXX          xml 中修改name
  f. attr               R.styleable.FlowMainItemView_fv_title  (比较复杂) 特殊处理
 
  ** 步骤：**
@@ -61,7 +61,7 @@ class ResReName {
 
     // 新资源前缀
     def static final NEW_FREFIX = "mae_"
-    // 老的资源前缀，可以保值空字符串
+    // 老的资源前缀，可以保持空字符串
     def static final OLD_FREFIX = ""
 
     // 源代码路径
@@ -78,34 +78,6 @@ class ResReName {
         srcDir = new File(srcDirPath)
         resDir = new File(resDirPath)
     }
-
-    /* ================== values     Start  ====================================== */
-    def renameValues() {
-        // 计划使用 Groovy xml 来操作
-
-        // ===  1.strings : <string name="me_empty_message">XXX</string>  or <string name="me_empty_message">@string/xxx</string>
-        // ==== 说明：string 节点的name需要改，value 如果是@string/开头，需要修改
-
-
-        // ===  2.color: 与string类似
-
-        // ===  3.dimens：与 string类似
-
-        // ===  4.array, 只在源代码中使用
-
-        // ===  5.style 有个 parent
-
-        // ===  6.attr 特殊处理一下
-        /*
-          <declare-styleable name="DynamicTextView">
-            <attr name="dynamic_textColor" format="color"/>  修改里面的内容。而不是declare-styleable父标签的name
-         </declare-styleable>
-         */
-
-    }
-
-
-    /* ================== values     End  ====================================== */
 
     /* ================== 文件夹资源     Start  ====================================== */
     /**
@@ -363,13 +335,112 @@ class ResReName {
     }
     // ====== 资源文件部分公用方法  end =====================
 
+    /* ================== values     Start  ====================================== */
+
+    def renameValues() {
+        Set<String> stringNameSet = new HashSet<>()     // 字符串
+        Set<String> colorNameSet = new HashSet<>()      // 颜色
+        Set<String> dimensNameSet = new HashSet<>()
+        Set<String> styleNameSet = new HashSet<>()
+        Set<String> arrayNameSet = new HashSet<>()
+
+        // ===  1.strings : <string name="me_empty_message">XXX</string>  or <string name="me_empty_message">@string/xxx</string>
+        // === /<string name=()>(.*)</string>/ ===
+        // ==== 说明：string 节点的name需要改
+
+        // 1.获取所有values开头的文件夹
+        File[] dirs = resDir.listFiles(new DirNamePrefixFilter("values"))
+        // 2.遍历文件夹下各个资源文件xml后缀，获取资源名称
+        dirs?.each { dir ->
+            dir.eachFile { it ->
+                if (it.name.endsWith(".xml")) {
+                    it.eachLine { line ->
+                        Matcher matcher = line =~ /(<string\s+name\s*=\s*\")(.+?)(\">)/
+                        while (matcher.find()) {
+                            stringNameSet.add(matcher.group(2))
+                        }
+
+                        matcher = line =~ /(<color\s+name\s*=\s*\")(.+?)(\">)/
+                        while (matcher.find()) {
+                            colorNameSet.add(matcher.group(2))
+                        }
+
+                        matcher = line =~ /(<dimen\s+name\s*=\s*\")(.+?)(\">)/
+                        while (matcher.find()) {
+                            dimensNameSet.add(matcher.group(2))
+                        }
+
+                        // <style name="lightDialog" parent="Theme.AppCompat.Light.Dialog.Alert"> 有 bug
+                        matcher = line =~ /(<style\s+name\s*=\s*\")(.+?)\"/
+                        while (matcher.find()) {
+                            styleNameSet.add(matcher.group(2))
+                            println(matcher.group(2))
+                        }
+
+                        matcher = line =~ /(<string-array\s+name\s*=\s*\")(.+?)(\">)/
+                        while (matcher.find()) {
+                            arrayNameSet.add(matcher.group(2))
+                        }
+                    }
+                }
+            }
+        }
+
+        println("------------ 处理 strings 资源")
+        // ==== 1.string
+        def java_regx = ~/(R(\s*?)\.(\s*?)string(\s*?)\.(\s*?))(\w+)/
+        def xml_regx = ~/(<string\s+name\s*=\s*\")(.+?)(\">)/
+        replaceSrcDir(srcDir, stringNameSet, java_regx)                        // 修改源码中的
+        ValuesRenameTools.replaceValuesName(resDir, stringNameSet, xml_regx)   // 修改xml中的
+
+        println("------------ 处理 color 资源")
+        // ===  2.color: 与string类似
+        java_regx = ~/(R(\s*?)\.(\s*?)color(\s*?)\.(\s*?))(\w+)/
+        xml_regx =  ~/(<color\s+name\s*=\s*\")(.+?)(\">)/
+        replaceSrcDir(srcDir, colorNameSet, java_regx)
+        ValuesRenameTools.replaceValuesName(resDir, colorNameSet, xml_regx)   // 修改xml中的
+
+        println("------------ 处理 dimens 资源")
+        // ===  3.dimens：与 string类似
+        java_regx = ~/(R(\s*?)\.(\s*?)dimen(\s*?)\.(\s*?))(\w+)/
+        xml_regx =  ~/(<dimen\s+name\s*=\s*\")(.+?)(\">)/
+        replaceSrcDir(srcDir, dimensNameSet, java_regx)
+        ValuesRenameTools.replaceValuesName(resDir, dimensNameSet, xml_regx)   // 修改xml中的
+
+        println("------------ 处理 string-array 资源")
+        // ===  4.array, 只在源代码中使用
+        java_regx = ~/(R(\s*?)\.(\s*?)array(\s*?)\.(\s*?))(\w+)/
+        xml_regx =  ~/(<string-array\s+name\s*=\s*\")(.+?)(\">)/
+        replaceSrcDir(srcDir, arrayNameSet, java_regx)
+        ValuesRenameTools.replaceValuesName(resDir, arrayNameSet, xml_regx)   // 修改xml中的
+
+//        // ===  5.style 有个 parent 先不处理了(parent 先不处理了) 咱不处理, 有 bug
+//        java_regx = ~/(R(\s*?)\.(\s*?)style(\s*?)\.(\s*?))(\w+)/
+//        xml_regx =  ~/(<style\s+name\s*=\s*\")(.+?)(\">)/
+//        replaceSrcDir(srcDir, arrayNameSet, java_regx)
+//        ValuesRenameTools.replaceValuesName(resDir, styleNameSet, xml_regx)
+
+        // ===  6.attr 特殊处理一下 暂时不做了
+        /*
+          <declare-styleable name="DynamicTextView">
+            <attr name="dynamic_textColor" format="color"/>  修改里面的内容。而不是declare-styleable父标签的name
+         </declare-styleable>
+         */
+
+    }
+
+    /* ================== values     End  ====================================== */
+
     // 运行时，请多次检查
     static void main(args) {
-        def src = "C:\\Users\\Administrator\\Desktop\\flowcenter\\src"
-        def res = "C:\\Users\\Administrator\\Desktop\\flowcenter\\res"
+        def src = "C:\\Users\\Administrator\\Desktop\\mae-flowcenter\\flowcenter\\src"
+        def res = "C:\\Users\\Administrator\\Desktop\\mae-flowcenter\\flowcenter\\res"
         ResReName resReName = new ResReName(src, res)
         resReName.renameLayout()
         resReName.renameDrawable()
+        resReName.renameColor()
         resReName.renameAnim()
+        resReName.renameRaw()
+        resReName.renameValues()
     }
 }
