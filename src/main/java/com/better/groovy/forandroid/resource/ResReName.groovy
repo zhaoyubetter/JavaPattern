@@ -30,7 +30,7 @@ import java.util.regex.Matcher
  a. string:            R.string.XXX         xml 中修改name @string/XXX  与 其值不改（如：<string name="empty">@string/xxx</string>）
  b. color              R.color.XXX          xml 中修改name @color/XXX   与 其值不改
  c. dimens             R.dimen.XXX          xml 中修改name @dimen/XXX   与 其值不改
- d. style              R.style.XXX          xml 中修改name @style/XXX   与其parent不改
+ d. style              R.style.XXX          xml 中修改name @style/XXX   parent 如果在当前工程，需要修改
  e. arrays:            R.array.XXX          xml 中修改name
  f. attr               R.styleable.FlowMainItemView_fv_title  (比较复杂) 特殊处理
 
@@ -61,7 +61,7 @@ class ResReName {
 
     // 新资源前缀
     def static final NEW_FREFIX = "mae_"
-    // 老的资源前缀，可以保持空字符串
+    // 老的资源前缀，可以保持空字符串(如：R.layout.jdme_layout_aa 会被替换成 R.layout.mae_layout_aa)
     def static final OLD_FREFIX = ""
 
     // 源代码路径
@@ -370,11 +370,10 @@ class ResReName {
                             dimensNameSet.add(matcher.group(2))
                         }
 
-                        // <style name="lightDialog" parent="Theme.AppCompat.Light.Dialog.Alert"> 有 bug
-                        matcher = line =~ /(<style\s+name\s*=\s*\")(.+?)\"/
+                        // <style name="lightDialog" parent="Theme.AppCompat.Light.Dialog.Alert"> 注意这里的正则, style name 加入了 "
+                        matcher = line =~ /(<style\s+name\s*=\s*\")(.+?\")(.*>)/
                         while (matcher.find()) {
                             styleNameSet.add(matcher.group(2))
-                            println(matcher.group(2))
                         }
 
                         matcher = line =~ /(<string-array\s+name\s*=\s*\")(.+?)(\">)/
@@ -390,35 +389,44 @@ class ResReName {
         // ==== 1.string
         def java_regx = ~/(R(\s*?)\.(\s*?)string(\s*?)\.(\s*?))(\w+)/
         def xml_regx = ~/(<string\s+name\s*=\s*\")(.+?)(\">)/
+        def xml_ref_regx = ~/(@string\/)(\w+)/
         replaceSrcDir(srcDir, stringNameSet, java_regx)                        // 修改源码中的
-        ValuesRenameTools.replaceValuesName(resDir, stringNameSet, xml_regx)   // 修改xml中的
+        ValuesRenameTools.replaceValuesName(resDir, stringNameSet, xml_regx)   // 修改xml中的名称
+        ValuesRenameTools.replaceValuesRef(resDir, stringNameSet, xml_ref_regx)
+        // 修改xml中的引用<string name="empty">@string/xxx</string>）
 
         println("------------ 处理 color 资源")
         // ===  2.color: 与string类似
         java_regx = ~/(R(\s*?)\.(\s*?)color(\s*?)\.(\s*?))(\w+)/
-        xml_regx =  ~/(<color\s+name\s*=\s*\")(.+?)(\">)/
+        xml_regx = ~/(<color\s+name\s*=\s*\")(.+?)(\">)/
+        xml_ref_regx = ~/(@color\/)(\w+)/
         replaceSrcDir(srcDir, colorNameSet, java_regx)
         ValuesRenameTools.replaceValuesName(resDir, colorNameSet, xml_regx)   // 修改xml中的
+        ValuesRenameTools.replaceValuesRef(resDir, colorNameSet, xml_ref_regx)   // 修改xml中的引用 @color/xxx
 
         println("------------ 处理 dimens 资源")
         // ===  3.dimens：与 string类似
         java_regx = ~/(R(\s*?)\.(\s*?)dimen(\s*?)\.(\s*?))(\w+)/
-        xml_regx =  ~/(<dimen\s+name\s*=\s*\")(.+?)(\">)/
+        xml_regx = ~/(<dimen\s+name\s*=\s*\")(.+?)(\">)/
+        xml_ref_regx = ~/(@dimen\/)(\w+)/
         replaceSrcDir(srcDir, dimensNameSet, java_regx)
-        ValuesRenameTools.replaceValuesName(resDir, dimensNameSet, xml_regx)   // 修改xml中的
+        ValuesRenameTools.replaceValuesName(resDir, dimensNameSet, xml_regx)   // 修改xml中的name
+        ValuesRenameTools.replaceValuesRef(resDir, dimensNameSet, xml_ref_regx) // xml中的引用
 
         println("------------ 处理 string-array 资源")
         // ===  4.array, 只在源代码中使用
         java_regx = ~/(R(\s*?)\.(\s*?)array(\s*?)\.(\s*?))(\w+)/
-        xml_regx =  ~/(<string-array\s+name\s*=\s*\")(.+?)(\">)/
+        xml_regx = ~/(<string-array\s+name\s*=\s*\")(.+?)(\">)/
         replaceSrcDir(srcDir, arrayNameSet, java_regx)
-        ValuesRenameTools.replaceValuesName(resDir, arrayNameSet, xml_regx)   // 修改xml中的
+        ValuesRenameTools.replaceValuesName(resDir, arrayNameSet, xml_regx)   // 修改xml中的name
 
-//        // ===  5.style 有个 parent 先不处理了(parent 先不处理了) 咱不处理, 有 bug
-//        java_regx = ~/(R(\s*?)\.(\s*?)style(\s*?)\.(\s*?))(\w+)/
-//        xml_regx =  ~/(<style\s+name\s*=\s*\")(.+?)(\">)/
-//        replaceSrcDir(srcDir, arrayNameSet, java_regx)
-//        ValuesRenameTools.replaceValuesName(resDir, styleNameSet, xml_regx)
+        // ===  5.style 有个 parent
+        java_regx = ~/(R(\s*?)\.(\s*?)style(\s*?)\.(\s*?))(\w+)/
+        xml_regx = ~/(<style\s+name\s*=\s*\")(.+?\")(.*>)/
+        xml_ref_regx = ~/(@style\/)(.+?\")/        // 注意这里的正则分组2加入了 "
+        replaceSrcDir(srcDir, styleNameSet, java_regx)
+        ValuesRenameTools.replaceValuesName(resDir, styleNameSet, xml_regx)     // name
+        ValuesRenameTools.replaceValuesRef(resDir, styleNameSet, xml_ref_regx)   // 引用
 
         // ===  6.attr 特殊处理一下 暂时不做了
         /*
@@ -426,21 +434,22 @@ class ResReName {
             <attr name="dynamic_textColor" format="color"/>  修改里面的内容。而不是declare-styleable父标签的name
          </declare-styleable>
          */
-
     }
 
     /* ================== values     End  ====================================== */
 
-    // 运行时，请多次检查
+    // 运行时，请使用副本运行（因为是直接操作文件，可能文件在使用，导致失败）
     static void main(args) {
-        def src = "C:\\Users\\Administrator\\Desktop\\mae-flowcenter\\flowcenter\\src"
-        def res = "C:\\Users\\Administrator\\Desktop\\mae-flowcenter\\flowcenter\\res"
+        def src = "\\src"
+        def res = "\\res"
         ResReName resReName = new ResReName(src, res)
-        resReName.renameLayout()
-        resReName.renameDrawable()
-        resReName.renameColor()
+        resReName.renameLayout()    // layout
+        resReName.renameDrawable()  // drawable
+        resReName.renameColor()     // color
         resReName.renameAnim()
         resReName.renameRaw()
+        resReName.renameMenu()
+        resReName.renameXml()
         resReName.renameValues()
     }
 }
