@@ -1,6 +1,5 @@
 package com.better.groovy.forandroid.resource
 
-import com.better.groovy.forandroid.module_separate.Tools
 
 import java.util.regex.Matcher
 
@@ -25,8 +24,8 @@ final class ValuesRenameTools {
      * @param regx
      */
     static void replaceValuesName(File file, Set<String> set, regx) {
-        // 1.获取所有values开头的文件夹
-        File[] dirs = file.listFiles(new ResReName.DirNamePrefixFilter("values"))
+        // 1.获取res下的所有文件夹
+        File[] dirs = file.listFiles()
         // 2.遍历文件夹下各个资源文件xml后缀，获取资源名称
         dirs?.each { dir ->
             dir.eachFile { it ->
@@ -50,7 +49,7 @@ final class ValuesRenameTools {
                     if (oldResName.startsWith(ResReName.OLD_FREFIX)) {
                         newResName = ResReName.NEW_FREFIX + oldResName.substring(ResReName.OLD_FREFIX.length())
                     }
-                    matcher.appendReplacement(tSb, "\$1$newResName\$3") // 拼接 保留$1分组,替换组2
+                    matcher.appendReplacement(tSb, "\$1$newResName\$3") // 拼接 保留$1$3分组,替换组2
                 } else {
                     matcher.find()               // 继续下一次查找，避免死循环
                 }
@@ -60,6 +59,8 @@ final class ValuesRenameTools {
                 hasUpdate = true
                 line = tSb.toString()
             }
+            // 处理style
+            line = handleStyleParent(line, set)
 
             sb.append(line).append("\r\n")
         }
@@ -70,19 +71,63 @@ final class ValuesRenameTools {
         }
     }
 
+    /**
+     * 处理 style 含有parent的情况
+     */
+    private static String handleStyleParent(String line, Set<String> set) {
+        // 是否含有parent，parent="@style/xxx",特殊处理style
+        if (line.indexOf("parent=\"@style/") != -1) {
+            StringBuffer tSb = new StringBuffer()
+            def parentRegx = ~/(parent=\"@style\/)(.+?\")(.*)/           // /(<style\s+name\s*=\s*\")(.+?\")(.*>)/
+            Matcher matcher = line =~ parentRegx
+            while (matcher.find()) {
+                String oldResName = matcher.group(2)
+                if (set.contains(oldResName)) {
+                    String newResName = ResReName.NEW_FREFIX + oldResName
+                    if (oldResName.startsWith(ResReName.OLD_FREFIX)) {
+                        newResName = ResReName.NEW_FREFIX + oldResName.substring(ResReName.OLD_FREFIX.length())
+                    }
+                    matcher.appendReplacement(tSb, "\$1$newResName\$3") // 拼接 保留$1$3分组,替换组2
+                } else {
+                    matcher.find()               // 继续下一次查找，避免死循环
+                }
+            }
+            if (tSb.length() > 0) {              // 如果包含了，则重新赋值line，并拼接余下部分
+                matcher.appendTail(tSb)
+                line = tSb.toString()
+            }
+        }
+        return line
+    }
+
+    /**
+     * 重名 values 的引用
+     * @param file
+     * @param set
+     * @param regx
+     */
+    static void replaceValuesRef(File file, Set<String> set, regx) {
+        // 1.获取res下的所有文件夹
+        File[] dirs = file.listFiles()
+        dirs?.each { dir ->
+            dir.eachFile { it ->
+                if (it.name.endsWith(".xml")) {
+                    ResReName.handleResFile(it, set, regx)
+                }
+            }
+        }
+    }
 
     /* ================== values     End  ====================================== */
 
-    static void main(args) {
-//        def strRegex = ~/(<string\s+name\s*=\s*\")(.+?)(\">)/
-//        StringBuffer tSb = new StringBuffer()
-//        Matcher matcher = " <string name=\"me_loading_message\">正在加载…</string>\n" +
-//                "    <string name=\"me_no_network\">当前无网络</string>\n" +
-//                "    <string name=\"me_todo\">@string/app_name</string>" =~ strRegex
-//        while (matcher.find()) {
-//            matcher.appendReplacement(tSb, "\$1bbcc\$3") // 拼接 保留$1分组,替换组2
-//        }
-//        matcher.appendTail(tSb)
-//        println(tSb.toString())
-    }
+//    static void main(args) {
+//        def xml_regx = ~/(<style\s+name\s*=\s*\")(.+?\")(.*>)/
+//        def xml_ref_regx = ~/(@style\/)(.+?\")/        // 注意这里的名称加入了 "  @style/set_container_bottom
+//        def resDir = new File("C:\\Users\\Administrator\\Desktop\\mae-aura-flowcenter\\aura-flowcenter\\res\\layout\\mae_fragment_holiday_breastfeeding_leave.xml")
+//        Set<String> styleNameSet = new HashSet<>()
+//        styleNameSet.add("mae_my_button\"")
+//        styleNameSet.add("mae_my_button_default\"")
+//        //ValuesRenameTools.handleResFile(resDir, styleNameSet, xml_regx)     // name
+//        ResReName.handleResFile(resDir, styleNameSet, xml_ref_regx)   // 引用
+//    }
 }
