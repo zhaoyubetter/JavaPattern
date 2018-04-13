@@ -3,11 +3,12 @@ package com.better.kotlin
 fun main(args: Array<String>) {
     // 示例:2 5 1 2 4  1 7 2 1 1 3  可以找到的水坑为:5 1 2 4 这个看起来可以
     // ,但是2 5 1 2 4 1 7 可以形成更大的.随后 2 1 1 3也可以形成一个.要求检测出来.这俩个
-    test()
+    test1()
 
 }
 
-fun test() {
+// 解法1 == 自己想的
+fun test1() {
     // val a = intArrayOf(2,5,3,4,2,1,1,5,4,3,2,3)     // 2 5 1 2 4 1 7
     val a = intArrayOf(2, 5, 1, 2, 4, 1, 7)     // 2 5 1 2 4 1 7
 
@@ -43,6 +44,8 @@ fun test() {
         index++
     }
 }
+
+
 
 fun result(a: IntArray, pre: Int, cur: Int) {
     (pre..cur).forEach {
