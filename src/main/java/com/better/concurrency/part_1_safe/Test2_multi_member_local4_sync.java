@@ -126,5 +126,4 @@ public class Test2_multi_member_local4_sync {
             return valueRef.get();
         }
     }
-
 }
