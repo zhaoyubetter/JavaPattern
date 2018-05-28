@@ -1,0 +1,29 @@
+1. 同步容器的问题
+    思路：
+        锁不一样
+    解决：
+        客户端有一些新操作时（复合操作），使用同一锁
+    示例：
+        Test1_vector_problem
+
+2.迭代器与concurrent_modify_exception
+    思路：
+        ArrayList非线程安全
+    解决：
+        加锁防止 concurrent_modify_exception
+    示例：
+        Test2_concurrent_modify_exception
+
+3. 隐藏迭代器加锁，有些容易的系统方法，比如：toString，会隐士的调用迭代器，这种情况尤佳要注意；
+   容器的hashCode、equals等会间接的执行迭代操作；
+    思路：
+        注意调用的方法中，是否包含了对迭代器的访问
+    解决：
+        加锁，或同步容器
+    示例：
+        Test3_hidden_iterator
+
+###### **** Java 提供的并发工具 **** #######
+4. BlockingQueued的使用
+    a.Test4_blockingQueue_1
+    b.Test5_blockingQueue_2  // 文件搜索
