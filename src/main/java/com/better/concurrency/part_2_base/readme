@@ -27,3 +27,7 @@
 4. BlockingQueued的使用
     a.Test4_blockingQueue_1
     b.Test5_blockingQueue_2  // 文件搜索
+
+5.CountDownLatch 闭锁的使用
+    a.Test6_CountDownLatch_1
+    b.Test7_CountDownLatch_2  // 模拟游戏匹配过程

@@ -12,7 +12,9 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * 简单的文件遍历
+ */
 public class Test5_blockingQueue_2 {
 
     public static void main(String... aa) throws InterruptedException {
