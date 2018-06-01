@@ -31,3 +31,12 @@
 5.CountDownLatch 闭锁的使用
     a.Test6_CountDownLatch_1
     b.Test7_CountDownLatch_2  // 模拟游戏匹配过程
+
+6. Future模式的使用
+    a.Test8_Future_1    // 获取Callable结果
+    b.Test9_Future_2    // FutureTask的例子
+    c.Test10_Future_2   // 搜索文件例子
+
+7. Thread.join    // 把指定的线程加入到当前线程，可以将两个交替执行的线程合并为顺序执行的线程
+   a.Test0_join  // 把指定的线程加入到当前线程，可以将两个交替执行的线程合并为顺序执行的线程
+
