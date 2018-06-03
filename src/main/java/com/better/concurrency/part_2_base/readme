@@ -24,19 +24,35 @@
         Test3_hidden_iterator
 
 ###### **** Java 提供的并发工具 **** #######
-4. BlockingQueued的使用
+4. Thread.join    // 把指定的线程加入到当前线程，可以将两个交替执行的线程合并为顺序执行的线程
+   a.Test0_join  // 把指定的线程加入到当前线程，可以将两个交替执行的线程合并为顺序执行的线程
+
+5. BlockingQueued的使用
     a.Test4_blockingQueue_1
     b.Test5_blockingQueue_2  // 文件搜索
 
-5.CountDownLatch 闭锁的使用
+6.CountDownLatch 闭锁的使用
     a.Test6_CountDownLatch_1
     b.Test7_CountDownLatch_2  // 模拟游戏匹配过程
 
-6. Future模式的使用
+7. Future模式的使用
     a.Test8_Future_1    // 获取Callable结果
     b.Test9_Future_2    // FutureTask的例子
     c.Test10_Future_2   // 搜索文件例子
 
-7. Thread.join    // 把指定的线程加入到当前线程，可以将两个交替执行的线程合并为顺序执行的线程
-   a.Test0_join  // 把指定的线程加入到当前线程，可以将两个交替执行的线程合并为顺序执行的线程
+8. Semaphore    信号量，用来控制同时访问某个特定资源的操作数量，或者执行某个指定操作的数量；
+    a.Test11_Semaphore_1   // 有界阻塞容器
+
+9. CyclicBarrier   类似于闭锁，能阻塞一组线程，直到某个事件发生；
+    a.Test12_CyclicBarrier  //
+
+10. Exanger
+    a.Test13_Exchanger_1  // 2方之间的数据交换，每方在完成一定的事务后想与对方交换数据，第一个先拿出数据的人将一直等待第第二方拿着数据到来时，才能彼此交换数据。
+
+11. 结合使用-缓存设计
+    a.Test14_cache_1     // 整个方法，同步，虽然没问题，但有效率问题
+    b.Test14_cache_2     // 虽然ConcurrentHashMap访问与写入是同步的，
+                            但是线程1正在计算A值（耗时），但其他线程，却不知道线程1在计算A值，所有会造成重复计算；
+    c.Test14_cache_3     // 同样会出现问题，跟cache_2类似，原因在于复合运算时没有同步
+    d.Test15_cache_4     // 线程安全，putIfAbsent 方法理解尤其重要
 

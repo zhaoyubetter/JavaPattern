@@ -1,6 +1,8 @@
 package com.better.concurrency.part_2_base;
 
 import com.better.Utils;
+import sun.jvm.hotspot.opto.Block;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,14 +17,14 @@ import java.util.concurrent.*;
  */
 public class Test10_Future_2 {
     public static void main(String... ag) throws ExecutionException, InterruptedException {
-        File file = new File("/Users/zhaoyu1/Documents/github/");
+        File file = new File("/Users/zhaoyu1/Documents/");
         String key = "android.permission.WRITE_EXTERNAL_STORAGE";
         FutureTask<Integer> task = new FutureTask<>(new FileCounterTask(file, key));
         new Thread(task).start();
 
         long currentTime = System.currentTimeMillis();
         Utils.println(task.get());
-        Utils.println("cost: " + (System.currentTimeMillis() - currentTime) + "ms");
+        Utils.println("cost: " + (System.currentTimeMillis() - currentTime) + "ms");  // 7678
     }
 
     private static class FileCounterTask implements Callable<Integer> {
