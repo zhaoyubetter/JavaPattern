@@ -54,7 +54,7 @@ public class Test1 {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
         }
-        synchronized (Test1.this) {
+        synchronized (Test1_executor.this) {
             status = 1;
         }
         latch.countDown();

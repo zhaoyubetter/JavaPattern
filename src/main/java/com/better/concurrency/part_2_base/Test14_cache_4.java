@@ -97,8 +97,11 @@ public class Test14_cache_4 {
             } catch (CancellationException e) {     // future 取消了,则移除 futureTask
                 cache.remove(arg, future);
             } catch (ExecutionException e) {
+                cache.remove(arg, future);
                 throw new RuntimeException(e);
             }
+
+            return null;
         }
     }
 

@@ -1,0 +1,12 @@
+1. Executor
+    a. Test1_executor
+
+2. ExecutorService : Executors.newXXX返回
+
+3. CompletionService
+    a. Test3_completion_service_1   // 不使用 CompletionService的情况：1. 文字与图片 渲染 是 并行；
+                                                                     2. 但是图片其实是串行线程；
+
+    b.Test3_completion_service_2    // 与上形成鲜明对比
+
+    c.Test4_invokeAll           // 多个任务提交；
