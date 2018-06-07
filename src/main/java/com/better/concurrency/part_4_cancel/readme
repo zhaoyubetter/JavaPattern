@@ -1,0 +1,5 @@
+线程中断操作
+
+1.  设置变量中断线程；
+    a.Test1_blockingqueue      // 一直阻塞
+    b.Test2_blockingqueue      // 通过中断修复
