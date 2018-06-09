@@ -50,6 +50,7 @@ public class Test3_completion_service_1 {
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                // 重新设置中断状态
                 Thread.currentThread().interrupt();
                 future.cancel(true);
             } catch (ExecutionException e) {

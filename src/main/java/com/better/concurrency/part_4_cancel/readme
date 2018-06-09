@@ -1,5 +1,47 @@
 线程中断操作
 
+参考资料：
+1. https://www.cnblogs.com/baoendemao/p/3804730.html
+2. https://blog.csdn.net/u011784767/article/details/51428101
+
+注意：
+1.线程中断，并不是停止线程！！！
+2.一个线程在调用interrupt()后，自己不会抛出InterruptedException异常；
+3.interrupt() 方法不会中断一个正在运行的线程，这个机制只是设置了一个线程中断标志位，需要用户自己去处理；
+
+中断的三种情况：
+1. 中断非阻塞线程：
+    a.使用一个volatile boolean 类型的变量来控制；
+    b.采用中断机制；
+2. 中断阻塞线程：
+    当线程调用Thread.sleep()、Thread.join()、object.wait()再或者调用阻塞的i/o操作方法时，都会使得当前线程进入阻塞状态。
+    此时调用interrupt方法，阻塞状态的线程将抛出InterruptedException异常；
+3. 不可中断线程：
+    有一种情况是线程不能被中断的，就是调用synchronized关键字和reentrantLock.lock()获取锁的过程、一些同步IO等待等；
+    但是如果调用带超时的tryLock方法，那么如果线程在等待时被中断，将抛出一个InterruptedException异常，这是一个非常
+    有用的特性，因为它允许程序打破死锁。
+
+
+### 代码部分
 1.  设置变量中断线程；
     a.Test1_blockingqueue      // 一直阻塞
     b.Test2_blockingqueue      // 通过中断修复
+
+2. 线程中断
+    a.Test3_interrupt_out      // 外部设置中断，中断线程之前，应先了解他的中断策略
+    b.Test4_interrupt          // 专门线程中断任务
+    c.Test5_interrupt_future    // 通过future来取消,(中断)
+    d.Test6_logwriter           // 专门的线程中处理日志，但无法停止
+    e.Test6_logwriter_cancel    // 退出任务
+    f.Test7_sleep_interrupt
+
+### 网络资料学习
+1. 中断非阻塞线程：
+    a.Test8_interrupt_use_volatie
+    b.Test8_interrupt_use_interrupt
+2. 中断阻塞线程
+    a.Test9_interrupt_block
+     需要注意的地方就是 Thread.sleep()、Thread.join()、object.wait()这些方法，会检测线程中断标志位，如果发现中断标志位为true则抛出异常并且将中断标志位设置为false。
+     所以while循环之后每次调用阻塞方法后 都要在捕获异常之后，调用Thread.currentThread().interrupt()重置状态标志位。
+3. 不可中断线程
+    a.Test10_interrupt_not_interrupt
