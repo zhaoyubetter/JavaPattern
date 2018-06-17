@@ -1,0 +1,6 @@
+线程池
+
+1. Test1_threaddeadLock      // task相互依赖，引发死锁
+2. Test2_threadPoolExecutor  // 自定义线程池
+3. Test3_semaphore           // 使用信号量来控制任务的提交速率
+4. Test4_threadfactory       // 线程工厂

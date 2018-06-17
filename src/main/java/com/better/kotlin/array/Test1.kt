@@ -9,6 +9,18 @@ fun main(args: Array<String>) {
     })
 
     println(array.minIndex())
+
+
+    // v
+    val l = { x: Int, y: Int -> x + y }
+
+
+    myPrintln(l(2,3)) {}
+//    {println("22")}()
+}
+
+fun myPrintln(any: Any?, closure: () -> Unit) {
+
 }
 
 fun Array<Int>.minIndex(): Int? {

@@ -6,6 +6,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 外界中断
+ */
 public class Test3_interrupt_out {
 
     private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(3);
@@ -19,6 +22,8 @@ public class Test3_interrupt_out {
                 while(!Thread.currentThread().isInterrupted()) {
                     Utils.println("running....");
                 }
+
+                Utils.println("....cancel");
             }
         }, 2, TimeUnit.SECONDS);        // 2 秒后中断
     }
