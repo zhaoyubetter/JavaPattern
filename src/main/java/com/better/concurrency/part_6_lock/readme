@@ -3,3 +3,6 @@
 1.Test1_leftright_deadLock   // 锁嵌套 - 2个线程以不同顺序来获取相同的锁，产生循环死锁（顺序死锁）
 2.Test2_differlock_deadLock   // 锁嵌套 - 动态的锁顺序死锁,
 3.Test3_differlock_deadLock  // 锁嵌套 - 通过锁顺序来解决死锁问题；
+4.Test4_demonstrateDeadlock  // 大量访问时，可以会出现死锁
+5.Test5_union_deadlock       // 协作对象之间的死锁问题，不容易发现的死锁
+6.Test6_union_open           // 公平调用，避免死锁

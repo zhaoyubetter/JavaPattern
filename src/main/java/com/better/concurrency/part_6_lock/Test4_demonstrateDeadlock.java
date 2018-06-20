@@ -2,35 +2,41 @@ package com.better.concurrency.part_6_lock;
 
 import com.better.Utils;
 
+import java.util.Random;
+
 /**
- * 解决问题，确保锁顺序调用
+ * 经测，没出现死锁现象
  */
-public class Test3_differlock_deadLock {
+public class Test4_demonstrateDeadlock {
     public static void main(String... a) {
-        final Account ab = new Account("better", 5000);
-        final Account cc = new Account("cc", 3000);
+        final int num_thread = 1000;
+        final int num_account =5;
+        final int num_iterations = 1000000;
 
-        new Thread(new Runnable() {
+        final Random ran = new Random();
+        final Account[] accounts = new Account[num_account];
+        for (int i = 0; i < accounts.length; i++) {
+            accounts[i] = new Account("account: " + i, 1000);
+        }
+
+        class TransferThread extends Thread {
             @Override
             public void run() {
-                try {
-                    tranfer(ab, cc, 100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                for (int i = 0; i < num_iterations; i++) {
+                    int from = ran.nextInt(num_account);
+                    int to = ran.nextInt(num_account);
+                    try {
+                        tranfer(accounts[from], accounts[to], ran.nextInt(500));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }).start();
+        }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    tranfer(cc, ab, 30);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        for (int i = 0; i < num_thread; i++) {
+            new TransferThread().start();
+        }
     }
 
     private static void tranfer(Account from, Account to, int amount) throws InterruptedException {
@@ -40,36 +46,32 @@ public class Test3_differlock_deadLock {
 
         class Helper {
             public void tran() {
-                if (from.getBalance() < amount) {
-                    throw new RuntimeException("余额不足。。。");
-                } else {
-                    from.minus(amount);
-                    to.plus(amount);
-                }
+                from.minus(amount);
+                to.plus(amount);
             }
         }
 
         int fromHash = System.identityHashCode(from);
         int toHash = System.identityHashCode(to);
 
-        if(fromHash < toHash) {
+        if (fromHash < toHash) {
             synchronized (from) {
-                Thread.sleep(200);
+                Thread.sleep(20);
                 synchronized (to) {
                     new Helper().tran();
                 }
             }
-        } else if(fromHash > toHash) {
+        } else if (fromHash > toHash) {
             synchronized (to) {
-                Thread.sleep(100);
+                Thread.sleep(40);
                 synchronized (from) {
                     new Helper().tran();
                 }
             }
         } else {
             synchronized (tieLock) {
+                Thread.sleep(10);
                 synchronized (from) {
-                    Thread.sleep(200);
                     synchronized (to) {
                         new Helper().tran();
                     }
@@ -77,6 +79,7 @@ public class Test3_differlock_deadLock {
             }
         }
     }
+
 
     private static class Account {
         private int balance = 0;
