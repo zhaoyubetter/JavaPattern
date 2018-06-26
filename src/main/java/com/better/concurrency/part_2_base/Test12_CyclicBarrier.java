@@ -33,6 +33,7 @@ public class Test12_CyclicBarrier {
                 Thread.sleep(new Random().nextInt(2000));
                 Utils.println("thread" + Thread.currentThread().getName() + "到达，当前已有" + cb.getNumberWaiting() + "个已经到达，正在等候");
                 cb.await();
+                Utils.println("lll");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (BrokenBarrierException e) {
