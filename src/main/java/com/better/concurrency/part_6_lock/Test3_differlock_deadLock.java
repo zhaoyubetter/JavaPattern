@@ -10,27 +10,30 @@ public class Test3_differlock_deadLock {
         final Account ab = new Account("better", 5000);
         final Account cc = new Account("cc", 3000);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    tranfer(ab, cc, 100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        for (int i = 0; i < 10; i++) {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    tranfer(cc, ab, 30);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        tranfer(ab, cc, 100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }).start();
+            }).start();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        tranfer(cc, ab, 30);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
     }
 
     private static void tranfer(Account from, Account to, int amount) throws InterruptedException {
@@ -52,14 +55,14 @@ public class Test3_differlock_deadLock {
         int fromHash = System.identityHashCode(from);
         int toHash = System.identityHashCode(to);
 
-        if(fromHash < toHash) {
+        if (fromHash < toHash) {
             synchronized (from) {
                 Thread.sleep(200);
                 synchronized (to) {
                     new Helper().tran();
                 }
             }
-        } else if(fromHash > toHash) {
+        } else if (fromHash > toHash) {
             synchronized (to) {
                 Thread.sleep(100);
                 synchronized (from) {
