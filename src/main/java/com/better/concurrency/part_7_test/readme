@@ -1,2 +1,4 @@
 
 1.Test1_BoundedBuffer   动态许可
+2.Test2_BoundedBuffer   缓存的有界与阻塞
+3.Test3_BoundedBuffer   缓存的有界与阻塞，测试生产者，消费者

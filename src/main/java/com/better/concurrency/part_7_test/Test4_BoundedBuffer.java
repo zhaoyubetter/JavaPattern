@@ -1,6 +1,7 @@
 package com.better.concurrency.part_7_test;
 
 import com.better.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,7 +11,28 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @param
  */
-public class Test3_BoundedBuffer {
+public class Test4_BoundedBuffer {
+
+    class BarrierTimer implements Runnable {
+        private boolean started;
+        private long startTime, endTime;
+        @Override
+        public synchronized void run() {
+            long t = System.nanoTime();
+            if(!started) {
+                started = true;
+                startTime = t;
+            } else {
+                endTime = t;
+            }
+        }
+        public synchronized void clear() {
+            started = false;
+        }
+        public synchronized long getTime() {
+            return endTime - startTime;
+        }
+    }
 
     private static final ExecutorService pool = Executors.newCachedThreadPool();
     private final AtomicInteger putSum = new AtomicInteger(0);
@@ -20,7 +42,7 @@ public class Test3_BoundedBuffer {
     private final int nTrials, nPairs;
 
     public static void main(String[] aa) {
-        new Test3_BoundedBuffer(10,10, 100000).test();
+        new Test4_BoundedBuffer(10, 10, 100000).test();
         pool.shutdown();
     }
 
@@ -31,7 +53,7 @@ public class Test3_BoundedBuffer {
         return y;
     }
 
-    Test3_BoundedBuffer(int capacity, int nPairs, int nTrials) {
+    Test4_BoundedBuffer(int capacity, int nPairs, int nTrials) {
         this.cc = new BoundedBuffer<>(capacity);
         this.nTrials = nTrials;
         this.nPairs = nPairs;
@@ -67,7 +89,7 @@ public class Test3_BoundedBuffer {
                     seed = xorShift(seed);
                 }
                 putSum.getAndAdd(sum);
-                Utils.println("wait: " +  barrier.getNumberWaiting());
+                Utils.println("wait: " + barrier.getNumberWaiting());
                 barrier.await();        // 任务完成后等带
             } catch (InterruptedException e) {
                 e.printStackTrace();
