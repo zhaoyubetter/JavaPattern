@@ -3,3 +3,5 @@ Lock 显示锁
 2. Test2_BoundedBuffer  无限死循环。定期调用
 3. Test3_BoundedBuffer  通过条件队列实现的有界缓存 Object.wait 与 notify notifyAll
 3. Test4_BoundedBuffer  优化通知
+4. Test5_threadGate 阀门类
+6. Test6_Condition  Condition 显示锁
