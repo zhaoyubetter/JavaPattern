@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * 栈封闭例子，如何解决呢？
+ * 栈封闭例子，如何解决呢？加入同步代码块解决
  */
 public class Test8_stack_close {
 
@@ -42,16 +42,18 @@ public class Test8_stack_close {
                         e.printStackTrace();
                     }
                     Utils.println(String.format("Thread name:%s, value:%s", Thread.currentThread(), next));
-                    map.put("key1", next);
+                    synchronized (map) {
+                        map.put("key1", next);
 
-                    try {
-                        Thread.sleep(next);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        try {
+                            Thread.sleep(next);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        // 使用
+                        check(map, "key1", next);
                     }
-
-                    // 使用
-                    check(map, "key1", next);
                 }
             }
         });
@@ -67,16 +69,18 @@ public class Test8_stack_close {
                         e.printStackTrace();
                     }
                     Utils.println(String.format("Thread name:%s, value:%s", Thread.currentThread(), next));
-                    map.put("key1", next);
+                    synchronized (map) {
+                        map.put("key1", next);
 
-                    try {
-                        Thread.sleep(next);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        try {
+                            Thread.sleep(next);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        // 使用
+                        check(map, "key1", next);
                     }
-
-                    // 使用
-                    check(map, "key1", next);
                 }
             }
         });
@@ -92,16 +96,19 @@ public class Test8_stack_close {
                         e.printStackTrace();
                     }
                     Utils.println(String.format("Thread name:%s, value:%s", Thread.currentThread(), next));
-                    map.put("key1", next);
 
-                    try {
-                        Thread.sleep(next);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    synchronized (map) {
+                        map.put("key1", next);
+
+                        try {
+                            Thread.sleep(next);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        // 使用
+                        check(map, "key1", next);
                     }
-
-                    // 使用
-                    check(map, "key1", next);
                 }
             }
         });

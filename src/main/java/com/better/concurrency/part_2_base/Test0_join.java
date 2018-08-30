@@ -33,7 +33,7 @@ public class Test0_join {
                 try {
                     Thread.sleep(new Random().nextInt(1000));
                     System.out.println(Thread.currentThread().getName() + " " + i++);
-                    if (i == 100) {
+                    if (i == 20) {
                         break;
                     }
                 } catch (InterruptedException e) {
