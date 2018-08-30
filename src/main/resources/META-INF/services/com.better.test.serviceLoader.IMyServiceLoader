@@ -1,0 +1,5 @@
+# fileName: interface fullname
+# content : interface impl name
+
+com.better.test.serviceLoader.MyServiceLoaderImpl
+com.better.test.serviceLoader.MyServiceLoaderImpl2
