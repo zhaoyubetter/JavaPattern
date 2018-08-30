@@ -9,21 +9,18 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 交替输出 一个Condition ，不太好理解
+ * 使用传统方法
  */
-public class Test7_Condition_2 {
+public class Test9_Condition_4_old_type {
 
     private static final String[] units_olds = {"壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾"};
     private static final String[] units_now = {"一", "二", "三", "四", "五", "六", "七", "八", "九", "十"};
 
     private static final Lock lock = new ReentrantLock();
-    private static Condition condition = lock.newCondition();
+    private static Condition condition_old = lock.newCondition();
+    private static boolean isOld = false;
 
     public static void main(String[] args) throws InterruptedException {
-        //   for (int i = 0; i < units_now.length; i++) {
-        //            printlnOld(i);
-        //        }
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -50,11 +47,13 @@ public class Test7_Condition_2 {
     private static void printlnOld(final int index) {
         try {
             lock.lock();
-//            Utils.println("old");
+            while (isOld) {
+                condition_old.await();
+            }
             Thread.sleep(new Random().nextInt(1000));
             Utils.println(units_olds[index]);
-            condition.signal();   // 完成工作，唤醒其他，进入休眠，等待唤醒
-            condition.await();
+            isOld = true;
+            condition_old.signal();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -65,11 +64,13 @@ public class Test7_Condition_2 {
     private static void println_now(int index) {
         try {
             lock.lock();
-//            Utils.println("now");
+            while (!isOld) {
+                condition_old.await();
+            }
             Thread.sleep(new Random().nextInt(2000));
             Utils.println(units_now[index]);
-            condition.signal();
-            condition.await();
+            isOld = false;
+            condition_old.signal();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {

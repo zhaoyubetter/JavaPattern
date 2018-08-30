@@ -18,7 +18,7 @@ apply plugin : 'java'
 
 repositories {
     jcenter()
-    mavenCentral();
+    mavenCentral()
 }
 
 dependencies {

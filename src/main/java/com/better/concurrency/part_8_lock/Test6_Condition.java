@@ -73,7 +73,7 @@ public class Test6_Condition {
             lock.lock();
             try {
                 while (count == buffer.length) {
-                    notFull.await();        // 满时，未满等待
+                    notFull.await();        // 满时，阻塞写线程
                 }
                 buffer[tail] = v;
                 if (++tail == buffer.length) {
@@ -90,7 +90,7 @@ public class Test6_Condition {
             lock.lock();
             try {
                 while (count == 0) {
-                    notEmpty.await();    // 空时，非空等待
+                    notEmpty.await();    // 空时，阻塞读线程
                 }
 
                 V v = buffer[head];

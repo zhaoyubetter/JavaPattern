@@ -9,27 +9,25 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 交替输出 一个Condition ，不太好理解
+ * 交替输出 1个Condition，通过一个成员变量来控制
  */
-public class Test7_Condition_2 {
+public class Test8_Condition_3 {
 
     private static final String[] units_olds = {"壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾"};
     private static final String[] units_now = {"一", "二", "三", "四", "五", "六", "七", "八", "九", "十"};
-
-    private static final Lock lock = new ReentrantLock();
-    private static Condition condition = lock.newCondition();
+    private static boolean isOld = false;
 
     public static void main(String[] args) throws InterruptedException {
-        //   for (int i = 0; i < units_now.length; i++) {
-        //            printlnOld(i);
-        //        }
-
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
                     for (int i = 0; i < units_now.length; i++) {
-                        printlnOld(i);
+                        try {
+                            printlnOld(i);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -40,40 +38,38 @@ public class Test7_Condition_2 {
             public void run() {
                 while (true) {
                     for (int i = 0; i < units_now.length; i++) {
-                        println_now(i);
+                        try {
+                            println_now(i);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
         }).start();
     }
 
-    private static void printlnOld(final int index) {
-        try {
-            lock.lock();
-//            Utils.println("old");
+    private static void printlnOld(final int index) throws InterruptedException {
+        synchronized (units_olds) {
+            while (isOld) {
+                units_olds.wait();
+            }
             Thread.sleep(new Random().nextInt(1000));
             Utils.println(units_olds[index]);
-            condition.signal();   // 完成工作，唤醒其他，进入休眠，等待唤醒
-            condition.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            lock.unlock();
+            isOld = true;
+            units_olds.notify();
         }
     }
 
-    private static void println_now(int index) {
-        try {
-            lock.lock();
-//            Utils.println("now");
+    private static void println_now(int index) throws InterruptedException {
+        synchronized (units_olds) {
+            while (!isOld) {
+                units_olds.wait();
+            }
             Thread.sleep(new Random().nextInt(2000));
             Utils.println(units_now[index]);
-            condition.signal();
-            condition.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            lock.unlock();
+            isOld = false;
+            units_olds.notify();
         }
     }
 }
