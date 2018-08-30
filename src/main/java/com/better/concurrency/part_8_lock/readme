@@ -5,3 +5,4 @@ Lock 显示锁
 3. Test4_BoundedBuffer  优化通知
 4. Test5_threadGate 阀门类
 6. Test6_Condition  Condition 显示锁
+7. Test6_Condition_2  Condition 显示锁，输出等待
