@@ -1,6 +1,5 @@
 package com.better.kotlin
 
-import org.apache.tools.ant.taskdefs.condition.Http
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.StringReader

@@ -1,8 +1,6 @@
 package com.better.concurrency.part_5_executor;
 
 import com.better.Utils;
-import jline.internal.Log;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -65,7 +63,7 @@ public class Test4_threadFatory {
         }
 
         @Override
-        public Thread newThread(@NotNull Runnable r) {
+        public Thread newThread(Runnable r) {
             return new MyAppThread(r, poolName);
         }
     }
