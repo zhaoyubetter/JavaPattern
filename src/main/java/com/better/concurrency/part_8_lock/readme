@@ -8,3 +8,4 @@ Lock 显示锁
 7. Test7_Condition_2  Condition 交替输出 一个Condition
 8. Test8_Condition_3  Condition 交替输出 一个Condition，使用了一个成员变量来控制await，signal
 9. Test9_Condition_4_old_type  交替输出 传统方式
+10.Test10_Condition_5_many
