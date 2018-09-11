@@ -102,7 +102,8 @@ public class Test2_ {
     }
 
     /**
-     * $T,类引用不在本工程，使用ClassName
+     * $T,类引用不在本工程，使用
+     *
      *
      * @throws IOException
      */
