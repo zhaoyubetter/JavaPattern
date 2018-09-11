@@ -4,7 +4,7 @@ package com.better.groovy.forandroid.resource
 import java.util.regex.Matcher
 
 /**
- 2.values: string、string-array、attr、color、dimens、style
+ 2.values: string、string-array、attr、color、dimens、style, 缺少：animator，raw，asset
  ---------------------------------------------------------------
  values   类型         源代码中                xml 资源中
  a. string:            R.string.XXX         @string/XXX  与其值        <string name="empty">@string/xxx</string>

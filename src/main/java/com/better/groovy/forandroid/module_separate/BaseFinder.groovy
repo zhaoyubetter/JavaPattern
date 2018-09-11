@@ -1,7 +1,6 @@
 package com.better.groovy.forandroid.module_separate
 
 /**
- * 先不考虑重构
  */
 abstract class BaseFinder {
 
@@ -20,7 +19,7 @@ abstract class BaseFinder {
     void export(String moduleFolder, String appResFolder) {
         Tools.checkDir(moduleFolder, appResFolder)
 
-        File moduleDirFile = new File(moduleDir)
+        File moduleDirFile = new File(moduleFolder)
         // === 1.layout name map from module.  (XXX to R.xxx.XXX)
         Map<String, String> moduleMap = new HashMap<>()
         moduleMap(moduleDirFile, moduleDirFile, moduleMap)

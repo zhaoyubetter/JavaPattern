@@ -12,7 +12,7 @@ class Tools {
     final static APP_RES_DIR = ""
 
 
-    public static void checkDir(String moduleDir, String appResDir) {
+    static void checkDir(String moduleDir, String appResDir) {
         File moduleDirFile = new File(moduleDir)
         if (!moduleDirFile.exists() || !moduleDirFile.isDirectory()) {
             throw new RuntimeException("the Aodule ${moduleDir} Directory is wrong!")
