@@ -440,16 +440,17 @@ class ResReName {
 
     // 运行时，请使用副本运行（因为是直接操作文件，可能文件在使用，导致失败）
     static void main(args) {
-        def src = "\\src"
-        def res = "\\res"
-        ResReName resReName = new ResReName(src, res)
-        resReName.renameLayout()    // layout
-        resReName.renameDrawable()  // drawable
-        resReName.renameColor()     // color
-        resReName.renameAnim()
-        resReName.renameRaw()
-        resReName.renameMenu()
-        resReName.renameXml()
-        resReName.renameValues()
+        println("aaaaa")
+//        def src = "\\src"
+//        def res = "\\res"
+//        ResReName resReName = new ResReName(src, res)
+//        resReName.renameLayout()    // layout
+//        resReName.renameDrawable()  // drawable
+//        resReName.renameColor()     // color
+//        resReName.renameAnim()
+//        resReName.renameRaw()
+//        resReName.renameMenu()
+//        resReName.renameXml()
+//        resReName.renameValues()
     }
 }

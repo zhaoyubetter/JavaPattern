@@ -22,7 +22,7 @@ class LayoutFinder {
         Map<String, String> moduleLayoutMap = new HashMap<>()
         getModuleLayoutMap(moduleDirFile, moduleDirFile, moduleLayoutMap)
 
-        // === 2. layout name map from 'Main App Res'
+        // === 2. layout name map from 'MainGo App Res'
         File appResDirFile = new File(appResDir)
         // folderName to layout filename list
         Map<String, List<String>> dirFileMap = getAppLayoutMap(appResDirFile, moduleLayoutMap)

@@ -23,7 +23,7 @@ abstract class BaseFinder {
         // === 1.layout name map from module.  (XXX to R.xxx.XXX)
         Map<String, String> moduleMap = new HashMap<>()
         moduleMap(moduleDirFile, moduleDirFile, moduleMap)
-        // === 2. layout name map from 'Main App Res'
+        // === 2. layout name map from 'MainGo App Res'
         File appResDirFile = new File(appResFolder)
         // folderName to layout filename list
         Map<String, List<String>> dirFileMap = getAppLayoutMap(appResDirFile, moduleLayoutMap)
