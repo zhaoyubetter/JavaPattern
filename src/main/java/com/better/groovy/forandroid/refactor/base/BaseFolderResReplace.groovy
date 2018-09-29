@@ -1,5 +1,7 @@
 package com.better.groovy.forandroid.refactor.base
 
+import com.better.groovy.forandroid.refactor.Config
+
 /**
  * 资源Base
  * @auther better
@@ -56,6 +58,35 @@ abstract class BaseFolderResReplace extends BaseReplace {
     abstract void replaceSrc(Set<String> resNameSet, java_regx) throws IOException
 
     abstract void replaceRes(Set<String> resNameSet, xml_regx) throws IOException
+
+    /**
+     * 文件重命名
+     * @param file
+     * @param dir_filter
+     * @param resTypeName 资源类型名
+     */
+    protected void renameFile(File file, dir_filter, resTypeName) {
+        File[] layoutDirs = file.listFiles(dir_filter)
+        // 遍历
+        layoutDirs?.each { layoutDir ->
+            layoutDir.eachFile { it ->
+                if (it.name.endsWith(".xml")) {     // 只处理xml文件
+                    String oldName = it.name
+                    String newName = Config.NEW_PREFIX + oldName
+                    if (oldName.startsWith(Config.OLD_PREFIX)) {
+                        newName = Config.NEW_PREFIX + oldName.substring(Config.OLD_PREFIX.length())
+                    }
+                    File newFile = new File(it.getParent(), newName)
+                    if (newFile.exists()) {
+                        newFile.delete()
+                    }
+                    if (!it.renameTo(newFile)) {
+                        println("--------------- $resTypeName ${it.name} 重命名失败！，请手动修改成：${newFile.name}")
+                    }
+                }
+            }
+        }
+    }
 
     /*
     void export(String moduleFolder, String appResFolder) {

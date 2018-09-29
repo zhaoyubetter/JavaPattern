@@ -9,8 +9,8 @@ import com.better.groovy.forandroid.refactor.base.BaseFolderResReplace
  */
 class MipmapReplace extends BaseFolderResReplace {
 
-    private def final DIR_FILTER = new Tools.DirNamePrefixFilter("mipmap")
-    private def final RES_TYPE_NAME = "mipmap"
+    private def final  static DIR_FILTER = new Tools.DirNamePrefixFilter("mipmap")
+    private def final static String RES_TYPE_NAME = "mipmap"
 
     MipmapReplace(Object srcFolderPath, Object resFolderPath) {
         super(srcFolderPath, resFolderPath, RES_TYPE_NAME)
