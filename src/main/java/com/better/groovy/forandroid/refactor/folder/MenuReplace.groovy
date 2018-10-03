@@ -13,8 +13,8 @@ class MenuReplace extends BaseFolderResReplace {
     private def final DIR_FILTER = new Tools.DirNamePrefixFilter("menu")
     private def final RES_TYPE_NAME = "menu"
 
-    MenuReplace(Object srcFolderPath, Object resFolderPath) {
-        super(srcFolderPath, resFolderPath)
+    MenuReplace(srcFolderPath, resFolderPath, manifestFile) {
+        super(srcFolderPath, resFolderPath, manifestFile)
     }
 
     @Override

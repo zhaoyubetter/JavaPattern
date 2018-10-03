@@ -12,8 +12,8 @@ class ColorReplace extends BaseFolderResReplace {
     private def final DIR_FILTER = new Tools.DirNamePrefixFilter("color")
     private def final RES_TYPE_NAME = "color"
 
-    ColorReplace(Object srcFolderPath, Object resFolderPath) {
-        super(srcFolderPath, resFolderPath)
+    ColorReplace(srcFolderPath, resFolderPath, manifestFile) {
+        super(srcFolderPath, resFolderPath, manifestFile)
     }
 
     @Override

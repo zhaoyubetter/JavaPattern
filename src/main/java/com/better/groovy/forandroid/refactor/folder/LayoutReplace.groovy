@@ -11,8 +11,8 @@ public class LayoutReplace extends BaseFolderResReplace {
     private def final DIR_FILTER = new Tools.DirNamePrefixFilter("layout")
     private def final RES_TYPE_NAME = "layout"
 
-    LayoutReplace(Object srcFolderPath, Object resFolderPath) {
-        super(srcFolderPath, resFolderPath)
+    LayoutReplace(srcFolderPath, resFolderPath, manifestFile) {
+        super(srcFolderPath, resFolderPath, manifestFile)
     }
 
     @Override

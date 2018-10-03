@@ -14,46 +14,47 @@ import java.util.regex.Pattern;
 public class HelloGo {
 
     public static void main(String[] args) throws IOException {
-        String sourcePath = "/Users/zhaoyu1/Documents/git.jd/jdme_android/app/src/main/java";
-        String resPath = "/Users/zhaoyu1/Documents/git.jd/jdme_android/app/src/main/res";
+        String sourcePath = "/Users/zhaoyu1/Documents/android/app/src/main/java";
+        String resPath = "/Users/zhaoyu1/Documents/android/app/src/main/res";
+        String manifestFilePath = "/Users/zhaoyu1/Documents/android/app/src/main/AndroidManifest.xml";
 
 //        // 1.test layout
-        LayoutReplace layoutReplace = new LayoutReplace(sourcePath, resPath);
+        LayoutReplace layoutReplace = new LayoutReplace(sourcePath, resPath, manifestFilePath);
         layoutReplace.replaceThis();
 //
 //        // 2.test drawable
-        DrawableReplace drawableReplace = new DrawableReplace(sourcePath, resPath);
+        DrawableReplace drawableReplace = new DrawableReplace(sourcePath, resPath, manifestFilePath);
         drawableReplace.replaceThis();
 //
 //
 //        // 3. test color
-        ColorReplace colorReplace = new ColorReplace(sourcePath, resPath);
+        ColorReplace colorReplace = new ColorReplace(sourcePath, resPath, manifestFilePath);
         colorReplace.replaceThis();
 //
 //
 //        // 4. test Anim
-        AnimReplace anim = new AnimReplace(sourcePath, resPath);
+        AnimReplace anim = new AnimReplace(sourcePath, resPath, manifestFilePath);
         anim.replaceThis();
 //
 //        // 5. test menu
-        MenuReplace menuReplace = new MenuReplace(sourcePath, resPath);
+        MenuReplace menuReplace = new MenuReplace(sourcePath, resPath, manifestFilePath);
         menuReplace.replaceThis();
 //
 //        // 6. test mipmap   == need test more time
-        MipmapReplace mipmapReplace = new MipmapReplace(sourcePath, resPath);
+        MipmapReplace mipmapReplace = new MipmapReplace(sourcePath, resPath, manifestFilePath);
         mipmapReplace.replaceThis();
 //
 //        // 7.test raw
-        RawReplace rawReplace = new RawReplace(sourcePath, resPath);
+        RawReplace rawReplace = new RawReplace(sourcePath, resPath, manifestFilePath);
         rawReplace.replaceThis();
 //
 //        // 8.test xml
-        XmlReplace xmlReplace = new XmlReplace(sourcePath, resPath);
+        XmlReplace xmlReplace = new XmlReplace(sourcePath, resPath, manifestFilePath);
         xmlReplace.replaceThis();
 
 
         // ===9.values test not support attrs
-        ValuesReplace valuesReplace = new ValuesReplace(sourcePath, resPath);
+        ValuesReplace valuesReplace = new ValuesReplace(sourcePath, resPath, manifestFilePath);
         Set<ValuesReplace.ValuesType> set = new HashSet<>();
         set.add(ValuesReplace.ValuesType.string);
         valuesReplace.replaceValues(ValuesReplace.ALL_VALUES_TYPES);

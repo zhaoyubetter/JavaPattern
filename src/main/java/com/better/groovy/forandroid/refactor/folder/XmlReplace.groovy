@@ -13,8 +13,8 @@ class XmlReplace extends BaseFolderResReplace {
     private def final DIR_FILTER = new Tools.DirNamePrefixFilter("xml")
     private def final RES_TYPE_NAME = "xml"
 
-    XmlReplace(Object srcFolderPath, Object resFolderPath) {
-        super(srcFolderPath, resFolderPath)
+    XmlReplace(srcFolderPath, resFolderPath, manifestFile) {
+        super(srcFolderPath, resFolderPath, manifestFile)
     }
 
     @Override

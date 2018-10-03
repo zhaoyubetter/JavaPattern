@@ -12,8 +12,8 @@ class DrawableReplace extends BaseFolderResReplace {
     private def final static DIR_FILTER = new Tools.DirNamePrefixFilter("drawable")
     private def final static RES_TYPE_NAME = "drawable"
 
-    DrawableReplace(Object srcFolderPath, Object resFolderPath) {
-        super(srcFolderPath, resFolderPath)
+    DrawableReplace(srcFolderPath, resFolderPath, manifestFile) {
+        super(srcFolderPath, resFolderPath, manifestFile)
     }
 
     @Override

@@ -12,8 +12,8 @@ class MipmapReplace extends BaseFolderResReplace {
     private def final  static DIR_FILTER = new Tools.DirNamePrefixFilter("mipmap")
     private def final static String RES_TYPE_NAME = "mipmap"
 
-    MipmapReplace(Object srcFolderPath, Object resFolderPath) {
-        super(srcFolderPath, resFolderPath)
+    MipmapReplace(srcFolderPath, resFolderPath, manifestFile) {
+        super(srcFolderPath, resFolderPath, manifestFile)
     }
 
     @Override

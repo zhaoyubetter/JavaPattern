@@ -137,6 +137,10 @@ abstract class BaseReplace {
                 }
             }
         }
-    }
 
+        // 清单文件 manifest file
+        if(manifestFile != null) {
+            handleResFile(manifestFile, set, regx)
+        }
+    }
 }

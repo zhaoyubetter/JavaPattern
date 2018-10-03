@@ -34,8 +34,8 @@ class ValuesReplace extends BaseReplace {
         ALL_VALUES_TYPES.add(ValuesType.style)
     }
 
-    public ValuesReplace(srcFolderPath, resFolderPath) {
-        super(srcFolderPath, resFolderPath)
+    public ValuesReplace(srcFolderPath, resFolderPath, manifestFile) {
+        super(srcFolderPath, resFolderPath, manifestFile)
     }
 
     /**
