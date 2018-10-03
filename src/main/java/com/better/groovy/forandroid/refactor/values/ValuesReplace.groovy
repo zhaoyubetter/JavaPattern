@@ -18,41 +18,63 @@ import java.util.regex.Matcher
 class ValuesReplace extends BaseReplace {
 
     private def final DIR_FILTER = new Tools.DirNamePrefixFilter("values")
+    public static final Set<ValuesType> ALL_VALUES_TYPES
 
-    ValuesReplace(srcFolderPath, resFolderPath) {
+    static {
+        ALL_VALUES_TYPES = new LinkedHashSet<>()
+        ALL_VALUES_TYPES.add(ValuesType.string)
+        ALL_VALUES_TYPES.add(ValuesType.string_arrays)
+        ALL_VALUES_TYPES.add(ValuesType.color)
+        ALL_VALUES_TYPES.add(ValuesType.bool)
+        ALL_VALUES_TYPES.add(ValuesType.integer)
+        ALL_VALUES_TYPES.add(ValuesType.dimens)
+
+        // not support now
+        ALL_VALUES_TYPES.add(ValuesType.attr)
+        ALL_VALUES_TYPES.add(ValuesType.style)
+    }
+
+    public ValuesReplace(srcFolderPath, resFolderPath) {
         super(srcFolderPath, resFolderPath)
     }
 
     /**
      * values 类型
      */
-    enum ValuesType {
-        string("(<string\\s+name\\s*=\\s*\\\")(.+?)(\\\">)",
+    public static enum ValuesType {
+        /*
+         <string name="better_me_app_name京东ME</string>
+
+         <string name="better_me_app_name ">   京东ME</string>
+         <string name="better_me_app_name">京东ME</string>
+         */
+
+        string("(<string\\s+name\\s*=\\s*[\\\"'])(\\w+)(\\s*.*[\\\"']\\s*>)",
                 "(R(\\s*?)\\.(\\s*?)string(\\s*?)\\.(\\s*?))(\\w+)",
                 "(@string/)(\\w+)"
         ),
 
-        string_arrays("(<string-array\\s+name\\s*=\\s*\\\")(.+?)(\\\">)",
+        string_arrays("(<string-array\\s+name\\s*=\\s*[\\\"'])(\\w+)(\\s*.*[\\\"']\\s*>)",
                 "(R(\\s*?)\\.(\\s*?)array(\\s*?)\\.(\\s*?))(\\w+)",
                 "(<string-array\\s+name\\s*=\\s*\\\")(.+?)(\\\">)"
         ),
 
-        color("(<color\\s+name\\s*=\\s*\\\")(.+?)(\\\">)",
+        color("(<color\\s+name\\s*=\\s*[\\\"'])(\\w+)(\\s*.*[\\\"']\\s*>)",
                 "(R(\\s*?)\\.(\\s*?)color(\\s*?)\\.(\\s*?))(\\w+)",
                 "(@color/)(\\w+)"
         ),
 
-        dimens("(<dimen\\s+name\\s*=\\s*\\\")(.+?)(\\\">)",
+        dimens("(<dimen\\s+name\\s*=\\s*[\\\"'])(\\w+)(\\s*.*[\\\"']\\s*>)",
                 "(R(\\s*?)\\.(\\s*?)dimen(\\s*?)\\.(\\s*?))(\\w+)",
                 "(@dimen/)(\\w+)"
         ),
 
-        bool("(<bool\\s+name\\s*=\\s*\\\")(.+?)(\\\">)",
+        bool("(<bool\\s+name\\s*=\\s*[\\\"'])(\\w+)(\\s*.*[\\\"']\\s*>)",
                 "(R(\\s*?)\\.(\\s*?)bool(\\s*?)\\.(\\s*?))(\\w+)",
                 "(@bool/)(\\w+)"
         ),
 
-        integer("(<integer\\s+name\\s*=\\s*\\\")(.+?)(\\\">)",
+        integer("(<integer\\s+name\\s*=\\s*[\\\"'])(\\w+)(\\s*.*[\\\"']\\s*>)",
                 "(R(\\s*?)\\.(\\s*?)integer(\\s*?)\\.(\\s*?))(\\w+)",
                 "(@integer/)(\\w+)"
         ),
@@ -90,14 +112,14 @@ class ValuesReplace extends BaseReplace {
         }
     }
 
-    void replaceValues(Set<ValuesReplace> list) {
-        list.forEach {
+    void replaceValues(Set<ValuesType> set) {
+        set.forEach {
             switch (it) {
                 case ValuesType.string:
-                    replaceString(it)
+                    strings(it)
                     break
                 case ValuesType.string_arrays:
-                    replaceStringArray(it)
+                    arrays(it)
                     break
                 case ValuesType.color:
                     color(it)
@@ -111,20 +133,19 @@ class ValuesReplace extends BaseReplace {
                 case ValuesType.integer:
                     integer(it)
                     break
-                case ValuesType.style:
+                case ValuesType.style:      // need implement
                     style(it)
                     break
-                case ValuesType.attr:
+                case ValuesType.attr:       // need implement
                     attr(it)
                     break
-
             }
         }
     }
 
     // 字符串
-    private def replaceString(ValuesType valueType) {
-        println("------------ 处理 strings 资源")
+    private def strings(ValuesType valueType) {
+        println("------------ replace strings resource (处理strings资源)")
         def stringNameSet = getValueNameSet(valueType.xml_Regx)
         def java_regx = ~valueType.java_Regx
         def xml_regx = ~valueType.xml_Regx
@@ -132,14 +153,14 @@ class ValuesReplace extends BaseReplace {
         // 修改源码中的
         replaceSrcDir(srcDir, stringNameSet, java_regx)
         // 修改xml中的名称
-        replaceResDir(resDir, stringNameSet, xml_regx, null)
+        replaceResDir(resDir, stringNameSet, xml_regx, null,true)
         // 修改xml中的引用
         replaceResDir(resDir, stringNameSet, xml_ref_regx, null)
     }
 
     // string-array
-    private def replaceStringArray(ValuesType valueType) {
-        println("------------ 处理 string-array 资源")
+    private def arrays(ValuesType valueType) {
+        println("------------ replace string-array resource (处理 string-array 资源)")
         def nameSet = getValueNameSet(valueType.xml_Regx)
         def java_regx = ~valueType.java_Regx
         def xml_regx = ~valueType.xml_Regx
@@ -148,12 +169,12 @@ class ValuesReplace extends BaseReplace {
         // 修改源码中的
         replaceSrcDir(srcDir, nameSet, java_regx)
         // 修改xml中的名称
-        replaceResDir(resDir, nameSet, xml_regx, null)
+        replaceResDir(resDir, nameSet, xml_regx, null, true)
     }
 
     // color
     private def color(ValuesType valueType) {
-        println("------------ 处理 color 资源")
+        println("------------ replace color resource (处理 color 资源)")
         def nameSet = getValueNameSet(valueType.xml_Regx)
         def java_regx = ~valueType.java_Regx
         def xml_regx = ~valueType.xml_Regx
@@ -161,14 +182,14 @@ class ValuesReplace extends BaseReplace {
 
         replaceSrcDir(srcDir, nameSet, java_regx)
         // 修改xml中的名称
-        replaceResDir(resDir, nameSet, xml_regx, null)
+        replaceResDir(resDir, nameSet, xml_regx, null, true)
         // 修改xml中的引用
         replaceResDir(resDir, nameSet, xml_ref_regx, null)
     }
 
     // dimens
     private def dimens(ValuesType valueType) {
-        println("------------ 处理 dimens 资源")
+        println("------------ replace dimens resource (处理 dimens 资源")
         def nameSet = getValueNameSet(valueType.xml_Regx)
         def java_regx = ~valueType.java_Regx
         def xml_regx = ~valueType.xml_Regx
@@ -176,14 +197,14 @@ class ValuesReplace extends BaseReplace {
 
         replaceSrcDir(srcDir, nameSet, java_regx)
         // 修改xml中的名称
-        replaceResDir(resDir, nameSet, xml_regx, null)
+        replaceResDir(resDir, nameSet, xml_regx, null, true)
         // 修改xml中的引用
         replaceResDir(resDir, nameSet, xml_ref_regx, null)
     }
 
     // bool
     private def bool(ValuesType valueType) {
-        println("------------ 处理 bool 资源")
+        println("------------ replace bool resource (处理 bool 资源)")
 
         def nameSet = getValueNameSet(valueType.xml_Regx)
         def java_regx = ~valueType.java_Regx
@@ -192,14 +213,14 @@ class ValuesReplace extends BaseReplace {
 
         replaceSrcDir(srcDir, nameSet, java_regx)
         // 修改xml中的名称
-        replaceResDir(resDir, nameSet, xml_regx, null)
+        replaceResDir(resDir, nameSet, xml_regx, null, true)
         // 修改xml中的引用
         replaceResDir(resDir, nameSet, xml_ref_regx, null)
     }
 
     // integer
     private def integer(ValuesType valueType) {
-        println("------------ 处理 bool 资源")
+        println("------------ replace integer resource (处理 integer 资源)")
 
         def nameSet = getValueNameSet(valueType.xml_Regx)
         def java_regx = ~valueType.java_Regx
@@ -208,19 +229,19 @@ class ValuesReplace extends BaseReplace {
 
         replaceSrcDir(srcDir, nameSet, java_regx)
         // 修改xml中的名称
-        replaceResDir(resDir, nameSet, xml_regx, null)
+        replaceResDir(resDir, nameSet, xml_regx, null, true)
         // 修改xml中的引用
         replaceResDir(resDir, nameSet, xml_ref_regx, null)
     }
 
     private def style(ValuesType valueType) {
-        println("------------ 处理 style 资源")
-        println("----> style 暂没有实现")
+        // println("------------ 处理 style 资源")
+        println("----> sorry style replace is not implement now ( 暂没有实现)")
     }
 
     private def attr(ValuesType valueType) {
-        println("------------ 处理 attr 资源")
-        println("----> attr 暂没有实现")
+        // println("------------ 处理 attr 资源")
+        println("----> sorry attr  replace is not implements now (暂没有实现)")
     }
 
     // ==========================================================

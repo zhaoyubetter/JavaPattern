@@ -14,9 +14,15 @@ abstract class BaseReplace {
      */
     protected File resDir
 
-    BaseReplace(srcFolderPath, resFolderPath) {
+    /**
+     * AndroidManifest
+     */
+    protected File manifestFile
+
+    BaseReplace(srcFolderPath, resFolderPath, manifestFile) {
         this.srcDir = new File(srcFolderPath)
         this.resDir = new File(resFolderPath)
+        this.manifestFile = new File(manifestFile)
     }
 
     // ====== 源代码中的部分  start =============================================
@@ -31,7 +37,7 @@ abstract class BaseReplace {
             if (file.isDirectory()) {
                 file.eachFile { it -> replaceSrcDir(it, set, java_regx) }
             } else {
-                if (file.name.endsWith(".java") || file.name.endsWith(".kt")) {  // 只处理Java与Kt文件
+                if (file.name.endsWith(".java") || file.name.endsWith(".kt")) {  // only .java or .kt files
                     handleSrcFile(file, set, java_regx)
                 }
             }
@@ -39,11 +45,11 @@ abstract class BaseReplace {
     }
 
     private void handleSrcFile(File file, Set<String> set, regex) {
-        String fileContent = file.getText()              // 文件都是文本文件
-        StringBuffer sb = new StringBuffer()             // 结果内容
+        String fileContent = file.getText()              // every file is a text file
+        StringBuffer sb = new StringBuffer()             // result content
         Matcher matcher = fileContent =~ regex
         while (matcher.find()) {
-            String oldResName = matcher.group(6)   // 获取原有名称
+            String oldResName = matcher.group(6)   // the old res name
             if (set.contains(oldResName)) {               // 本模块中包含的资源名，才替换
                 String newResName = Config.NEW_PREFIX + oldResName
                 if (oldResName.startsWith(Config.OLD_PREFIX)) {     // 替换掉旧的前缀
@@ -64,7 +70,16 @@ abstract class BaseReplace {
 
     // ====== 资源文件部分公用方法  start =====================
     // def xml_regx = ~/(@XXX\/)(w+)"/      xxx 表示各种资源，如：layout、drawable 等
-    protected void handleResFile(File file, Set<String> set, regex) {
+    /**
+     * 操作资源
+     * @param file
+     * @param set
+     * @param regex
+     * @param valuesType 是否是 values 类型资源（values-xx, values-en这种）
+     *        values 类型资源时，需要保留 $3 分组
+     * @return
+     */
+    def  handleResFile(File file, Set<String> set, regex,valuesType = false) {
         boolean hasUpdate = false                 // 是否有修改
         StringBuilder sb = new StringBuilder()    // 文件内容
         file.each { line ->
@@ -77,7 +92,12 @@ abstract class BaseReplace {
                     if (oldResName.startsWith(Config.OLD_PREFIX)) {
                         newResName = Config.NEW_PREFIX + oldResName.substring(Config.OLD_PREFIX.length())
                     }
-                    matcher.appendReplacement(tSb, "\$1$newResName") // 拼接 保留$1分组,替换组2
+
+                    if(valuesType) {
+                        matcher.appendReplacement(tSb, "\$1$newResName\$3") // 拼接 保留$1分组,替换组2,保留组3
+                    } else {
+                        matcher.appendReplacement(tSb, "\$1$newResName") // 拼接 保留$1分组,替换组2
+                    }
                 } else {
                     matcher.find()                          // 继续下一次查找，避免死循环
                 }
@@ -99,20 +119,21 @@ abstract class BaseReplace {
     // ====== 资源文件部分公用方法  end =====================
 
     /**
-     *  文件中的资源重命名
+     *  res目录下的资源 - 替换名称
      * @param file
      * @param set
      * @param regx
      * @param dir_filter null no filter
+     * @param valuesType 是否是 values 文件夹 类型(如：values，values-en)
      */
-    protected def replaceResDir(File file, Set<String> set, regx, dir_filter) {
-        // 只处理 layout 开头的文件名
-        File[] dirs = file.listFiles(dir_filter)
-        // 遍历
+    protected def replaceResDir(File file, Set<String> set, regx, dir_filter, valuesType = false) {
+        File[] dirs = file.listFiles(dir_filter as FilenameFilter)
         dirs?.each { dir ->
-            dir.eachFile { it ->
-                if (it.name.endsWith(".xml")) {     // 只处理xml文件
-                    handleResFile(it, set, regx)
+            if (dir != null && dir.isDirectory()) {
+                dir.eachFile { it ->
+                    if (it.name.endsWith(".xml")) {     // 只在xml有引用
+                        handleResFile(it, set, regx, valuesType)
+                    }
                 }
             }
         }

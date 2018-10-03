@@ -48,20 +48,21 @@ public class LayoutReplace extends BaseFolderResReplace {
 
     @Override
     void replaceSrc(Set<String> resNameSet, java_regx) throws IOException {
-        println("---------- layout ----- 替换源代码目录开始")
+        println("---------- layout ----- replace source folder start...")
         replaceSrcDir(srcDir, resNameSet, java_regx)
-        println("---------- layout ----- 替换源代码目录结束")
+        println("---------- layout ----- replace source folder end")
     }
 
     @Override
     void replaceRes(Set<String> resNameSet, xml_regx) throws IOException {
-        println("---------- layout ----- 替换资源目录开始")
+        println("---------- layout ----- replace res folder start...")
+        // 1.替换文件内容，经验证，xml文件夹的小部分布局，可能引用到了layout文件，所以filter 传 null
+        replaceResDir(resDir, resNameSet, xml_regx, null)
+        println("---------- layout ----- replace res folder end")
 
-        // 1.替换文件内容
-        replaceResDir(resDir, resNameSet, xml_regx, DIR_FILTER)
         // 2.修改文件名
-        renameFile(resDir, DIR_FILTER, RES_TYPE_NAME)
-
-        println("---------- layout ----- 替换资源目录结束")
+        println("---------- layout ----- rename start...")
+        renameFile(resDir, resNameSet, DIR_FILTER, RES_TYPE_NAME)
+        println("---------- layout ----- rename end")
     }
 }

@@ -40,8 +40,13 @@ class RawReplace extends BaseFolderResReplace {
         // 2.获取drawable名字并存储
         dirs?.each { dir ->
             dir.eachFile { it ->
-                String fileName = it.name.substring(0, it.name.lastIndexOf("."))
-                resNameSet.add(fileName)
+                //  may be no file suffixes
+                if(it.name.lastIndexOf('.') > -1) {
+                    String fileName = it.name.substring(0, it.name.lastIndexOf("."))
+                    resNameSet.add(fileName)
+                } else {
+                    resNameSet.add(it.name)
+                }
             }
         }
         return resNameSet
@@ -49,20 +54,20 @@ class RawReplace extends BaseFolderResReplace {
 
     @Override
     void replaceSrc(Set<String> resNameSet, Object java_regx) throws IOException {
-        println("---------- $RES_TYPE_NAME ----- 替换源代码目录开始")
+        println("---------- $RES_TYPE_NAME ----- replace source folder start...")
         replaceSrcDir(srcDir, resNameSet, java_regx)
-        println("---------- $RES_TYPE_NAME ----- 替换源代码目录结束")
+        println("---------- $RES_TYPE_NAME ----- replace source folder end")
     }
 
     @Override
     void replaceRes(Set<String> resNameSet, Object xml_regx) throws IOException {
-        println("---------- $RES_TYPE_NAME ----- 替换资源目录开始")
-        println("---------- $RES_TYPE_NAME ----- 暂时不需要替换资源目录，如有需要，修改这个方法即可")
         // 1.替换文件内容
+        println("---------- $RES_TYPE_NAME ----- $RES_TYPE_NAME not used in the res folder now, so replace res not implemented.")
+
 
         // 2.修改文件名
-        renameFile(resDir, DIR_FILTER, RES_TYPE_NAME)
-
-        println("---------- $RES_TYPE_NAME ----- 替换资源目录结束")
+        println("---------- $RES_TYPE_NAME ----- rename start...")
+        renameFile(resDir, resNameSet, DIR_FILTER, RES_TYPE_NAME)
+        println("---------- $RES_TYPE_NAME ----- rename end")
     }
 }

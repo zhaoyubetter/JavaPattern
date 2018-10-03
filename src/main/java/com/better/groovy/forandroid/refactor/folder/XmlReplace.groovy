@@ -49,20 +49,22 @@ class XmlReplace extends BaseFolderResReplace {
 
     @Override
     void replaceSrc(Set<String> resNameSet, Object java_regx) throws IOException {
-        println("---------- $RES_TYPE_NAME ----- 替换源代码目录开始")
+        println("---------- $RES_TYPE_NAME ----- replace source folder start...")
         replaceSrcDir(srcDir, resNameSet, java_regx)
-        println("---------- $RES_TYPE_NAME ----- 替换源代码目录结束")
+        println("---------- $RES_TYPE_NAME ----- replace source folder end")
     }
 
     @Override
     void replaceRes(Set<String> resNameSet, Object xml_regx) throws IOException {
-        println("---------- $RES_TYPE_NAME ----- 替换资源目录开始")
-        println("---------- $RES_TYPE_NAME ----- 暂时不需要替换资源目录，如有需要，修改这个方法即可")
         // 1.替换文件内容
+        println("---------- $RES_TYPE_NAME ----- replace res folder start...")
+        replaceResDir(resDir, resNameSet, xml_regx, DIR_FILTER)     // only replace xml folder
+        println("---------- $RES_TYPE_NAME ----- replace res folder end")
+
 
         // 2.修改文件名
-        renameFile(resDir, DIR_FILTER, RES_TYPE_NAME)
-
-        println("---------- $RES_TYPE_NAME ----- 替换资源目录结束")
+        println("---------- $RES_TYPE_NAME ----- rename start...")
+        renameFile(resDir, resNameSet, DIR_FILTER, RES_TYPE_NAME)
+        println("---------- $RES_TYPE_NAME ----- rename end")
     }
 }
