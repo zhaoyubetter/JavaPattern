@@ -61,7 +61,7 @@ class ResReName {
 
     // 新资源前缀
     def static final NEW_FREFIX = "mae_"
-    // 老的资源前缀，可以保持空字符串(如：R.layout.jdme_layout_aa 会被替换成 R.layout.mae_layout_aa)
+    // 老的资源前缀，可以保持空字符串(如：R.layout.layout_aa 会被替换成 R.layout.mae_layout_aa)
     def static final OLD_FREFIX = ""
 
     // 源代码路径
