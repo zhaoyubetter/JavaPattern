@@ -1,5 +1,6 @@
 package com.better.groovy.forandroid.refactor.folder
 
+import com.better.groovy.forandroid.refactor.ResToolsConfig
 import com.better.groovy.forandroid.refactor.Tools
 import com.better.groovy.forandroid.refactor.base.BaseFolderResReplace
 
@@ -11,8 +12,8 @@ class AnimReplace extends BaseFolderResReplace {
     private def final DIR_FILTER = new Tools.DirNamePrefixFilter("anim")
     private def final RES_TYPE_NAME = "anim"
 
-    AnimReplace(srcFolderPath, resFolderPath, manifestFile) {
-        super(srcFolderPath, resFolderPath, manifestFile)
+    AnimReplace(ResToolsConfig config) {
+        super(config)
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.better.groovy.forandroid.refactor.values
 
+import com.better.groovy.forandroid.refactor.ResToolsConfig
 import com.better.groovy.forandroid.refactor.Tools
 import com.better.groovy.forandroid.refactor.base.BaseReplace
 
@@ -34,8 +35,8 @@ class ValuesReplace extends BaseReplace {
         ALL_VALUES_TYPES.add(ValuesType.style)
     }
 
-    public ValuesReplace(srcFolderPath, resFolderPath, manifestFile) {
-        super(srcFolderPath, resFolderPath, manifestFile)
+    public ValuesReplace(ResToolsConfig config) {
+        super(config)
     }
 
     /**
@@ -153,7 +154,7 @@ class ValuesReplace extends BaseReplace {
         // 修改源码中的
         replaceSrcDir(srcDir, stringNameSet, java_regx)
         // 修改xml中的名称
-        replaceResDir(resDir, stringNameSet, xml_regx, null,true)
+        replaceResDir(resDir, stringNameSet, xml_regx, null, true)
         // 修改xml中的引用
         replaceResDir(resDir, stringNameSet, xml_ref_regx, null)
     }

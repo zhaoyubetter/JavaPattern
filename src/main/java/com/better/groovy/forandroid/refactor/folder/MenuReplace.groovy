@@ -1,7 +1,7 @@
 package com.better.groovy.forandroid.refactor.folder
 
+import com.better.groovy.forandroid.refactor.ResToolsConfig
 import com.better.groovy.forandroid.refactor.Tools
-import com.better.groovy.forandroid.refactor.Config
 import com.better.groovy.forandroid.refactor.base.BaseFolderResReplace
 
 /**
@@ -13,8 +13,8 @@ class MenuReplace extends BaseFolderResReplace {
     private def final DIR_FILTER = new Tools.DirNamePrefixFilter("menu")
     private def final RES_TYPE_NAME = "menu"
 
-    MenuReplace(srcFolderPath, resFolderPath, manifestFile) {
-        super(srcFolderPath, resFolderPath, manifestFile)
+    MenuReplace(ResToolsConfig config) {
+        super(config)
     }
 
     @Override

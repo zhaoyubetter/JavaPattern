@@ -1,7 +1,7 @@
 package com.better.groovy.forandroid.refactor.folder
 
+import com.better.groovy.forandroid.refactor.ResToolsConfig
 import com.better.groovy.forandroid.refactor.Tools
-import com.better.groovy.forandroid.refactor.Config
 import com.better.groovy.forandroid.refactor.base.BaseFolderResReplace
 
 /**
@@ -13,10 +13,9 @@ class XmlReplace extends BaseFolderResReplace {
     private def final DIR_FILTER = new Tools.DirNamePrefixFilter("xml")
     private def final RES_TYPE_NAME = "xml"
 
-    XmlReplace(srcFolderPath, resFolderPath, manifestFile) {
-        super(srcFolderPath, resFolderPath, manifestFile)
+    XmlReplace(ResToolsConfig config) {
+        super(config)
     }
-
     @Override
     String getResTypeName() {
         return RES_TYPE_NAME

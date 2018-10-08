@@ -1,7 +1,7 @@
 package com.better.groovy.forandroid.refactor.folder
 
+import com.better.groovy.forandroid.refactor.ResToolsConfig
 import com.better.groovy.forandroid.refactor.Tools
-import com.better.groovy.forandroid.refactor.Config
 import com.better.groovy.forandroid.refactor.base.BaseFolderResReplace
 
 /**
@@ -12,8 +12,8 @@ class ColorReplace extends BaseFolderResReplace {
     private def final DIR_FILTER = new Tools.DirNamePrefixFilter("color")
     private def final RES_TYPE_NAME = "color"
 
-    ColorReplace(srcFolderPath, resFolderPath, manifestFile) {
-        super(srcFolderPath, resFolderPath, manifestFile)
+    ColorReplace(ResToolsConfig config) {
+        super(config)
     }
 
     @Override

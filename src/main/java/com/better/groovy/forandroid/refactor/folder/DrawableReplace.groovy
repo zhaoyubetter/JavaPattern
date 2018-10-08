@@ -1,7 +1,7 @@
 package com.better.groovy.forandroid.refactor.folder
 
+import com.better.groovy.forandroid.refactor.ResToolsConfig
 import com.better.groovy.forandroid.refactor.Tools
-import com.better.groovy.forandroid.refactor.Config
 import com.better.groovy.forandroid.refactor.base.BaseFolderResReplace
 
 /**
@@ -12,8 +12,8 @@ class DrawableReplace extends BaseFolderResReplace {
     private def final static DIR_FILTER = new Tools.DirNamePrefixFilter("drawable")
     private def final static RES_TYPE_NAME = "drawable"
 
-    DrawableReplace(srcFolderPath, resFolderPath, manifestFile) {
-        super(srcFolderPath, resFolderPath, manifestFile)
+    DrawableReplace(ResToolsConfig config) {
+        super(config)
     }
 
     @Override

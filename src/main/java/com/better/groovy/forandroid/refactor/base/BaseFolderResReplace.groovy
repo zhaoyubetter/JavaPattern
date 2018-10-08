@@ -1,6 +1,6 @@
 package com.better.groovy.forandroid.refactor.base
 
-import com.better.groovy.forandroid.refactor.Config
+import com.better.groovy.forandroid.refactor.ResToolsConfig
 
 /**
  * 资源Base
@@ -8,8 +8,8 @@ import com.better.groovy.forandroid.refactor.Config
  */
 abstract class BaseFolderResReplace extends BaseReplace {
 
-    BaseFolderResReplace(srcFolderPath, resFolderPath, manifestFile) {
-        super(srcFolderPath, resFolderPath, manifestFile)
+    BaseFolderResReplace(ResToolsConfig config) {
+        super(config)
     }
 
     /**
@@ -84,9 +84,9 @@ abstract class BaseFolderResReplace extends BaseReplace {
                 // 只替换指定的资源
                 if (resNameSet.contains(fileName)) {
                     String oldName = it.name
-                    String newName = Config.NEW_PREFIX + oldName
-                    if (oldName.startsWith(Config.OLD_PREFIX)) {
-                        newName = Config.NEW_PREFIX + oldName.substring(Config.OLD_PREFIX.length())
+                    String newName = config.new_prefix + oldName
+                    if (oldName.startsWith(config.old_prefix)) {
+                        newName = config.new_prefix + oldName.substring(config.old_prefix.length())
                     }
 
                     File newFile = new File(it.getParent(), newName)

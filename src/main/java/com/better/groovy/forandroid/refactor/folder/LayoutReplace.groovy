@@ -1,5 +1,6 @@
 package com.better.groovy.forandroid.refactor.folder
 
+import com.better.groovy.forandroid.refactor.ResToolsConfig
 import com.better.groovy.forandroid.refactor.Tools
 import com.better.groovy.forandroid.refactor.base.BaseFolderResReplace
 
@@ -11,8 +12,8 @@ public class LayoutReplace extends BaseFolderResReplace {
     private def final DIR_FILTER = new Tools.DirNamePrefixFilter("layout")
     private def final RES_TYPE_NAME = "layout"
 
-    LayoutReplace(srcFolderPath, resFolderPath, manifestFile) {
-        super(srcFolderPath, resFolderPath, manifestFile)
+    LayoutReplace(ResToolsConfig config) {
+        super(config)
     }
 
     @Override

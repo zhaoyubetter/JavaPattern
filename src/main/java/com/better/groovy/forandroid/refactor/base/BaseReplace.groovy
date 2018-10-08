@@ -1,6 +1,6 @@
 package com.better.groovy.forandroid.refactor.base
 
-import com.better.groovy.forandroid.refactor.Config
+import com.better.groovy.forandroid.refactor.ResToolsConfig
 
 import java.util.regex.Matcher
 
@@ -19,10 +19,13 @@ abstract class BaseReplace {
      */
     protected File manifestFile
 
-    BaseReplace(srcFolderPath, resFolderPath, manifestFile) {
-        this.srcDir = new File(srcFolderPath)
-        this.resDir = new File(resFolderPath)
-        this.manifestFile = new File(manifestFile)
+    protected ResToolsConfig config
+
+    BaseReplace(ResToolsConfig config) {
+        this.config = config
+        this.srcDir = new File(config.srcFolderPath)
+        this.resDir = new File(config.resFolderPath)
+        this.manifestFile = new File(config.manifestFilePath)
     }
 
     // ====== 源代码中的部分  start =============================================
@@ -51,9 +54,9 @@ abstract class BaseReplace {
         while (matcher.find()) {
             String oldResName = matcher.group(6)   // the old res name
             if (set.contains(oldResName)) {               // 本模块中包含的资源名，才替换
-                String newResName = Config.NEW_PREFIX + oldResName
-                if (oldResName.startsWith(Config.OLD_PREFIX)) {     // 替换掉旧的前缀
-                    newResName = Config.NEW_PREFIX + oldResName.substring(Config.OLD_PREFIX.length())
+                String newResName = config.new_prefix + oldResName
+                if (oldResName.startsWith(config.old_prefix)) {     // 替换掉旧的前缀
+                    newResName = config.new_prefix + oldResName.substring(config.old_prefix.length())
                 }
                 matcher.appendReplacement(sb, "\$1$newResName") // 拼接 保留$1分组,替换$6分组
             } else {
@@ -79,7 +82,7 @@ abstract class BaseReplace {
      *        values 类型资源时，需要保留 $3 分组
      * @return
      */
-    def  handleResFile(File file, Set<String> set, regex,valuesType = false) {
+    def handleResFile(File file, Set<String> set, regex, valuesType = false) {
         boolean hasUpdate = false                 // 是否有修改
         StringBuilder sb = new StringBuilder()    // 文件内容
         file.each { line ->
@@ -88,12 +91,12 @@ abstract class BaseReplace {
             while (matcher.find()) {
                 String oldResName = matcher.group(2)
                 if (set.contains(oldResName)) {
-                    String newResName = Config.NEW_PREFIX + oldResName
-                    if (oldResName.startsWith(Config.OLD_PREFIX)) {
-                        newResName = Config.NEW_PREFIX + oldResName.substring(Config.OLD_PREFIX.length())
+                    String newResName = config.new_prefix + oldResName
+                    if (oldResName.startsWith(config.old_prefix)) {
+                        newResName = config.new_prefix + oldResName.substring(config.old_prefix.length())
                     }
 
-                    if(valuesType) {
+                    if (valuesType) {
                         matcher.appendReplacement(tSb, "\$1$newResName\$3") // 拼接 保留$1分组,替换组2,保留组3
                     } else {
                         matcher.appendReplacement(tSb, "\$1$newResName") // 拼接 保留$1分组,替换组2
@@ -139,7 +142,7 @@ abstract class BaseReplace {
         }
 
         // 清单文件 manifest file
-        if(manifestFile != null) {
+        if (manifestFile != null) {
             handleResFile(manifestFile, set, regx)
         }
     }
