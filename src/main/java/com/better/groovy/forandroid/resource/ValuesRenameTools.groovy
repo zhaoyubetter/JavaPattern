@@ -50,8 +50,6 @@ final class ValuesRenameTools {
                         newResName = ResReName.NEW_FREFIX + oldResName.substring(ResReName.OLD_FREFIX.length())
                     }
                     matcher.appendReplacement(tSb, "\$1$newResName\$3") // 拼接 保留$1$3分组,替换组2
-                } else {
-                    matcher.find()               // 继续下一次查找，避免死循环
                 }
             }
             if (tSb.length() > 0) {              // 如果包含了，则重新赋值line，并拼接余下部分
@@ -88,8 +86,6 @@ final class ValuesRenameTools {
                         newResName = ResReName.NEW_FREFIX + oldResName.substring(ResReName.OLD_FREFIX.length())
                     }
                     matcher.appendReplacement(tSb, "\$1$newResName\$3") // 拼接 保留$1$3分组,替换组2
-                } else {
-                    matcher.find()               // 继续下一次查找，避免死循环
                 }
             }
             if (tSb.length() > 0) {              // 如果包含了，则重新赋值line，并拼接余下部分

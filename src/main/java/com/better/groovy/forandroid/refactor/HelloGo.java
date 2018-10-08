@@ -14,22 +14,25 @@ import java.util.regex.Pattern;
 public class HelloGo {
 
     public static void main(String[] args) throws IOException {
-        String sourcePath = "/Users/zhaoyu1/Documents/app名称/app/src/main/java";
-        String resPath = "//Users/zhaoyu1/Documents/app名称/app/src/main/res";
-        String manifestFilePath = "/Users/zhaoyu1/Documents/app名称/app/src/main/AndroidManifest.xml";
+        String sourcePath = "/Users/zhaoyu1/Documents/github/AndroidResourceTools/app/src/main/java";
+        String resPath = "/Users/zhaoyu1/Documents/github/AndroidResourceTools/app/src/main/res";
+        String manifestFilePath = "/Users/zhaoyu1/Documents/github/AndroidResourceTools/app/src/main/AndroidManifest.xml";
 
-        final ResToolsConfig config = new ResToolsConfig("better_", "", sourcePath, resPath, manifestFilePath);
+        final ResToolsConfig config = new ResToolsConfig("app_main_", "better_", sourcePath, resPath, manifestFilePath);
+
+
 
 //        // 1.test layout
         LayoutReplace layoutReplace = new LayoutReplace(config);
         layoutReplace.replaceThis();
-//
-//        // 2.test drawable
+
+        // 2.test drawable
         DrawableReplace drawableReplace = new DrawableReplace(config);
         drawableReplace.replaceThis();
 //
 //
 //        // 3. test color
+
         ColorReplace colorReplace = new ColorReplace(config);
         colorReplace.replaceThis();
 //
@@ -62,25 +65,41 @@ public class HelloGo {
         valuesReplace.replaceValues(ValuesReplace.ALL_VALUES_TYPES);
 
 
-        testString();
+//        testString();
 
     }
 
 
     private static void testString() {
-//        String str = "<string name=\"me_didi_car_searching\" translatable=\"false\" formatted=\"true\"> 正在为您寻找车辆</string>";
-////        String str = "<string name=\"me_didi_car_searching\"> 正在为您寻找车辆</string>";
-//        String regex ="(<string\\s+name\\s*=\\s*[\\\"'])(\\w+)(\\s*.*[\\\"']\\s*>)";
-//
-//        Pattern pattern = Pattern.compile(regex);
-//        Matcher matcher = pattern.matcher(str);
-//        while(matcher.find()) {
-//
-//            System.out.println(matcher.group(1));
-//            System.out.println(matcher.group(2));
-//            System.out.println(matcher.group(3));
-//        }
+        String str = " import android.support.v7.app.AppCompatActivity\n" +
+                "import android.os.Bundle\n" +
+                "import kotlinx.android.synthetic.main.better_activity_main.*";
 
+        HashSet<String> set = new HashSet<>();
+        handleSrcFile(str, set, "(main\\.)(\\w+)(\\.)");
+    }
 
+    private static void handleSrcFile(String text, Set<String> set, String regex) {
+        String fileContent = text;                      // every file is a text file
+        StringBuffer sb = new StringBuffer();            // result content
+
+        Pattern p = Pattern.compile(regex);
+        Matcher matcher = p.matcher(fileContent);
+        while (matcher.find()) {
+            String oldResName = matcher.group(2);          // the old res name
+            System.out.println(oldResName);
+            String newResName = "aaa" + oldResName;
+//            if(1==1) {
+//                matcher.appendReplacement(sb, "\\$1" + newResName); // 拼接 保留$1分组,替换$6分组
+//            } else {
+//                matcher.find();
+//            }
+
+        }
+        // 修改了文件时，才写入文件
+        if (sb.length() > 0) {
+            matcher.appendTail(sb);              // 添加结尾
+            System.out.println(sb);
+        }
     }
 }
