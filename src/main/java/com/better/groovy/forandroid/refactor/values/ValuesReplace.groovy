@@ -43,10 +43,10 @@ class ValuesReplace extends BaseReplace {
      */
     public static enum ValuesType {
         /*
-         <string name="better_me_app_name京东ME</string>
+         <string name="better_me_app_name>appName</string>
 
-         <string name="better_me_app_name ">   京东ME</string>
-         <string name="better_me_app_name">京东ME</string>
+         <string name="better_me_app_name ">   appName</string>
+         <string name="better_me_app_name">appName</string>
          */
 
         string("(<string\\s+name\\s*=\\s*[\\\"'])(\\w+)(\\s*.*[\\\"']\\s*>)",
