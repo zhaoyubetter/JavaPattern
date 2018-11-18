@@ -11,7 +11,8 @@ public class ScannerTest {
 //        test1();
 //        test2();
 //        test3();
-        test4_re();
+//        test4_re();
+        test5();
     }
 
     private static void test1() {
@@ -45,6 +46,17 @@ public class ScannerTest {
     private static void test4_re() {
         Scanner sc = new Scanner("1 fish 2 fish red fish blue fish");
         sc.useDelimiter("\\s*fish\\s*");  // use a
+        while (sc.hasNext()) {
+            System.out.println("hasNext()判断为true,我还有下一个：");
+            System.out.println("下一个输出是：" + sc.next());      // 1,2,red,blue
+        }
+    }
+
+    private static void test5() {
+        Scanner sc = new Scanner("public class RouterBuildInfo {\n" +
+                "    public static final String ALL_MODULES = \"%ALL_MODULES%\";\n" +
+                "}");
+        sc.useDelimiter("\\A");  // use a
         while (sc.hasNext()) {
             System.out.println("hasNext()判断为true,我还有下一个：");
             System.out.println("下一个输出是：" + sc.next());      // 1,2,red,blue
