@@ -65,7 +65,6 @@ fun test2(currentMoney: Int, result: ArrayList<Int>) {
  为给定的整数 n，找到所有可能的分解（1 在解中最多只能出现 1 次）。
  例如，输入 8，输出是可以是 1x8, 8x1, 2x4, 4x2, 1x2x2x2, 1x2x4, ……
 
- TODO: 失败的算法
  使用乘法
  */
 fun test3(num: Int, result: ArrayList<Int>) {
