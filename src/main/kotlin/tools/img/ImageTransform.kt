@@ -1,37 +1,55 @@
 package tools.img
 
+import tools.img.log.DefaultLog
 import java.io.File
-
-sealed class ImageFormat {
-    object Jpeg : ImageFormat()
-    class Png(val hasAlpha: Boolean) : ImageFormat()
-    class Webp() : ImageFormat()
-}
-
-data class ImageInfo(val filePath: String, val oldSize: Long,
-                     val format: ImageFormat, var tranSize: Int = 0)
+import java.util.*
 
 /**
- * 图片转换
+ * abstract class
  */
-fun main(args: Array<String>) {
+abstract class ImageTransform {
 
-}
+    protected val log = DefaultLog()
 
-fun getImageList() {
-    val path = "/img/"
-    val imgDir = ImageInfo::class.java.getResource(path).path
-    val dir = File(imgDir)
-    if (dir.exists()) {
-        val imgs = dir.listFiles().filter { it.name.endsWith(".jpg") }
-                .map {
-                    ImageInfo(it.path, it.totalSpace, ImageFormat.Jpeg)
-                }.toList()
+    /**
+     * Transform image use specify path
+     * @param path
+     * @param suffixs suffix 扩展名
+     * @param excludeSuffixs
+     */
+    fun transform(path: String, suffixs: Array<String>, excludeSuffixs: Array<String>? = null) {
+        val list = getImageInfoList(path, suffixs, excludeSuffixs)
+        if (!list.isEmpty()) {
+            list.forEach { transformOne(it) }
+        }
     }
-}
 
-fun transform(imgList: List<ImageInfo>) {
+    /**
+     * Get all imageInfo
+     * @param path
+     * @param suffix suffix 扩展名
+     * @param excludeSuffix
+     */
+    open fun getImageInfoList(path: String, suffixs: Array<String>, excludeSuffixs: Array<String>? = null): List<ImageInfo> {
+        val dir = File(path)
+        if (dir.exists()) {
+            var list = dir.listFiles { file ->
+                suffixs.any { file.name.endsWith(it) }
+            }.toList()
+            excludeSuffixs?.apply {
+                list = list.filterNot { file ->
+                    this.any { file.name.endsWith(it) }
+                }
+            }
+            return list.map {
+                ImageInfo(it.name, it.path, it.length(), ImageFormat.Unkown)
+            }.sortedBy { it.name }
+        }
 
+        return Collections.emptyList()
+    }
+
+    abstract fun transformOne(imageInfo: ImageInfo)
 }
 
 

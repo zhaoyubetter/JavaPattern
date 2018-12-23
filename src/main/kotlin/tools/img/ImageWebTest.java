@@ -26,7 +26,6 @@ public class ImageWebTest {
     // base encoding
     private static void encoding() throws IOException {
         // 默认无损压缩 压缩度：0.75
-
         // Obtain an image to encode from somewhere
         BufferedImage image = ImageIO.read(new File("/Users/zhaoyu1/1webpTest/idea_remote_debug_tiny.png"));
         // Encode it as webp using default settings
