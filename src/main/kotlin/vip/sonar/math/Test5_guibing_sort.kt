@@ -31,6 +31,7 @@ private fun merge(left: Array<Int>, right: Array<Int>): Array<Int> {
     var l = 0
     var r = 0
 
+
     while (l < left.size && r < right.size) {
         if (left[l] < right[r]) {
             result[index] = left[l]
