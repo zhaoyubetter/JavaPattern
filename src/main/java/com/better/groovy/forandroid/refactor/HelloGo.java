@@ -80,7 +80,7 @@ public class HelloGo {
     }
 
     private static void handleSrcFile(String text, Set<String> set, String regex) {
-        String fileContent = text;                      // every file is a text file
+        String fileContent = text;                      // every extend is a text extend
         StringBuffer sb = new StringBuffer();            // result content
 
         Pattern p = Pattern.compile(regex);

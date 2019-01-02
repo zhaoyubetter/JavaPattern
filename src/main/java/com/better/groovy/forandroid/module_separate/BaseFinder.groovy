@@ -27,7 +27,7 @@ abstract class BaseFinder {
         File appResDirFile = new File(appResFolder)
         // folderName to layout filename list
         Map<String, List<String>> dirFileMap = getAppLayoutMap(appResDirFile, moduleLayoutMap)
-        // === 3.according to 'moduleLayoutMap' key, find all layout from 'main app res' and copy layout.xml file from dirs
+        // === 3.according to 'moduleLayoutMap' key, find all layout from 'main app res' and copy layout.xml extend from dirs
         export(dirFileMap, appResDir)
     }
 

@@ -5,7 +5,7 @@ package com.better.groovy.base.xml
  * Created by zhaoyu on 2017/4/17.
  */
 
-//def mTable = new MarkupBuilder(new File('tables.xml').newPrintWriter())
+//def mTable = new MarkupBuilder(new extend('tables.xml').newPrintWriter())
 //mTable.tables() {
 //    mTable.table(name:'Book') {
 //        filed(name:'title', type:'text')

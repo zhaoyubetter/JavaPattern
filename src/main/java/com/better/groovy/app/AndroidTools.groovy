@@ -80,8 +80,8 @@ class AndroidTools {
     }
 
     public static void main(String[] args) {
-        //xmlFilePath = "file:///Users/zhaoyu/Documents/basenet/app/src/main/res/layout/activity_okhttp_cache.xml"
-        def xmlFilePath = 'file:///Users/zhaoyu/Documents/Java/Pattern/src/com/better/groovy/base/xml/1.xml'
+        //xmlFilePath = "extend:///Users/zhaoyu/Documents/basenet/app/src/main/res/layout/activity_okhttp_cache.xml"
+        def xmlFilePath = 'extend:///Users/zhaoyu/Documents/Java/Pattern/src/com/better/groovy/base/xml/1.xml'
         def tools = new AndroidTools();
         println(tools.getFieldString(xmlFilePath));
         println()

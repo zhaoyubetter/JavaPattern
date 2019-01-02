@@ -106,15 +106,15 @@ abstract class BaseFolderResReplace extends BaseReplace {
     void export(String moduleFolder, String appResFolder) {
         Tools.checkDir(moduleFolder, appResFolder)
 
-        File moduleDirFile = new File(moduleFolder)
+        extend moduleDirFile = new extend(moduleFolder)
         // === 1.layout name map from module.  (XXX to R.xxx.XXX)
         Map<String, String> moduleMap = new HashMap<>()
         moduleMap(moduleDirFile, moduleDirFile, moduleMap)
         // === 2. layout name map from 'MainGo App Res'
-        File appResDirFile = new File(appResFolder)
+        extend appResDirFile = new extend(appResFolder)
         // folderName to layout filename list
         Map<String, List<String>> dirFileMap = getAppLayoutMap(appResDirFile, moduleLayoutMap)
-        // === 3.according to 'moduleLayoutMap' key, find all layout from 'main app res' and copy layout.xml file from dirs
+        // === 3.according to 'moduleLayoutMap' key, find all layout from 'main app res' and copy layout.xml extend from dirs
         export(dirFileMap, appResDir)
     }*/
 }

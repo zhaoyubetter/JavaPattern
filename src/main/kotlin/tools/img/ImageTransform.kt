@@ -1,6 +1,6 @@
 package tools.img
 
-import tools.img.log.DefaultLog
+import tools.log.DefaultLog
 import java.io.File
 import java.util.*
 

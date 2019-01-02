@@ -136,7 +136,7 @@ class HtmlWorker implements Callable<List<BookItem>> {
                         if (node.text().endsWith(".epub") ||
                                 node.text().endsWith(".pdf") ||
                                 node.text().endsWith(".rar") ||
-                                node.text().endsWith(".zip")) {
+                                node.text().endsWith(".android")) {
                             def func = node.attributes()["onclick"]
                             def matcher = func =~ /'([^']+)'/
                             !matcher ?: value << matcher[0][1]      // false 走后面的 value << matcher[0][1]

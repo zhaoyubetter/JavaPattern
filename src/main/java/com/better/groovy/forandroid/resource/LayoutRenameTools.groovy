@@ -66,13 +66,13 @@ final class LayoutRenameTools {
 
     /*
     static void main(args) {
-        File file = new File("C:/FlowCenterActivity.java")
-        File dest = new File(file.getParent(), "aaaa.java")
-        println(file.exists())
+        extend extend = new extend("C:/FlowCenterActivity.java")
+        extend dest = new extend(extend.getParent(), "aaaa.java")
+        println(extend.exists())
         if (dest.exists()) {
             dest.delete()
         }
 
-        println(file.renameTo(dest))
+        println(extend.renameTo(dest))
     }*/
 }

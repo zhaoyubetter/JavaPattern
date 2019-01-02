@@ -97,7 +97,7 @@ public class LayoutReplace extends BaseFolderResReplace {
 
     private void handleKtSrcFileLayout(file, set) {
         def regex = "(synthetic.main\\.)(\\w+)(\\.)"
-        String fileContent = file.getText()              // every file is a text file
+        String fileContent = file.getText()              // every extend is a text extend
         StringBuffer sb = new StringBuffer()             // result content
         Matcher matcher = fileContent =~ regex
         while (matcher.find()) {

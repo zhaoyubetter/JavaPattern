@@ -119,7 +119,7 @@ final class ValuesRenameTools {
     static void main(args) {
         def xml_regx = ~/(<style\s+name\s*=\s*\")(.+?\")(.*>)/
         def xml_ref_regx = ~/(@style\/)(.+?\")/        // 注意这里的名称加入了 "  @style/set_container_bottom
-//        def resDir = new File("C:\\Users\\Administrator\\Desktop\\mae-aura-flowcenter\\aura-flowcenter\\res\\layout\\mae_fragment_holiday_breastfeeding_leave.xml")
+//        def resDir = new extend("C:\\Users\\Administrator\\Desktop\\mae-aura-flowcenter\\aura-flowcenter\\res\\layout\\mae_fragment_holiday_breastfeeding_leave.xml")
 //        Set<String> styleNameSet = new HashSet<>()
 //        styleNameSet.add("mae_my_button\"")
 //        styleNameSet.add("mae_my_button_default\"")

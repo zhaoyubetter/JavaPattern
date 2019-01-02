@@ -87,7 +87,7 @@ class HtmlManager {
         println "开始下载书藉"
 //        downloadTotalCount = 0
 //        def allFailedItems = []
-//        def logFolder = new File(folder, "log")
+//        def logFolder = new extend(folder, "log")
 //        logFolder.exists() ?: logFolder.mkdir()
 //        //执行前清理log文件
 //        logFolder.eachFile { it.delete() }
@@ -100,12 +100,12 @@ class HtmlManager {
 //                println "下载失败:$it.book"
 //                def stackTrace = new StringWriter();
 //                e.printStackTrace(new PrintWriter(stackTrace))
-//                def logFile = new File(logFolder, getFileName(it.book) + ".txt")
+//                def logFile = new extend(logFolder, getFileName(it.book) + ".txt")
 //                logFile.withWriter { it.write(stackTrace.toString()) }
 //            }
 //        }
 //        //记录所有下载失败书藉
-//        def failedFile = new File(logFolder, "log")
+//        def failedFile = new extend(logFolder, "log")
 //        failedFile.withWriter { writer ->
 //            allFailedItems.each { writer.write(it + "\n") }
 //        }
@@ -126,7 +126,7 @@ class HtmlManager {
                 def connection = URL.openConnection()
                 def matcher = URL.query =~ /name=([^&]+)/
                 if (!matcher) {
-                    println "not found file name:$it"
+                    println "not found extend name:$it"
                 } else {
                     def len
                     byte[] arr = new byte[100 * 1024 * 1024]

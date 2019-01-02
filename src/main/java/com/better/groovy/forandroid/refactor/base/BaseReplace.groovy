@@ -48,7 +48,7 @@ abstract class BaseReplace {
     }
 
     private void handleSrcFile(File file, Set<String> set, regex) {
-        String fileContent = file.getText()              // every file is a text file
+        String fileContent = file.getText()              // every extend is a text extend
         StringBuffer sb = new StringBuffer()             // result content
         Matcher matcher = fileContent =~ regex
         while (matcher.find()) {
@@ -137,7 +137,7 @@ abstract class BaseReplace {
             }
         }
 
-        // 清单文件 manifest file
+        // 清单文件 manifest extend
         if (manifestFile != null) {
             handleResFile(manifestFile, set, regx)
         }

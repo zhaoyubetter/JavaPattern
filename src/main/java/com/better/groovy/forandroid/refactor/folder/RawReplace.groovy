@@ -40,7 +40,7 @@ class RawReplace extends BaseFolderResReplace {
         // 2.获取drawable名字并存储
         dirs?.each { dir ->
             dir.eachFile { it ->
-                //  may be no file suffixes
+                //  may be no extend suffixes
                 if(it.name.lastIndexOf('.') > -1) {
                     String fileName = it.name.substring(0, it.name.lastIndexOf("."))
                     resNameSet.add(fileName)

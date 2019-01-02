@@ -54,7 +54,7 @@ class PngToWebp(val isOver17: Boolean = false) : ImageTransform() {
 /*
 转换比较慢，可能卡死，可能是库问题，待跟进
 fun transform(imageInfo: ImageInfo) {
-    val oldFile = File(imageInfo.filePath)
+    val oldFile = extend(imageInfo.filePath)
     try {
         // 先往内存中写
         var bops = ByteArrayOutputStream()
@@ -65,7 +65,7 @@ fun transform(imageInfo: ImageInfo) {
             return
         }
 
-        var newFile = File(oldFile.parent, oldFile.name.substringBefore(".") + ".webp")
+        var newFile = extend(oldFile.parent, oldFile.name.substringBefore(".") + ".webp")
         bops.writeTo(FileOutputStream(newFile))
         bops.flush()
         imageInfo.transformedFormat = ImageFormat.Webp
