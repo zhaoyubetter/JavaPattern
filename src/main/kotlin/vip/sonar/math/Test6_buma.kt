@@ -34,4 +34,7 @@ fun main(args: Array<String>) {
     }
 
     println(result xor r)
+
+    println("====================================")
+    println(5 xor 3 xor 5) // 3 xor 5 xor 5 与顺序无关
 }
