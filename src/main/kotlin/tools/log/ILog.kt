@@ -60,6 +60,10 @@ class Log {
         fun w(tag: String, msg: String, vararg obj: Any) {
             logImp.w(tag, msg, obj)
         }
+
+        fun d(tag: String, msg: String, vararg obj: Any) {
+            logImp.d(tag, msg, obj)
+        }
     }
 }
 
