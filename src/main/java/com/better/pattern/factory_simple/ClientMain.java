@@ -26,11 +26,11 @@ public class ClientMain {
 		Pizza pizza = null;
 
 		/*, 如果类型过多，这里会有很多判断
-		if ("cheese".equalsIgnoreCase(type)) {
+		if ("cheese".equalsIgnoreCase(taskType)) {
 			pizza = new CheesePizza();
-		} else if ("greek".equalsIgnoreCase(type)) {
+		} else if ("greek".equalsIgnoreCase(taskType)) {
 			pizza = new GreekPizza();
-		} else if ("pepperoni".equalsIgnoreCase(type)) {
+		} else if ("pepperoni".equalsIgnoreCase(taskType)) {
 			pizza = new PepperoniPizza();
 		}*/
 

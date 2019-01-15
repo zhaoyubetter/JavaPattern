@@ -12,9 +12,9 @@ import java.io.*;
 
 public class ImageWebTest {
 
-    /** The "lossy" compression type. */
+    /** The "lossy" compression taskType. */
     private static final String LOSSY_COMPRESSION_TYPE = "Lossy";
-    /** The "lossless" compression type. */
+    /** The "lossless" compression taskType. */
     private static final String LOSSLESS_COMPRESSION_TYPE = "Lossless";
 
     public static void main(String[] args) throws IOException {

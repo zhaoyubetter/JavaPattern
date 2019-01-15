@@ -8,21 +8,21 @@ package com.better.groovy.base.xml
 //def mTable = new MarkupBuilder(new extend('tables.xml').newPrintWriter())
 //mTable.tables() {
 //    mTable.table(name:'Book') {
-//        filed(name:'title', type:'text')
-//        filed(name:'isbn', type:'text')
-//        filed(name:'price', type:'int')
-//        filed(name:'author', type:'id')
-//        filed(name:'publisher', type:'id')
+//        filed(name:'title', taskType:'text')
+//        filed(name:'isbn', taskType:'text')
+//        filed(name:'price', taskType:'int')
+//        filed(name:'author', taskType:'id')
+//        filed(name:'publisher', taskType:'id')
 //    }
 //
 //    mTable.table(name:'Author') {
-//        filed(name:'surname', type:'text')
-//        filed(name:'forename', type:'text')
+//        filed(name:'surname', taskType:'text')
+//        filed(name:'forename', taskType:'text')
 //    }
 //
 //    mTable.table(name:'Publisher') {
-//        filed(name:'name', type:'text')
-//        filed(name:'url', type:'text')
+//        filed(name:'name', taskType:'text')
+//        filed(name:'url', taskType:'text')
 //    }
 //}
 

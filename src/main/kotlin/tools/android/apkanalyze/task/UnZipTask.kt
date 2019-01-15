@@ -27,7 +27,7 @@ import tools.android.apkanalyze.result.TaskJsonResult
 /**
  * apk解压任务
  */
-class ApkUnZipTask(config: JobConfig, params: Map<String, String>) : ApkTask(TASK_TYPE_UNZIP, config, params) {
+class UnZipTask(config: JobConfig, params: Map<String, String>) : ApkTask(TASK_TYPE_UNZIP, config, params) {
 
     private val TAG = this.javaClass.simpleName
 
@@ -37,14 +37,14 @@ class ApkUnZipTask(config: JobConfig, params: Map<String, String>) : ApkTask(TAS
     private lateinit var outputFile: File
     private var mappingTxt: File? = null
     private var resMappingTxt: File? = null
-    /** 源代码混淆对应关系表 */
-    private var proguardClassMap: HashMap<String, String>? = null
-    private var resguardMap: HashMap<String, String>? = null
-    private var resDirMap: HashMap<String, String>? = null
+    /** 源代码类名称 混淆对应关系表 */
+    private val proguardClassMap: HashMap<String, String>
+    private val resguardMap: HashMap<String, String>
+    private val resDirMap: HashMap<String, String>
     // 文件名对应关系表
-    private var entryNameMap: HashMap<String, String>
+    private val entryNameMap: HashMap<String, String>
     // 解压后文件大小
-    private lateinit var entrySizeMap: HashMap<String, Pair<Long, Long>>
+    private val entrySizeMap: HashMap<String, Pair<Long, Long>>
 
     init {
         proguardClassMap = HashMap()
@@ -60,7 +60,7 @@ class ApkUnZipTask(config: JobConfig, params: Map<String, String>) : ApkTask(TAS
                 throw IllegalArgumentException("File [${this.path}] is not valid.")
             }
         }
-        outputFile = File(config.outputPath).apply {
+        outputFile = File(config.unzipPath).apply {
             if (this.isFile) {
                 throw IllegalArgumentException("${config.outputPath} must be a directory.")
             }
@@ -102,13 +102,12 @@ class ApkUnZipTask(config: JobConfig, params: Map<String, String>) : ApkTask(TAS
             }
 
             // 任务结果
-            val taskResult: TaskJsonResult = TaskResultFactory.factory(type, TASK_RESULT_TYPE_JSON, config)
+            val taskResult: TaskJsonResult = TaskResultFactory.factory(taskType, TASK_RESULT_TYPE_JSON, config)
                     ?: throw TaskExecuteException("$TAG  taskResult is null.")
 
             if (!outputFile.mkdir()) {
                 throw  TaskExecuteException(TAG + "---Create directory '" + outputFile.absolutePath + "' failed!")
             }
-
 
             val startTime = System.currentTimeMillis()
 
@@ -151,6 +150,9 @@ class ApkUnZipTask(config: JobConfig, params: Map<String, String>) : ApkTask(TAS
         throw  TaskExecuteException("$TAG  taskResult is null.")
     }
 
+    /**
+     * 处理混淆资源
+     */
     private inline fun readResMappingTxtFile() {
         if (resMappingTxt != null) {
             val bufferedReader = BufferedReader(FileReader(resMappingTxt))
@@ -201,29 +203,21 @@ class ApkUnZipTask(config: JobConfig, params: Map<String, String>) : ApkTask(TAS
         return ""
     }
 
+    /**
+     * 读取mapping 文件，填充 proguardClassMap
+     */
     private inline fun readMappingTxtFile() {
-        if (mappingTxt != null) {
-            val bufferedReader = BufferedReader(FileReader(mappingTxt))
-            var line: String? = bufferedReader.readLine()
-            var beforeClass = ""
-            var afterClass = ""
-            try {
-                while (line != null) {
-                    if (!line.startsWith(" ")) {
-                        val pair = line.split("->".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-                        if (pair.size == 2) {
-                            beforeClass = pair[0].trim { it <= ' ' }  // 混淆前
-                            afterClass = pair[1].trim { it <= ' ' }   // 混淆后
-                            afterClass = afterClass.substring(0, afterClass.length - 1)
-                            if (beforeClass.isNotNullOrBlank() && afterClass.isNotNullOrBlank()) {
-                                proguardClassMap?.put(afterClass, beforeClass)
-                            }
-                        }
+        mappingTxt?.forEachLine { line ->
+            if (!line.startsWith(" ")) {  // just class name
+                val pair = line.split("->".toRegex()).dropLastWhile { line.isEmpty() }.toTypedArray()
+                if (pair.size == 2) {
+                    val beforeClass = pair[0].trim { it <= ' ' }  // 混淆前
+                    var afterClass = pair[1].trim { it <= ' ' }   // 混淆后
+                    afterClass = afterClass.substring(0, afterClass.length - 1)
+                    if (beforeClass.isNotNullOrBlank() && afterClass.isNotNullOrBlank()) {
+                        proguardClassMap.put(afterClass, beforeClass)
                     }
-                    line = bufferedReader.readLine()
                 }
-            } finally {
-                bufferedReader.close()
             }
         }
     }
@@ -273,11 +267,11 @@ class ApkUnZipTask(config: JobConfig, params: Map<String, String>) : ApkTask(TAS
         return outEntryName
     }
 
-    // 反混淆
+    // 反混淆资源
     private inline fun reverseResguard(dirName: String, filename: String): String {
         var filename = filename
         var outEntryName = ""
-        if (resDirMap?.containsKey(dirName) == true) {
+        if (resDirMap.containsKey(dirName)) {
             val newDirName = resDirMap?.get(dirName)
             val resource = parseResourceNameFromPath(newDirName, filename)
             val suffixIndex = filename.indexOf('.')
@@ -285,7 +279,7 @@ class ApkUnZipTask(config: JobConfig, params: Map<String, String>) : ApkTask(TAS
             if (suffixIndex >= 0) {
                 suffix = filename.substring(suffixIndex)
             }
-            if (resguardMap?.containsKey(resource) == true) {
+            if (resguardMap.containsKey(resource)) {
                 val lastIndex = resguardMap?.get(resource)?.lastIndexOf('.') ?: -1
                 if (lastIndex >= 0) {
                     filename = resguardMap?.get(resource)?.substring(lastIndex + 1) + suffix

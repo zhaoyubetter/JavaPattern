@@ -5,10 +5,12 @@ class TaskFactory {
     companion object {
 
         const val TASK_TYPE_UNZIP = 1
+        const val TASK_TYPE_MANIFEST = 2
+        const val TASK_TYPE_SHOW_FILE_SIZE = 3
 
         // 任务描述
         val TaskDescription = arrayOf(
-                "Useless Task for default task type.",
+                "Useless Task for default task taskType.",
                 "Unzip the apk file to dest path.",
                 "Read package info from the AndroidManifest.xml.",
                 "Show files whose size exceed limit size in order.",

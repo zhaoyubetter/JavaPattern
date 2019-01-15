@@ -1,4 +1,4 @@
-package tools.android.apkanalyze
+package tools.android.apkanalyze.task
 
 import brut.androlib.res.decoder.AXmlResourceParser
 import com.google.gson.JsonArray
@@ -6,25 +6,33 @@ import org.xmlpull.v1.XmlPullParser
 import java.io.File
 import java.io.FileInputStream
 import com.google.gson.JsonObject
+import tools.android.apkanalyze.ApkResourceDecoder
 import tools.extend.isNotNullOrBlank
 import java.util.*
 
 
 /**
  * 参考微信 Matrix-ApkChecker
+ * 清单文件解析
  */
 class ManifestParser(manifestFile: File) {
+
+    constructor(manifestFile: File, arscFile: File?) : this(manifestFile) {
+        this.arscFile = arscFile
+    }
 
     private val ROOTTAG = "manifest"
 
     private val resourceParser: AXmlResourceParser
     private val manifestFile: File
+    private var arscFile: File? = null
     private var isParseStarted = false
     private val jsonStack = Stack<JsonObject>()
     private lateinit var result: JsonObject
 
     init {
-        this.resourceParser = ApkResourceDecoder.createAXmlParser()
+        this.resourceParser = if (arscFile == null) ApkResourceDecoder.createAXmlParser() else
+            ApkResourceDecoder.createAXmlParser(arscFile)
         this.manifestFile = manifestFile
     }
 

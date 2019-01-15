@@ -9,8 +9,8 @@ import javax.imageio.ImageIO
 // 测试代码
 fun main(args: Array<String>) {
     /* cwebp -q 75  -o
-    // /Users/zhaoyu1/1webpTest/drawable-xxhdpi/jdme_shape_wallet_title_outer_bg.png -o
-    val path1 = "/Users/zhaoyu1/1webpTest/drawable-xxhdpi/jdme_shape_wallet_title_outer_bg.png"
+    // /Users/zhaoyu1/1webpTest/drawable-xxhdpi/a.png -o
+    val path1 = "/Users/zhaoyu1/1webpTest/drawable-xxhdpi/b.png"
     val path2 = "/Users/zhaoyu1/1webpTest/drawable-xxhdpi/11_cmd.webp"
     println("cwebp -q 75 $path1 -o $path2".runCommand("/Users/zhaoyu1/Documents/thin/webap/libwebp-1.0.1-rc2-mac-10.13/bin", 30))
     */

@@ -154,7 +154,7 @@ public class ApkResourceDecoder {
             }
 
             if (!inFileName.endsWith(".xml")) {
-//                Log.d(TAG, "Not xml file %s, type %s", inFileName, typeName);
+//                Log.d(TAG, "Not xml file %s, taskType %s", inFileName, typeName);
                 return;
             }
 
