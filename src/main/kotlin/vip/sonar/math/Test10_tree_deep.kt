@@ -1,6 +1,7 @@
 package vip.sonar.math
 
 import java.util.*
+import kotlin.collections.HashSet
 
 fun main(args: Array<String>) {
     buildPreTree(Pair("boy", "男生"))
@@ -14,6 +15,7 @@ fun main(args: Array<String>) {
 
     println("深度优先搜索")
     dfsByStack(parent)
+    println("广度")
 }
 
 // 根
@@ -56,9 +58,9 @@ private fun dfsByStack(root: TreeNode) {
     val stack = Stack<TreeNode>()
     // 初始化时，插入根节点
     stack.push(root)
-    while(!stack.isEmpty()) {
+    while (!stack.isEmpty()) {
         val node = stack.pop()
-        if(node.sons.isEmpty()) {       // leaf, 叶子
+        if (node.sons.isEmpty()) {       // leaf, 叶子
             println(node.prefix + node.label)
         } else {
             node.sons.forEach { _, u ->
@@ -66,7 +68,6 @@ private fun dfsByStack(root: TreeNode) {
             }
         }
     }
-
 }
 
 
