@@ -1,5 +1,7 @@
 package vip.sonar.math
 
+import java.util.*
+
 fun main(args: Array<String>) {
     buildPreTree(Pair("boy", "男生"))
     buildPreTree(Pair("book", "篮球"))
@@ -9,6 +11,9 @@ fun main(args: Array<String>) {
     buildPreTree(Pair("buy", "买"))
 
     println(search("basket"))
+
+    println("深度优先搜索")
+    dfsByStack(parent)
 }
 
 // 根
@@ -44,6 +49,24 @@ private fun search(word: String): String {
         parent = parent.sons[c]!!
     }
     return parent.explain!!
+}
+
+// 深度优先搜索
+private fun dfsByStack(root: TreeNode) {
+    val stack = Stack<TreeNode>()
+    // 初始化时，插入根节点
+    stack.push(root)
+    while(!stack.isEmpty()) {
+        val node = stack.pop()
+        if(node.sons.isEmpty()) {       // leaf, 叶子
+            println(node.prefix + node.label)
+        } else {
+            node.sons.forEach { _, u ->
+                stack.push(u)
+            }
+        }
+    }
+
 }
 
 
