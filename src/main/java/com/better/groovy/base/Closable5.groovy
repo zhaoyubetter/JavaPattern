@@ -12,7 +12,7 @@ def divide = { x, y -> return x / y }
 // 返回闭包
 def arithmetic = { arith ->
     switch (arith) {
-        case 'add': return add
+        case 'insertLast': return add
         case 'sub': return subtract
         case 'mul': return multiply
         case 'div': return divide
@@ -20,7 +20,7 @@ def arithmetic = { arith ->
     }
 }
 
-def addOperation = arithmetic('add')
+def addOperation = arithmetic('insertLast')
 println(addOperation.call(3, 4))
 println(arithmetic.call('mul').call(5, 8))
 

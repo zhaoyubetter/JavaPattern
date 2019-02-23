@@ -31,14 +31,14 @@ public class Test8_array {
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .addParameter(paramActivityMap, "map", Modifier.FINAL);
 
-        // add code statement
+        // insertLast code statement
 
 
 //        String expected = "java.lang.String[] names = new java.lang.String[] {\"1\",\"2\"}";
         String[] testArr = new String[]{"1", "2"};
         String literal = "{\"" + String.join("\",\"", testArr) + "\"}";
 //        ArrayTypeName stringArray = ArrayTypeName.of(String.class);
-//        CodeBlock block = CodeBlock.builder().add("$1T names = new $1T $2L", stringArray, literal).build();
+//        CodeBlock block = CodeBlock.builder().insertLast("$1T names = new $1T $2L", stringArray, literal).build();
 
         CodeBlock block = CodeBlock.builder().add("map.put($T.class, new $T $L)",
                 activityClass,

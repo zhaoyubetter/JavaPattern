@@ -141,9 +141,9 @@ public class Test2_ {
         MethodSpec beyond = MethodSpec.methodBuilder("beyond")
                 .returns(listOfHoverboards)
                 .addStatement("$T result = new $T<>()", listOfHoverboards, arrayList)     // List<Hoverboard> result = new ArrayList<>();
-                .addStatement("result.add(new $T())", hoverboard)
-                .addStatement("result.add(new $T())", hoverboard)
-                .addStatement("result.add(new $T())", hoverboard)
+                .addStatement("result.insertLast(new $T())", hoverboard)
+                .addStatement("result.insertLast(new $T())", hoverboard)
+                .addStatement("result.insertLast(new $T())", hoverboard)
                 .addStatement("return result")
                 .build();
 
@@ -173,9 +173,9 @@ public class Test2_ {
         MethodSpec beyond = MethodSpec.methodBuilder("beyond")
                 .returns(listOfHoverboards)
                 .addStatement("$T result = new $T<>()", listOfHoverboards, arrayList)
-                .addStatement("result.add($T.createNimbus(2000))", hoverboard)
-                .addStatement("result.add($T.createNimbus(\"2001\"))", hoverboard)
-                .addStatement("result.add($T.createNimbus($T.THUNDERBOLT))", hoverboard, namedBoards)
+                .addStatement("result.insertLast($T.createNimbus(2000))", hoverboard)
+                .addStatement("result.insertLast($T.createNimbus(\"2001\"))", hoverboard)
+                .addStatement("result.insertLast($T.createNimbus($T.THUNDERBOLT))", hoverboard, namedBoards)
                 .addStatement("$T.sort(result)", Collections.class)
                 .addStatement("return result.isEmpty() ? $T.emptyList() : result", Collections.class)
                 .build();

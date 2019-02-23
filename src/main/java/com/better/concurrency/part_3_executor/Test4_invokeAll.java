@@ -81,11 +81,11 @@ public class Test4_invokeAll {
                 totalPriceList.add(future.get());
             } catch (ExecutionException e) {
                 // 返回计算失败的原因
-                // totalPriceList.add(task.getFailureQuote(e.getCause()));
+                // totalPriceList.insertLast(task.getFailureQuote(e.getCause()));
                 totalPriceList.add(BigDecimal.valueOf(-1));
                 System.out.println("任务执行异常,单价是" + task.price + "，人数是：" + task.num);
             } catch (CancellationException e) {
-                // totalPriceList.add(task.getTimeoutQuote(e));
+                // totalPriceList.insertLast(task.getTimeoutQuote(e));
                 totalPriceList.add(BigDecimal.ZERO);
                 System.out.println("任务超时，取消计算,单价是" + task.price + "，人数是：" + task.num);
                 future.cancel(true);

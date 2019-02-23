@@ -35,7 +35,7 @@ class MainFrame(title: String) : JFrame() {
         val borderLayout = BorderLayout()             // 布局管理器
         val mainPanel = JPanel(borderLayout)
 
-        // add to mainPanel
+        // insertLast to mainPanel
         mainPanel.add(getTopPanel(), BorderLayout.NORTH)
         mainPanel.add(getCenterPanel(), BorderLayout.CENTER)
         mainPanel.add(getBottomPanel(), BorderLayout.SOUTH)
