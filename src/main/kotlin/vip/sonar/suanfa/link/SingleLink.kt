@@ -10,9 +10,9 @@ import java.lang.RuntimeException
  */
 
 // 数据类
-data class Node<T>(var data: T, var next: Node<T>? = null)
+private data class Node<T>(var data: T, var next: Node<T>? = null)
 
-class SingleLink<T> : Iterable<T> {
+private class SingleLink<T> : Iterable<T> {
 
     // 头结点
     private var first: Node<T>? = null

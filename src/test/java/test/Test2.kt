@@ -24,7 +24,7 @@ class Test2 {
         run loop@ {
             listOf(1, 2, 3, 4, 5).forEach{
                 if (it == 3) return@loop // local return to the caller of the lambda, i.e. the forEach loop
-                print(it)  // 1,2,4,5
+                print(it)  // 1,2
             }
         }
         println("ok")
