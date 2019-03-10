@@ -27,10 +27,9 @@ fun main() {
         fun getMiddle():Node<T>? {
             var fast = head.next
             var slow = head.next
-            while(fast?.next != null) {
+            while(fast?.next != null && fast?.next?.next != null) {
                 fast = fast?.next?.next
                 slow = slow?.next
-                print("${fast?.data} ")
             }
 
             return slow

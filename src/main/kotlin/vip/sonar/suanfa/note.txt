@@ -1,3 +1,5 @@
+## 1. 链表
+
 1. 2019-02-26
     a.单链表与循环链表 - 未使用哨兵节点
         (SingleLink.kt 、CircleLink.kt)
@@ -24,3 +26,21 @@
         参考：https://github.com/wangzheng0822/algo/blob/master/java/07_linkedlist/LinkedListAlgo.java
     b. 求链表的中间结点
        Test_get_middle.kt
+
+## 2. 栈
+
+1. 2019-03-03
+    a.链表实现栈练习
+        Stack_ByLink.kt
+2. 2019-03-04
+    a.队列
+        queue/QueueTest.kt
+3. 2019-03-05
+   循环队列
+        queue/CircleTest.kt
+4. 2019-03-08
+    sort/Guibing.kt
+5. 2019-03-10
+    sort/QuickSort.kt
+
+
