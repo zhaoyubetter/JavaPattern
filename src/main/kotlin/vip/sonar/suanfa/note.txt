@@ -54,3 +54,12 @@
 8. 2019-03-15
     a.基数排序
       sort/RadixSort.kt
+9. 2019-03-17
+    二分查找，看似简单其实越难掌握，灵活应用就更加困难；
+        binarysearch/BinarySearch.kt
+    计算平方根
+        binarysearch/Test1.kt
+
+10. 2019-03-18
+    二分查找变形问题
+         binarysearch/Binary.kt
