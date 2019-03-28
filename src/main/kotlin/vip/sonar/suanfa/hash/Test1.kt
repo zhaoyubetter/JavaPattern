@@ -36,6 +36,9 @@ package vip.sonar.suanfa.hash
  1.3 这样设计保证了对象的hashCode的32位值只要有一位发生改变，整个hash()返回值就会改变，
      高位的变化会反应到低位里，保证了hash值的随机性。
 
+ 1.4 在插入或查找的时候，计算Key被映射到桶的位置：
+    int index = hash(key) & (capacity - 1)
+
 
 
 == String 类型的 hashCode 函数：
