@@ -1,5 +1,7 @@
 package vip.sonar.suanfa.hash
 
+import java.util.LinkedHashMap
+
 /**
  * @description: 散列
  * 装载因子：散列表的装载因子 = 填入表中的元素个数 / 散列表的长度
@@ -67,8 +69,9 @@ fun main() {
     str.forEach {
         h = (31 * h) + it.toInt()
     }
-
     println(h)
 
+
+    val linkmap = LinkedHashMap<String, String>()
 
 }
