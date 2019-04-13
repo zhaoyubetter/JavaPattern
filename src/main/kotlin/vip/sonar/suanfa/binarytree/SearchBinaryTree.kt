@@ -74,20 +74,21 @@ fun main() {
                 if (it.left == null && it.right == null) {
                     // 1.left与right都为null
                     child = null
-                } else if (it.left != null || it.right != null) {
-                    // 2.left or right 有一个不为null
-                    child = if (it.left != null) it.left else it.right
-                } else {
-                    // 3. left与right都存在的情况，从右孩子对应的左子树种找到最小节点
+                } else if (it.left != null && it.right != null) {
+                    // 2. left与right都存在的情况，从右孩子对应的左子树种找到最小节点
                     var min = it.right
                     var minP = min
                     while (min?.left != null) {
+                        minP = min
                         min = min.left
                     }
 
                     it.data = min?.data!!   // 直接改变值，完成替换
                     node = min              // 下面就变成了删除 min 了
                     parent = minP           // 改变父
+                } else {
+                    // 3.left or right 有一个不为null
+                    child = if (it.left != null) it.left else it.right
                 }
             }
 
