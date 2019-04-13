@@ -102,22 +102,40 @@ fun main() {
             }
         }
 
-        fun getMaxNode():Node<T> {
+        fun getMaxNode(): Node<T> {
             // 直接获取右直到叶子
             var node = this
-            while(node.right != null) {
+            while (node.right != null) {
                 node = node.right!!
             }
             return node
         }
 
-        fun getMinNode():Node<T> {
+        fun getMinNode(): Node<T> {
             var node = this
-            while(node.left != null) {
+            while (node.left != null) {
                 node = node.left!!
             }
             return node
         }
+
+        /**
+         * 获取前驱节点,也就是parent
+         */
+        fun getPrevNode(t: T): Node<T>? {
+            var find: Node<T>? = this
+            var parent: Node<T>? = null
+            while (find?.data != t) {
+                parent = find
+                find = if(t > data) {
+                    find?.right
+                } else {
+                    find?.left
+                }
+            }
+            return parent
+        }
+
     }
 
     fun <T : Comparable<T>> inOrder(root: Node<T>?) {
@@ -149,4 +167,6 @@ fun main() {
 
     println("min: ${tree.getMinNode().data}")
     println("max: ${tree.getMaxNode().data}")
+
+    println("prevNode: ${tree.getPrevNode(12)?.data ?: "not found" }")
 }
