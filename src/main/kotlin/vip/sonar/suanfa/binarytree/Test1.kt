@@ -70,6 +70,7 @@ fun main() {
         }
     }
 
+
     val root = buildTree()
 
     println("preOrder:")
