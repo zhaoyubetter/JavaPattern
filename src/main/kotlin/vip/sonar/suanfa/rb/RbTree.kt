@@ -23,10 +23,10 @@ package vip.sonar.suanfa.rb
 5.从任一节点到其每个叶子的所有路径都包含相同数目的黑色节点。
 
 
-
+////
 1.红黑树的前提是二叉查找树，所以二叉查找树的知识可以用过来，比如插入
 2.红黑树的插入节点必须是红色，插入时，红黑树会自动平衡
-3.什么时候用变色，啥时候左旋，啥时候右旋
+3.什么时候用变色(parent与uncle全红)，啥时候左旋(parent红，uncle黑，右孩子)，啥时候右旋(parent红，uncle黑，左孩子)
 4.变色和旋转之间的先后关系可以表示为：变色->左旋->右旋；变色可能没发生
  */
 fun main() {
@@ -92,69 +92,73 @@ fun main() {
          */
         private inline fun insertFix(addNode: RBNode<T>) {
             var parent: RBNode<T>?        // 父节点
-            var gParent: RBNode<T>?      // 祖父节点
-            var current: RBNode<T>? = addNode    // 当前节点
-
+            var gParent: RBNode<T>         // 祖父节点
+            var current: RBNode<T> = addNode    // 当前节点
+            parent = current.parent
 
             // 需要fix条件： 父节点存在，且父节点是红色
-            parent = current?.parent
             while (parent != null && parent?.isRed == true) {
-                gParent = parent!!.parent       // 肯定存在祖父节点
+                gParent = parent!!.parent!!       // 肯定存在祖父节点
 
                 if (gParent?.left == parent) {
                     val uncle = gParent?.right  // 获取叔叔节点
 
                     // === case 1: 父节点是红色，uncle 也是红色
                     if (uncle != null && uncle.isRed) {
-                        // 将父与叔叔分别染黑，并继续向上找到
+                        // 将父与叔叔染黑，并将祖父节点涂红，并继续向上找到
                         parent?.isRed = false
                         uncle.isRed = false
+                        gParent.isRed = true
                         current = gParent           // 当前节点指向祖父节点
-                        parent = current?.parent
+                        parent = current.parent
                         continue                    // 继续循环，重新判断（注意这里是continue，没必须进入下面的case2，case3）
                     }
 
                     // === case 2: 父节点是红的，uncle 黑色，且当前节点父节点的右孩子，旋转跟uncle没关系，这里就不需要判断uncle是否为null
                     if (current == parent?.right) {
-                        // 将当前节点的父节点作为新的节点(记作：N)，以N为支点做左旋操作，继续操作
-                        rotateLeft(parent!!)                // 父节点处左旋,
-                        current = parent                    // 当前节点指向父节点
-                        parent = current?.parent
+                        // 将当前节点的父节点作为新的节点(记作：N)，以N为支点做左旋操作，将父节点和当前结点调换一下，为下面右旋做准备
+                        rotateLeft(current?.parent!!)       // 父节点处左旋,
+                        val tmp = parent!!      // 交换当前节点与父节点
+                        parent = current
+                        current = tmp
                     }
 
                     // === case 3: 父红，uncle黑，且current是父的左孩子
-                    // 将current涂黑，将祖父节点涂红，并在祖父节点为支点做右旋操作。最后把根节点涂黑
-                    current?.isRed = false
-                    gParent?.isRed = true
-                    rotateRight(gParent!!)
-
+                    // 将当前的父parent涂黑，并将祖父节点涂红，并在祖父节点为支点做右旋操作。最后把根节点涂黑
+                    parent?.isRed = false
+                    gParent.isRed = true
+                    rotateRight(gParent)
                 } else {  // 右孩子
                     val uncle = gParent?.right  // 获取叔叔节点
 
                     // === case 1: 父节点是红色，uncle 也是红色
                     if (uncle != null && uncle.isRed) {
-                        // 将父与叔叔分别染黑，并继续向上找到
+                        // 将父与叔叔染黑，并将祖父染红，并继续向上找到
                         parent?.isRed = false
                         uncle.isRed = false
+                        gParent.isRed = true
                         current = gParent           // 当前节点指向祖父节点
-                        parent = current?.parent
+                        parent = current.parent
                         continue                    // 继续循环，重新判断（注意这里是continue，没必须进入下面的case2，case3）
                     }
 
                     // === case 2: 父节点是红的，uncle 黑色，且当前节点父节点的左孩子
                     if (current == parent?.left) {
-                        // 将当前节点的父节点作为新的节点(记作：N)，以N为支点做右旋操作，继续操作
-                        rotateRight(parent!!)       // 父节点处右旋
-                        current = parent            // 当前节点指向父节点
-                        parent = current?.parent
+                        // 将当前节点的父节点作为新的节点(记作：N)，以N为支点做右旋操作，将父节点和当前结点调换一下，为下面左旋做准备
+                        rotateRight(parent!!)         // 父节点处右旋
+                        val tmp = parent!!
+                        parent = current
+                        current = tmp
                     }
 
                     // === case 3: 父红，uncle黑，且current是父的右孩子
                     // 将current涂黑，将祖父节点涂红，并在祖父节点为支点做左旋操作。最后把根节点涂黑
-                    current?.isRed = false
+                    parent?.isRed = false
                     gParent?.isRed = true
-                    rotateLeft(gParent!!)
+                    rotateLeft(gParent)
                 }
+
+                parent = current?.parent            // parent 重新赋值
             }
 
             this.rootNode?.isRed = false
