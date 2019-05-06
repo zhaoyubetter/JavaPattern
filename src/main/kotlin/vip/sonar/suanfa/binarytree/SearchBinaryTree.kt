@@ -3,6 +3,10 @@ package vip.sonar.suanfa.binarytree
 /**
  * @description: 二叉查找树
  * @author better
+ * 删除节点也比较麻烦
+ * 前驱与后继结点的查找相对比较麻烦；
+ * 参考：
+ * http://www.cnblogs.com/Renyi-Fan/p/8252227.html
  * @date 2019-04-09 22:48
  */
 fun main() {
@@ -120,22 +124,91 @@ fun main() {
         }
 
         /**
-         * 获取前驱节点,也就是parent
+         * 获取前驱节点(前提：假设当前节点存在)
+         * 节点值小于当前节点，并且所有最小值中最大的
+         * 规则：
+         * a.节点有left时，则从left中找到（也就是left孩子的一直找right孩子）；
+         * b.节点没有left时，节点是父的right时，则父为前驱节点；
+         * c.节点没有left时，节点是父的left时，则需要沿着父一直往根节点找，直到找到(右拐弯就是)；
          */
         fun getPrevNode(t: T): Node<T>? {
             var find: Node<T>? = this
             var parent: Node<T>? = null
-            while (find?.data != t) {
-                parent = find
-                find = if(t > data) {
-                    find?.right
+            var firstMin: Node<T>? = null
+            while (find != null) {
+                if (find.data > t) {
+                    parent = find
+                    find = find.left
+                } else if (find.data < t) {
+                    parent = find
+                    firstMin = parent       // 右走，赋值parent，只会赋值一次
+                    find = find.right
                 } else {
-                    find?.left
+                    // a 情况
+                    if (find?.left != null) {
+                        var result = find.left
+                        while (result?.right != null) {
+                            result = result.right
+                        }
+                        return result
+                    }
+                    // b
+                    if (parent?.right == find) {
+                        return parent
+                    }
+                    // c 情况
+                    if (parent?.left == find) {
+                        return firstMin
+                    }
                 }
             }
-            return parent
+            return null
         }
 
+        /**
+         * 获取后继节点
+         * 节点值大于当前节点，并且所有最大值中最小的
+         * 规则：
+         * a.节点有right，则从right孩子中找（也就是right孩子的一直找left孩子）；
+         * b.节点没有right，节点是父的left时，则返回父；
+         * c.节点没有right，节点是父的right时则需要沿着父一直往根节点找，直到找到(左拐弯就是)；
+         */
+        fun getNextNode(t: T): Node<T>? {
+            var find: Node<T>? = this
+            var parent: Node<T>? = null
+            var firstMax: Node<T>? = null
+            while (find != null) {
+                if (find!!.data > t) {
+                    parent = find
+                    firstMax = parent
+                    find = find!!.left
+                } else if (find!!.data < t) {
+                    parent = find
+                    find = find!!.right
+                } else {
+                    // a情况
+                    if (find!!.right != null) {
+                        var result = find!!.right
+                        while (result!!.left != null) {
+                            result = result!!.left
+                        }
+                        return result
+                    }
+
+                    // b情况
+                    if (parent!!.left == find) {
+                        return parent
+                    }
+
+                    // c情况
+                    if (parent!!.right == find) {
+                        return firstMax
+                    }
+                }
+            }
+
+            return null
+        }
     }
 
     fun <T : Comparable<T>> inOrder(root: Node<T>?) {
@@ -168,5 +241,33 @@ fun main() {
     println("min: ${tree.getMinNode().data}")
     println("max: ${tree.getMaxNode().data}")
 
-    println("prevNode: ${tree.getPrevNode(12)?.data ?: "not found" }")
+    println("12 prevNode: ${tree.getPrevNode(3)?.data ?: "not found"}")
+
+
+    //////////
+    println("获取前驱与后继")
+    val tree2 = Node(6)
+    tree2.apply {
+        insertNode(1, this)
+        insertNode(7, this)
+        insertNode(5, this)
+        insertNode(3, this)
+        insertNode(2, this)
+        insertNode(4, this)
+        insertNode(9, this)
+        insertNode(8, this)
+        insertNode(10, this)
+    }
+
+    println("6的前驱是${tree2.getPrevNode(6)?.data}")
+    println("7的前驱是${tree2.getPrevNode(7)?.data}")
+    println("4的前驱是${tree2.getPrevNode(4)?.data}")
+    println("2的前驱是${tree2.getPrevNode(2)?.data}")
+
+
+    println("")
+
+    println("2的next是${tree2.getNextNode(2)?.data}")
+    println("7的next是${tree2.getNextNode(7)?.data}")
+    println("5的next是${tree2.getNextNode(5)?.data}")
 }

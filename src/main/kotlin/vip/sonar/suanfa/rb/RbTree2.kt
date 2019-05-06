@@ -126,6 +126,20 @@ fun main() {
             rootNode?.isRed = false
         }
 
+        fun search(data: T): RBNode<T>? {
+            var cNode = rootNode
+            while (cNode != null) {
+                cNode = when {
+                    cNode.data > data -> cNode.left
+                    cNode.data < data -> cNode.right
+                    else -> {
+                        return cNode
+                    }
+                }
+            }
+            return null
+        }
+
 
         /**
          * <pre>
@@ -149,15 +163,15 @@ fun main() {
             val y = x.right
             x.right = y?.left
 
-            if(y?.left != null) {  // 双向关联
+            if (y?.left != null) {  // 双向关联
                 y?.left?.parent = x
             }
 
             // === 2
-            if(x.parent == null) {
+            if (x.parent == null) {
                 rootNode = y
             } else {
-                if(x == x.parent?.left) {
+                if (x == x.parent?.left) {
                     x.parent?.left = y
                 } else {
                     x.parent?.right = y
@@ -174,15 +188,15 @@ fun main() {
             val y = x.left
             x.left = y?.right
 
-            if(y?.right != null) {  // 双向关联
+            if (y?.right != null) {  // 双向关联
                 y?.right?.parent = x
             }
 
             // === 2
-            if(x.parent == null) {
+            if (x.parent == null) {
                 rootNode = y
             } else {
-                if(x == x.parent?.left) {
+                if (x == x.parent?.left) {
                     x.parent?.left = y
                 } else {
                     x.parent?.right = y
@@ -221,5 +235,9 @@ fun main() {
 
     // inOrder
     inOrder(tree.rootNode)
+
+    // search
+    println("\nsearch")
+    println(tree.search(3)?.data)
 
 }

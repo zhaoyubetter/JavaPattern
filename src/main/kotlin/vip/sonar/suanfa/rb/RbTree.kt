@@ -23,11 +23,24 @@ package vip.sonar.suanfa.rb
 5.从任一节点到其每个叶子的所有路径都包含相同数目的黑色节点。
 
 
-////
+//// 插入：
 1.红黑树的前提是二叉查找树，所以二叉查找树的知识可以用过来，比如插入
 2.红黑树的插入节点必须是红色，插入时，红黑树会自动平衡
 3.什么时候用变色(parent与uncle全红)，啥时候左旋(parent红，uncle黑，右孩子)，啥时候右旋(parent红，uncle黑，左孩子)
-4.变色和旋转之间的先后关系可以表示为：变色->左旋->右旋；变色可能没发生
+4.变色和旋转之间的先后关系可以表示为：变色->左旋->右旋(变色可能没发生)；
+
+/// 删除：节点
+1. 删除操作平衡调整分为2步：
+a.保证整棵红黑树在一个节点删除后，仍满足最后一条定义，包含相同数量的黑色节点；
+b.针对关注节点进行二次调整，满足第4条，不存在相邻的2个红色节点；
+
+节点删除后的顶替节点，如果顶替节点原来是红色，那么现在是红+黑，如果原来是黑色，那么它现在的颜色是黑+黑;
+
+第一次调整：
+case 1: 如果要删除的节点是a，且只有一个子节点b：
+a.删除节点a，并把b替换到节点a的位置；
+
+
  */
 fun main() {
 
@@ -42,6 +55,7 @@ fun main() {
         var right: RBNode<T>? = null
         var isRed: Boolean = false
     }
+
 
     class RBTree<T : Comparable<T>> {
 
@@ -86,7 +100,7 @@ fun main() {
          * 1.插入节点的父节点和其叔叔节点（祖父节点的另一个子节点）均为红色的；
          *   => 将当前节点的父节点和叔叔节点涂黑，将祖父节点涂红，当前节点(current)指向祖父节点，再判断
          * 2.插入节点的父节点是红色，叔叔节点是黑色，且插入节点是其父节点的右子节点；
-         *   => 将当前节点的父节点作为新的节点(N)，以N为支点做左旋操作，再判断
+         *   => 将当前节点的父节点作为新的节点(N)，以N为支点做左旋操作，后将父节点和当前结点调换一下，为下面右旋做准备
          * 3.插入节点的父节点是红色，叔叔节点是黑色，且插入节点是其父节点的左子节点。
          * @param  addNode 待添加的节点（红色）
          */
@@ -152,7 +166,7 @@ fun main() {
                     }
 
                     // === case 3: 父红，uncle黑，且current是父的右孩子
-                    // 将current涂黑，将祖父节点涂红，并在祖父节点为支点做左旋操作。最后把根节点涂黑
+                    // 将current涂黑，将祖父节点涂红，并在祖父节点为支点做右旋操作。最后把根节点涂黑
                     parent?.isRed = false
                     gParent?.isRed = true
                     rotateLeft(gParent)
@@ -229,6 +243,162 @@ fun main() {
                 // 3.将x的右子节点设为y，将y的父节点设为x
                 x.right = y
                 y.parent = x
+            }
+        }
+
+        private fun search(data: T): RBNode<T>? {
+            var cNode = rootNode
+            while (cNode != null) {
+                cNode = when {
+                    cNode!!.data > data -> cNode!!.left
+                    cNode!!.data < data -> cNode!!.right
+                    else -> {
+                        return cNode
+                    }
+                }
+            }
+            return null
+        }
+
+
+        /**
+         * 删除节点
+         *
+         */
+        fun delete(data: T) {
+            val delNode = search(data)
+            delNode?.let {
+                deleteNode(it)
+            }
+        }
+
+        /**
+         * 删除红色节点无影响
+         */
+        fun deleteNode(node: RBNode<T>) {
+            var child: RBNode<T>?
+            var parent: RBNode<T>?
+            var color: Boolean
+
+            // 1. 被删除的节点“左右子节点都不为空”的情况
+            if (node.left != null && node.right != null) {
+                // 先找到被删除节点的后继节点，用它来取代被删除节点的位置
+
+                // a. 获取后继节点 (右)
+                var replace = node.right
+                while (replace?.left != null) {  // 如右孩子有左，不断获取左
+                    replace = replace.left
+                }
+
+                // b. 处理“后继节点”与“被删除节点的父节点”之间的关系
+                // 首先删除节点，与二叉查找树无异
+                if (node.parent != null) {  // 被删除节点不是根节点，去掉node，替换成后继节点
+                    if (node?.parent?.left == node) {
+                        node?.parent?.left = replace
+                    } else {
+                        node?.parent?.right = replace
+                    }
+                } else {
+                    this.rootNode = replace
+                }
+
+                // c. 处理“后继节点的子节点”和“被删除节点的子节点”之间的关系
+                child = replace?.right       // 这里【不会存在左孩子】！
+                color = replace?.isRed!!     // 记录后继节点的颜色
+                parent = replace?.parent     // 后继节点父
+                if (parent == node) {        // 后继节点是被删除节点的子节点
+                    parent = replace        // 这种情况直接赋值
+                } else {
+                    // child 关系重新梳理
+                    if (child != null) {
+                        child.parent = parent
+                    }
+                    parent?.left = child
+                    replace.right = node.right
+                    node?.right?.parent = replace
+                }
+                // replace父与左的关系重新梳理
+                replace.parent = node.parent    // 指向“被删除节点”的parent
+                replace.isRed = node.isRed      // 保持"被删除节点"原来的颜色
+                replace.left = node.left        // 相互衔接
+                node?.left?.parent = replace    // "被删除节点"左孩子设置新的parent
+
+                // d.如果后继节点颜色是黑色，重新修整红黑树
+                if (color) {
+                    removeFixUp(child, parent)  // 将后继节点的child和parent传进去
+                }
+            }
+        }
+
+        //node表示关注节点，即后继节点的子节点（因为后继节点被挪到删除节点的位置去了）
+        private fun removeFixUp(node: RBNode<T>?, parent: RBNode<T>?) {
+            var node = node
+            var parent = parent
+            var other: RBNode<T>?   // 兄弟节点
+
+            // (node 为Null || 是黑色) && node 不是根节点
+            while ((node == null || !node.isRed) && (node != rootNode)) {
+                if (parent?.left == node) {      // node 是左孩子
+                    other = parent?.right       // 兄弟节点
+
+                    // === case 1: node 的兄弟节点是红色
+                    // a. 互换 other 与 parent 颜色
+                    // b. 以 parent 左旋
+                    if (other?.isRed == true) {
+                        other.isRed = false
+                        parent?.isRed = false
+                        rotateLeft(parent!!)
+                        other = parent?.right       // 为下一次做准备
+                    }
+
+                    // === case 2: node的兄弟节点other是黑色的，且other的两个子节点也都是黑色的
+                    // a. other 染红，parent
+                    // b. 关注节点改成 parent
+                    if ((other?.left == null || other?.left?.isRed == false) &&
+                            (other?.right == null || other?.right?.isRed == false)) {
+                        other?.isRed = true
+                        node = parent
+                        parent = node?.parent
+                    } else {
+                        // === case 3: node的兄弟节点other是黑色的，且other的左子节点是红色，右子节点是黑色
+                        // a. other的左孩子染黑，other染红
+                        // b. 围绕other右旋，关注节点不变，跳转到case4，继续判断
+                        if (other.right == null || !other.isRed) {
+                            other.left?.isRed = false
+                            other.isRed = true
+                            rotateRight(other)
+                            other = parent?.right
+                        }
+
+                        // === case 4: node的兄弟节点other是黑色的，且other的右子节点是红色，左子节点任意颜色
+                        // a. 将other设为node父节点相同的颜色
+                        // b. parent设置黑色,other的右孩子设为黑色
+                        // c. 围绕父节点左旋
+                        other?.isRed = parent?.isRed!!
+                        parent?.isRed = false
+                        other?.right?.isRed = false
+                        rotateLeft(parent!!)
+
+                        node = rootNode
+                        break
+                    }
+                } else {  // node 是右孩子，与上面的反过来
+                    other = parent?.left       // 兄弟节点
+
+                    // === case 1: node 的兄弟节点是红色
+                    // a. 互换 other 与 parent 颜色
+                    // b. 以 parent 左旋
+                    if (other?.isRed == true) {
+                        other.isRed = false
+                        parent?.isRed = false
+                        rotateRight(parent!!)
+                        other = parent?.left       // 为下一次做准备
+                    }
+                }
+
+                if(node != null) {
+                    node.isRed = false
+                }
             }
         }
     }
