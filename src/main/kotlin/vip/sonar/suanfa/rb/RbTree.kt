@@ -550,7 +550,7 @@ fun main() {
  */
 private fun testInert1And2() {
     val tree = RBTree<Int>()
-    listOf(10, 7, 15, 30, 22, 23, 40, 34, 41).forEach {
+    listOf(22, 30, 21, 28, 27, 8, 5, 17, 15, 18).forEach {
         // 4, 3, 5, 14, 22, 15
         tree.insert(it)
         println("== insert node $it ")
