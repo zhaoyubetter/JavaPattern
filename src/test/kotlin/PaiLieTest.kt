@@ -23,19 +23,20 @@ class PaiLieTest {
      * 4. 递归出口：直到当前位置到第 n 个位置，表示处理结束；
      * 注意：每次处理完后，需要交换回去，便于后面的处理；
      *
-     * 比如：第 1 个位置的全排列如下：
-     * <code>
-    fun <T> paiLie(array: Array<T>, i: Int) {
-    val len = array.size
-    if (i == len) {
-    println(array.joinToString())
-    return
-    }
-    println(array.joinToString())
-    swap(array, 0, i)
-    paiLie(array, i + 1)    // n - 1 排列
-    }
-     * </code>
+     *
+     * 分析：1,2,3
+     * <pre>
+     *      1,2,3
+     *          1,3,2
+     *      2,1,3
+     *          2,3,1
+     *      3,2,1
+     *          3,1,2
+     * </pre>
+     *
+     *  子问题：也就是第1位置时，交换 n - 1此，第2位置交换 n-2 次，这是递归规律；
+     *  退出条件：直到没有位置交换时，退出；
+     *
      */
     @Test
     fun test1() {
@@ -71,7 +72,7 @@ class PaiLieTest {
          * @param i 当前排列的下标
          */
         fun <T> paiLie(array: Array<T>, i: Int) {
-            if(i == 0) {
+            if (i == 0) {
                 println(array.joinToString())
                 return
             }
