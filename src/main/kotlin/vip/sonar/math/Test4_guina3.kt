@@ -1,6 +1,5 @@
 package vip.sonar.math
 
-import org.codehaus.groovy.runtime.ArrayUtil
 
 /**
  * https://time.geekbang.org/column/article/73511

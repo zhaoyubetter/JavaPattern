@@ -1,7 +1,6 @@
 package com.better.concurrency.part_4_cancel;
 
 import com.better.Utils;
-import sun.rmi.runtime.Log;
 
 import java.io.PrintWriter;
 import java.util.Random;

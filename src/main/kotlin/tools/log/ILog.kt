@@ -1,6 +1,5 @@
 package tools.log
 
-import jline.internal.Log
 import java.io.PrintWriter
 import java.io.StringWriter
 
@@ -95,22 +94,22 @@ interface ILog {
 
 class DefaultLog : ILog {
     override fun error(e: Throwable) {
-        Log.error(e)
+        //Log.error(e)
     }
 
     override fun info(msg: String) {
-        Log.info(msg)
+        //Log.info(msg)
     }
 
     override fun debug(msg: String) {
-        Log.debug(msg)
+        //Log.debug(msg)
     }
 
     override fun error(msg: String?, e: Throwable?) {
-        Log.error(msg ?: "", e ?: "")
+        //Log.error(msg ?: "", e ?: "")
     }
 
     override fun warn(msg: String, e: Throwable?) {
-        Log.warn(msg ?: "", e ?: "")
+        //Log.warn(msg ?: "", e ?: "")
     }
 }

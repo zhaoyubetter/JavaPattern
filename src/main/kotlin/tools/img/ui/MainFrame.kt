@@ -1,8 +1,5 @@
 package tools.img.ui
 
-import com.sun.codemodel.internal.fmt.JTextFile
-import org.fusesource.jansi.Ansi
-import org.intellij.lang.annotations.Flow
 import java.awt.*
 import javax.swing.*
 
