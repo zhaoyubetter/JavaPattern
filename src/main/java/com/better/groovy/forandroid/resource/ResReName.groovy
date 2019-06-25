@@ -24,14 +24,14 @@ import java.util.regex.Matcher
  f. raw:              R.raw.XXX
  g. xml:              R.xml.xxx
 
- 2.values: string、string-array、attr、color、dimens、style
+ 2.values: string、string-a、attr、color、dimens、style
  ---------------------------------------------------------------
  values   类型         源代码中                xml 资源中
  a. string:            R.string.XXX         xml 中修改name @string/XXX  与 其值不改（如：<string name="empty">@string/xxx</string>）
  b. color              R.color.XXX          xml 中修改name @color/XXX   与 其值不改
  c. dimens             R.dimen.XXX          xml 中修改name @dimen/XXX   与 其值不改
  d. style              R.style.XXX          xml 中修改name @style/XXX   parent 如果在当前工程，需要修改
- e. arrays:            R.array.XXX          xml 中修改name
+ e. arrays:            R.a.XXX          xml 中修改name
  f. attr               R.styleable.FlowMainItemView_fv_title  (比较复杂) 特殊处理
 
  ** 步骤：**
@@ -376,7 +376,7 @@ class ResReName {
                             styleNameSet.add(matcher.group(2))
                         }
 
-                        matcher = line =~ /(<string-array\s+name\s*=\s*\")(.+?)(\">)/
+                        matcher = line =~ /(<string-a\s+name\s*=\s*\")(.+?)(\">)/
                         while (matcher.find()) {
                             arrayNameSet.add(matcher.group(2))
                         }
@@ -413,10 +413,10 @@ class ResReName {
         ValuesRenameTools.replaceValuesName(resDir, dimensNameSet, xml_regx)   // 修改xml中的name
         ValuesRenameTools.replaceValuesRef(resDir, dimensNameSet, xml_ref_regx) // xml中的引用
 
-        println("------------ 处理 string-array 资源")
-        // ===  4.array, 只在源代码中使用
-        java_regx = ~/(R(\s*?)\.(\s*?)array(\s*?)\.(\s*?))(\w+)/
-        xml_regx = ~/(<string-array\s+name\s*=\s*\")(.+?)(\">)/
+        println("------------ 处理 string-a 资源")
+        // ===  4.a, 只在源代码中使用
+        java_regx = ~/(R(\s*?)\.(\s*?)a(\s*?)\.(\s*?))(\w+)/
+        xml_regx = ~/(<string-a\s+name\s*=\s*\")(.+?)(\">)/
         replaceSrcDir(srcDir, arrayNameSet, java_regx)
         ValuesRenameTools.replaceValuesName(resDir, arrayNameSet, xml_regx)   // 修改xml中的name
 

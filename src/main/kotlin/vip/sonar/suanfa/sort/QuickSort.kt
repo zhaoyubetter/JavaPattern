@@ -109,7 +109,7 @@ fun main() {
     }
 
     val array = arrayOf(1, 5, 4, 2, 0, 3, -9)
-//    val array = arrayOf(0,1,2,3,4,5)
+//    val a = arrayOf(0,1,2,3,4,5)
     quickSort(array)
     println(array.joinToString(" "))
 }

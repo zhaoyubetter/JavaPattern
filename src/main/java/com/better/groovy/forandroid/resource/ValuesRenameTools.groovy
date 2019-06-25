@@ -4,14 +4,14 @@ package com.better.groovy.forandroid.resource
 import java.util.regex.Matcher
 
 /**
- 2.values: string、string-array、attr、color、dimens、style, 缺少：animator，raw，asset
+ 2.values: string、string-a、attr、color、dimens、style, 缺少：animator，raw，asset
  ---------------------------------------------------------------
  values   类型         源代码中                xml 资源中
  a. string:            R.string.XXX         @string/XXX  与其值        <string name="empty">@string/xxx</string>
  b. color              R.color.XXX          @color/XXX   与其值        <color name="color">@color/xxx</string>
  c. dimens             R.dimen.XXX          @dimen/XXX   与其值        <dimens name="xx_16">@dimens/xxx</string>
  d. style              R.style.XXX          @style/XXX   与其parent    <style name="DialogLightDatePicker" parent="@style/XXX">
- e. arrays:            R.array.XXX
+ e. arrays:            R.a.XXX
  f. attr               R.styleable.FlowMainItemView_fv_title  (比较复杂) 特殊处理
  */
 final class ValuesRenameTools {

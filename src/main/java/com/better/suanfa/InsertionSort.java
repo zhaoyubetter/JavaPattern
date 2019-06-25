@@ -14,8 +14,8 @@ public class InsertionSort {
 	public static void main(String[] args) {
 		int[] array = {4, 1, 5, 3, 2, 9, 20, 100, -1};
 
-//		sort(array);
-//		sort2(array);
+//		sort(a);
+//		sort2(a);
 
 		sort3(array);
 		for (int m = 0; m < array.length; m++) {

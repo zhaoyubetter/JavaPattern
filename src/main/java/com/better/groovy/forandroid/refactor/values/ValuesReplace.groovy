@@ -55,9 +55,9 @@ class ValuesReplace extends BaseReplace {
                 "(@string/)(\\w+)"
         ),
 
-        string_arrays("(<string-array\\s+name\\s*=\\s*[\\\"'])(\\w+)(\\s*.*[\\\"']\\s*>)",
-                "(R(\\s*?)\\.(\\s*?)array(\\s*?)\\.(\\s*?))(\\w+)",
-                "(<string-array\\s+name\\s*=\\s*\\\")(.+?)(\\\">)"
+        string_arrays("(<string-a\\s+name\\s*=\\s*[\\\"'])(\\w+)(\\s*.*[\\\"']\\s*>)",
+                "(R(\\s*?)\\.(\\s*?)a(\\s*?)\\.(\\s*?))(\\w+)",
+                "(<string-a\\s+name\\s*=\\s*\\\")(.+?)(\\\">)"
         ),
 
         color("(<color\\s+name\\s*=\\s*[\\\"'])(\\w+)(\\s*.*[\\\"']\\s*>)",
@@ -159,13 +159,13 @@ class ValuesReplace extends BaseReplace {
         replaceResDir(resDir, stringNameSet, xml_ref_regx, null)
     }
 
-    // string-array
+    // string-a
     private def arrays(ValuesType valueType) {
-        println("------------ replace string-array resource (处理 string-array 资源)")
+        println("------------ replace string-a resource (处理 string-a 资源)")
         def nameSet = getValueNameSet(valueType.xml_Regx)
         def java_regx = ~valueType.java_Regx
         def xml_regx = ~valueType.xml_Regx
-        def xml_ref_regx = ~valueType.xml_ref_regex  // array 引用没有实现
+        def xml_ref_regx = ~valueType.xml_ref_regex  // a 引用没有实现
 
         // 修改源码中的
         replaceSrcDir(srcDir, nameSet, java_regx)

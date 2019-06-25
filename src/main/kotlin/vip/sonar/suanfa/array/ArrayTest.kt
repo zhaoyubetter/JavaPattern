@@ -15,9 +15,9 @@ fun main(args: Array<String>) {
     )
 
     // 内容中形式 1,2,3,4,5,6,7,8,9,10
-    // 维数[1] 表示，跳过便宜一个维度，一个维度为5个，array[1][1] 则表示再偏移一个，总共6个，所以输出7
+    // 维数[1] 表示，跳过便宜一个维度，一个维度为5个，a[1][1] 则表示再偏移一个，总共6个，所以输出7
 
-    println(array[1][1])  // array[1] 维数
+    println(array[1][1])  // a[1] 维数
 
 
     val array2 = arrayOf(
@@ -25,5 +25,5 @@ fun main(args: Array<String>) {
             Array(5) { 0 }
     )
 
-    // array[m][n] (m>0 && n> 0) 寻址： array[i][j] = (i * n + j) * type_size
+    // a[m][n] (m>0 && n> 0) 寻址： a[i][j] = (i * n + j) * type_size
 }

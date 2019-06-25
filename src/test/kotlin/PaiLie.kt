@@ -35,11 +35,11 @@ fun main(args: Array<String>) {
 
             println(array.joinToString())
 
-            //paiLie(array, n, k - 1)
+            //paiLie(a, n, k - 1)
 
-//            tmp = array[i]
-//            array[i] = array[k - 1]
-//            array[k - 1] = tmp
+//            tmp = a[i]
+//            a[i] = a[k - 1]
+//            a[k - 1] = tmp
         }
     }
 
