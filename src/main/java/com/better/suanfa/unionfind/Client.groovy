@@ -7,7 +7,7 @@ class Client {
     static void main(args) {
 
         // 测试1
-        //test1();
+        //test1_bfs();
         test2();
     }
 

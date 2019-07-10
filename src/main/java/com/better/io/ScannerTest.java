@@ -8,8 +8,8 @@ import java.util.Scanner;
  */
 public class ScannerTest {
     public static void main(String... aa) {
-//        test1();
-//        test2();
+//        test1_bfs();
+//        test2_bfs();
 //        test3();
 //        test4_re();
         test5();

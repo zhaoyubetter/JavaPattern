@@ -8,7 +8,7 @@ package vip.sonar.math
 fun main(args: Array<String>) {
     var a = ArrayList<Int>()
     // test(10, a)  // 解法1
-    // test2(0, a)  // 解法2
+    // test2_bfs(0, a)  // 解法2
 
     println("乘法")
     test3(8, a)

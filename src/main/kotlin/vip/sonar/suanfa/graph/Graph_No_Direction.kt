@@ -1,28 +1,100 @@
 package vip.sonar.suanfa.graph
 
+import org.junit.Test
 import java.util.*
-
-fun main() {
-    val g = Graph_No_Direction.Gragp(8)
-    g.apply {
-        addEdge(0, 1)
-        addEdge(0, 3)
-        addEdge(1, 2)
-        addEdge(1, 4)
-        addEdge(3, 4)
-        addEdge(2, 5)
-        addEdge(4, 5)
-        addEdge(4, 6)
-        addEdge(5, 7)
-        addEdge(6, 7)
-    }
-    g.bfs(0, 6)
-}
 
 /**
  * 无向图
  */
 class Graph_No_Direction {
+
+    @Test
+    fun test_bfs1() {
+        val g = Graph_No_Direction.Gragp(8)
+        g.apply {
+            addEdge(0, 1)
+            addEdge(0, 3)
+            addEdge(1, 2)
+            addEdge(1, 4)
+            addEdge(3, 4)
+            addEdge(2, 5)
+            addEdge(4, 5)
+            addEdge(4, 6)
+            addEdge(5, 7)
+            addEdge(6, 7)
+        }
+        g.bfs(0, 6)
+    }
+
+    @Test
+    fun test_bfs2() {
+        /**
+         * 递归 t 的上一个顶点
+         * @param prev 路径
+         * @param s 开始
+         * @param t 目标
+         */
+        fun printResult(prev: Array<Int>, s: Int, t: Int) {
+            if (prev[t] != -1 && s != t) {
+                printResult(prev, s, prev[t])
+            }
+            println("$t ")
+        }
+
+        /**
+         * 广度优先搜索树
+         * @param s 起始
+         * @param t 终
+         */
+        fun bfs(g: Gragp, s: Int, t: Int) {
+            if (s == t) return
+
+            // 记录顶点的访问状态, true 表示已访问
+            val visited = Array(g.v) { false }.apply {
+                this[s] = true
+            }
+            // 队列
+            val queue = LinkedList<Int>().apply {
+                this.add(s)
+            }
+            // 记录顶点的上一个访问节点
+            val prev = Array(g.v) { -1 }
+
+            while (!queue.isEmpty()) {
+                val w = queue.poll()        // 顶点
+                // 遍历与w直接相邻的所有顶点
+                g.adj[w].forEach { p ->
+                    if (!visited[p]) {
+                        prev[p] = w     // 记录 p 的上一个顶点为 w
+                        if (p == t) {    // 找到目录节点，退出循环
+                            printResult(prev, s, t)
+                            return
+                        }
+                        visited[p] = true
+                        queue.offer(p)      // better: 这里写在 if 里
+                    }
+                }
+            }
+        }
+
+        val g = Graph_No_Direction.Gragp(8)
+        g.apply {
+            addEdge(0, 1)
+            addEdge(0, 3)
+            addEdge(1, 2)
+            addEdge(1, 4)
+            addEdge(3, 4)
+            addEdge(2, 5)
+            addEdge(4, 5)
+            addEdge(4, 6)
+            addEdge(5, 7)
+            addEdge(6, 7)
+        }
+        bfs(g, 0, 6)
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////
     /**
      * 无向图
      */
@@ -54,7 +126,7 @@ class Graph_No_Direction {
             val queue = LinkedList<Int>()
             queue.add(s)
 
-            // 用来记录搜索路径
+            // 用来记录搜索路径 (prev[w] 存储的是：顶点 w 是从哪个前驱顶点遍历过来的)
             val prev = Array(v) { -1 }
 
             while (queue.size != 0) {
@@ -64,7 +136,7 @@ class Graph_No_Direction {
                     if (!visited[q]) {
                         prev[q] = w
                         if (q == t) {
-                            println(prev, s, t)
+                            printResult(prev, s, t)
                             return
                         }
                         visited[q] = true
@@ -74,9 +146,10 @@ class Graph_No_Direction {
             }
         }
 
-        private fun println(prev: Array<Int>, s: Int, t: Int) {  //
+        // 递归，s->t 的路径；  用于正向打印
+        private fun printResult(prev: Array<Int>, s: Int, t: Int) {
             if (prev[t] != -1 && t != s) {
-                println(prev, s, prev[t])
+                printResult(prev, s, prev[t])
             }
             println("$t ")
         }
