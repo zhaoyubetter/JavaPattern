@@ -1,10 +1,9 @@
 package test;
 
 import com.better.Utils;
+import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.Arrays;
 
 /**
@@ -34,5 +33,15 @@ public class ListTest {
 
         Utils.printArray(ints);
 
+        int cc = 0;
+        for(cc = 5; cc >=0; --cc) {
+        }
+        System.out.println(cc);
+
+
+    }
+
+    @Test
+    public void test1() {
     }
 }
