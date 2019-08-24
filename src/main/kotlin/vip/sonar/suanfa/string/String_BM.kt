@@ -53,9 +53,9 @@ class String_BM {
                 return i
             }
 
-            // === 添加好后缀规则
+
             val x = si - bc[a[i + si].toInt()]  // 坏字符的滑动距离
-            var y = 0
+            var y = 0   // 好后缀滑动的距离
             if (si < m - 1) {   // 如果有好后缀的话
                 y = moveByGS(si, m, suffix, prefix)
             }
@@ -72,12 +72,15 @@ class String_BM {
      */
     private fun moveByGS(si: Int, m: Int, suffix: Array<Int>, prefix: Array<Boolean>): Int {
         val k = m - 1 - si
+        // 规则1
         if (suffix[k] != -1) return si - suffix[k] + 1
+        // 规则2 好后缀的后缀子串，for 循环是规则2
         for (r in (si + 2 until m)) {
-            if (prefix[m - r]) {
+            if (prefix[m - r] == true) {
                 return r
             }
         }
+        // 规则3
         return m
     }
 
@@ -122,8 +125,8 @@ class String_BM {
 
     @Test
     fun test1() {
-        val a = "abcdefg".toCharArray().toTypedArray()
-        val b = "a".toCharArray().toTypedArray()
+        val a = "bcaabcabbcabcab".toCharArray().toTypedArray()
+        val b = "bcabcab".toCharArray().toTypedArray()
         println(bm(a, a.size, b, b.size))
     }
 
