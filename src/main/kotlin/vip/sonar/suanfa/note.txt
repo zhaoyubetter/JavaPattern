@@ -58,7 +58,7 @@
     二分查找，看似简单其实越难掌握，灵活应用就更加困难；
         binarysearch/BinarySearch.kt
     计算平方根
-        binarysearch/Test1.kt
+        binarysearch/Greedy.kt
 
 10. 2019-03-18
     二分查找变形问题
