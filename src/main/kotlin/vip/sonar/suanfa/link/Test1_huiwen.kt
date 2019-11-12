@@ -77,6 +77,7 @@ fun main() {
         fast = fast?.next?.next
         // 记录临时值
         val next = slow?.next
+        // 这里非常巧妙，前半部分反转
         slow?.next = prev
         prev = slow
         slow = next
@@ -87,6 +88,7 @@ fun main() {
         slow = slow?.next
     }
 
+    // 判断后部分
     while (slow != null) {
         if (slow.data != prev?.data) {
             println("no")
