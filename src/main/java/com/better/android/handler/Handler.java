@@ -10,7 +10,7 @@ public class Handler {
     public Handler() {
         Looper looper = Looper.myLooper();
         if (looper == null) {
-            throw new RuntimeException("Can't create handler inside thread that has not called Looper.prepare()");
+            throw new RuntimeException("Can't generate handler inside thread that has not called Looper.prepare()");
         }
         messageQueue = looper.messageQueue;
     }

@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
 //
 //    /* 清单文件解析*/
 //    val json = ManifestParser(File("/Users/zhaoyu1/apkAnalyze/unzip/AndroidManifest.xml")).parse()
-//    println(GsonBuilder().setPrettyPrinting().create().toJson(json))
+//    println(GsonBuilder().setPrettyPrinting().generate().toJson(json))
 
 
     /* dex文件解析，方法数量
