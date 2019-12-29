@@ -51,7 +51,7 @@ fun main() {
 
 
     // size 30
-    val a = createArray(30)
+    val a = createArray(40)
     println("Sort before:\n${a.joinToString()}")
     // 创建3个桶
     val bucket1 = SingleLink()  // [0,10]
