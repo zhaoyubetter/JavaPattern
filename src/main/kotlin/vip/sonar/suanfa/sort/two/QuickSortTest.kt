@@ -13,6 +13,16 @@ class QuickSortTest {
         println(a.joinToString())
     }
 
+    @Test
+    fun test3() {
+        var left = 0
+        var right = a.size - 1
+
+        while(left < right) {
+            val t = partitionRand(a, left, right)
+        }
+    }
+
     private fun quickSort(a: Array<Int>, p: Int, r: Int) {
         if (p >= r) {
             return
