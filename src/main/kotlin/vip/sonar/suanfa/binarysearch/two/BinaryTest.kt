@@ -105,4 +105,61 @@ class BinaryTest {
             }
         }
     }
+
+    /*
+    讲的都是非常规的二分查找问题，今天的思考题也是一个非常规的二分查找问题。如果有序数组是一个循环有序数组，
+    比如 4，5，6，1，2，3。针对这种情况，如何实现一个求“值等于给定值”的二分查找算法呢？
+    不会做？？？
+     */
+    @Test
+    fun test5() {
+        // 这里的复杂度为 O(n)
+        fun inner(): Int {
+            val search = 5
+            val a = arrayOf(4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3)
+
+            var low = 0             // 最低位
+            var high = 0            // 最高位
+            var i = 0
+            while (i <= a.size - 1) {
+                // 1.找到有序数组最高位的下标
+                if (a[i] < a[i + 1]) {
+                    high = i
+                } else {
+                    // 2.使用普通2分查找
+                    val i = binarySearch(low, high, a, search)
+                    if (i != -1) {
+                        return i
+                    } else {
+                        low = high + 1
+                    }
+                }
+
+                //high已经到最后一个位置
+                if (high == a.size - 1) {
+                    return binarySearch(low, high, a, search)
+                }
+                i++
+            }
+
+            return -1
+        }
+        println(inner())
+    }
+
+    private fun binarySearch(low: Int, high: Int, a: Array<Int>, search: Int): Int {
+        var low = low
+        var high = high
+        while (low <= high) {
+            val mid = low + (high - low) / 2
+            if (a[mid] == search) {
+                return mid
+            } else if (a[mid] > search) {
+                high = mid - 1
+            } else {
+                low = mid + 1
+            }
+        }
+        return -1
+    }
 }
