@@ -88,13 +88,12 @@ class SkipListTest {
                 do {
                     var str: String? = null
                     str = if (d?.get(i) != null) {
-                        var a = "$i----" + d?.get(i)?.value
+                        var a = "----> " + d?.get(i)?.value
                         if (!first) "第${i}层: $a" else "$a"
                     } else {
-                        if (!first) "第${i}层: $i----" else "$i----"
+                        if (!first) "第${i}层: $i----> " else "$i----> "
                     }
                     print("$str ")
-//                    print("${(if (d?.get(i) != null) "$i>>" + d?.get(i)?.value else null)} : $i----")
                     d = d?.get(i)?.forwards
 
                     first = true    // 层数只打印一次
