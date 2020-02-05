@@ -7,6 +7,7 @@ import java.util.LinkedHashMap
  * 装载因子：散列表的装载因子 = 填入表中的元素个数 / 散列表的长度
  * @author better
  * @date 2019-03-24 20:23
+ * https://time.geekbang.org/column/article/64586
  */
 
 
