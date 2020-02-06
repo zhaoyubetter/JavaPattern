@@ -171,5 +171,10 @@
        生成二叉树、前、中、后、层序遍历
 48. 2020-02-05
     二叉查找树，重写 添加、查询、删除操作
+49. 2020-02-06
+    a.hashTable的详细说明
+        https://www.hackerearth.com/zh/practice/data-structures/hash-tables/basics-of-hash-tables/tutorial/
+        hash/test2
+    b.二叉查找树 获取最大、最小节点
 
 

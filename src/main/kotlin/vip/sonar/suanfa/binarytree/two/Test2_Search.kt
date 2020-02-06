@@ -1,5 +1,6 @@
 package vip.sonar.suanfa.binarytree.two
 
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
@@ -247,6 +248,22 @@ class Test2_Search {
 
             return true
         }
+
+        fun getMaxNode(root: Node<T>): Node<T>? {
+            var c: Node<T>? = root
+            while (c?.right != null) {
+                c = c?.right
+            }
+            return c
+        }
+
+        fun getMinNode(root: Node<T>): Node<T>? {
+            var c: Node<T>? = root
+            while (c?.left != null) {
+                c = c?.left
+            }
+            return c
+        }
     }   // end class Node
 
     private lateinit var root: Node<Int>
@@ -312,5 +329,17 @@ class Test2_Search {
         TreeBeauty.show(root)
         root.deleteNode(8, root)
         TreeBeauty.show(root)
+    }
+
+    @Test
+    fun testGetMaxMinNode() {
+        TreeBeauty.show(root)
+        Assert.assertEquals(10, root.getMaxNode(root)?.data)
+        Assert.assertEquals(-3, root.getMinNode(root)?.data)
+    }
+
+    @Test
+    fun testGetMinNode() {
+
     }
 }
