@@ -7,9 +7,11 @@ import org.junit.Before
 import org.junit.Test
 
 /**
- * 二叉查找树
+ * 二叉查找树,
+ * 支持重复数据
+ * removeNode 支持删除重复节点
  */
-class Test2_Search {
+class Test2_Search2_repeat {
 
     private class TreeBeauty {
         companion object {
@@ -100,7 +102,7 @@ class Test2_Search {
                     }
 
                     c = c.left
-                } else {                 // more use right (大于使用右孩子)
+                } else {                 // equals or more use right (大于使用右孩子)
                     if (c.right == null) {
                         c.right = newNode
                         return
@@ -111,159 +113,87 @@ class Test2_Search {
             }
         }
 
-        fun findNode(data: T, root: Node<T>): Node<T>? {
+        fun findNode(data: T, root: Node<T>) {
             var c: Node<T>? = root
+            var count = 0
             while (c != null) {
+                // 因为有重复数据，必须遍历到叶子节点
                 if (c.data == data) {
-                    return c
-                }
-                if (data < c.data) {
+                    println("find data $data, times: ${++count}")
+                    c = c.right  // 重复插入到右子树中，这里遍历右子树
+                } else if (data < c.data) {
                     c = c.left
                 } else if (data > c.data) {
                     c = c.right
                 }
             }
-            return null
         }
 
-        /* delete Node，删除比较复杂点
-        fun deleteNode(data: T, root: Node<T>): Boolean {
-            var c: Node<T>? = root
-            var p: Node<T> = root    // parent
+        /**
+         * 支持删除重复节点
+         */
+        fun removeNode(value: T, root: Node<T>?) {
+            var c = root
             var node: Node<T>? = null
-
-            while (c != null) {
-                if (c.data == data) {
-                    node = c
-                    break
-                } else if (data < c.data) {
-                    p = c
+            var parent: Node<T>? = null
+            while (c != null && c.data != value) {
+                parent = c
+                if (value < c?.data) {
                     c = c.left
-                } else {
-                    p = c
+                } else if (value > c?.data) {
                     c = c.right
                 }
             }
-
-            if(node == null) {
-                return false
-            }
-
-            // === 删除的多种情况
-            if (node != null) {
-                if (node.left == null && node.right == null) {
-                    // 1. node is leaf （为叶子节点）
-                    if (p.left == node) {
-                        p.left = null
-                    } else {
-                        p.right = null
-                    }
-                } else if (node.left != null && node.right != null) {
-                    // 3. node has left and right child (有2个孩子，这个相对麻烦了)
-                    // find right's tree min child replace current and delete min child.
-                    // 找到右子树最小节点，并将其待删除节点替换成最小节点，最后删除最小节点
-                    var min = node.right
-                    var minP = min
-                    while (min?.left != null) {
-                        minP = min
-                        min = min.left
-                    }
-                    // replace value and remove left child
-                    node.data = min?.data!!
-                    minP?.left = null
-                } else {
-                    // 2. node has a child either left or right （有一个孩子）
-                    if (p.left == node) {
-                        p.left = if (node.left != null) node.left else node.right
-                    } else {
-                        p.right = if (node.left != null) node.left else node.right
-                    }
-                }
-            }
-
-            return true
-        } // end delete */
-
-        // delete Node，删除比较复杂点
-        // 简写了一下，上面代码流程很清晰，简写更加简明
-        fun deleteNode(data: T, root: Node<T>): Boolean {
-            var c: Node<T>? = root
-            var p: Node<T>? = null    // parent
-            var node: Node<T>? = null
-
-            while (c != null) {
-                if (c.data == data) {
-                    node = c
-                    break
-                } else if (data < c.data) {
-                    p = c
-                    c = c.left
-                } else {
-                    p = c
-                    c = c.right
-                }
-            }
+            // 找到的值，赋给 node
+            node = c
 
             if (node == null) {
-                return false
+                return
             }
 
             var child: Node<T>? = null
-            // === 删除的多种情况
-            if (node.left == null && node.right == null) {
-                // 1. node is leaf （为叶子节点）
-                child = null
-            } else if (node.left != null && node.right != null) {
-                // 3. node has left and right child (有2个孩子，这个相对麻烦了)
-                // find right's tree min child replace current and delete min child.
-                // 找到右子树最小节点，并将其待删除节点替换成最小节点，最后删除最小节点
-                var min = node.right
-                var minP = min
-                while (min?.left != null) {
-                    minP = min
-                    min = min.left
-                }
-                // replace value and remove left child
-                node.data = min?.data!!
+            if (node != null) {
+                if (node.left != null && node.right != null) {
+                    // 1.has two children
+                    // 找到右子树最小节点，并将其待删除节点替换成最小节点，最后删除最小节点
+                    var min = node.right
+                    var minP = node
+                    while (min?.left != null) {  // until left most node
+                        // 重复的节点处理 （就是链表的删除）
+                        if (min.left?.data == node.data) {
+                            min.left = min?.left?.right
+                            continue
+                        }
+                        minP = min
+                        min = min.left
+                    }
+                    // replace data
+                    node?.data = min?.data!!
 
-                node = min
-                child = null
-                p = minP!!
-            } else {
-                // 2. node has a child either left or right （有一个孩子）
-                child = if (node.left != null) node.left else node.right
+                    node = min
+                    parent = minP
+                    child = null
+                } else if (node.left == null && node.right == null) {
+                    // 2. no child
+                    child = null
+                } else {
+                    child = if (node.left != null) node?.left else node.right
+                }
             }
 
-            // to delete
-            if (p == null) {
-                // to delete is root node
+            if (parent == null) {
                 println("删除的是根节点")
             } else {
-                if (p.left == node) {
-                    p.left = child
+                // real del
+                if (parent?.left == node) {
+                    parent?.left = child
                 } else {
-                    p.right = child
+                    parent?.right = child
                 }
+                println("删除节点 ${value}")
             }
-
-            return true
         }
 
-        fun getMaxNode(root: Node<T>): Node<T>? {
-            var c: Node<T>? = root
-            while (c?.right != null) {
-                c = c?.right
-            }
-            return c
-        }
-
-        fun getMinNode(root: Node<T>): Node<T>? {
-            var c: Node<T>? = root
-            while (c?.left != null) {
-                c = c?.left
-            }
-            return c
-        }
 
         // 获取后继节点，节点值大于当前节点，并且所有最大值中最小的
         /**
@@ -358,6 +288,14 @@ class Test2_Search {
             return result
         }
 
+        fun getHeight(root: Node<T>?): Int {
+            if(root != null) {
+                val left = getHeight(root.left) + 1
+                var right = getHeight(root.right) + 1
+                return Math.max(left, right)
+            }
+            return 0
+        }
 
     }   // end class Node
 
@@ -377,6 +315,31 @@ class Test2_Search {
     }
 
     @Test
+    fun testRemove() {
+        TreeBeauty.show(root)
+        root.removeNode(3, root)
+        TreeBeauty.show(root)
+        root.removeNode(8, root)
+        TreeBeauty.show(root)
+        root.removeNode(5, root)
+        TreeBeauty.show(root)
+    }
+
+    @Test
+    fun testRemoveMul() {
+        root.addNode(8, root)
+        root.addNode(3, root)
+        root.addNode(3, root)
+        root.addNode(2, root)
+        root.addNode(4, root)
+        TreeBeauty.show(root)
+        root.removeNode(3, root)
+        TreeBeauty.show(root)
+        root.removeNode(8, root)
+        TreeBeauty.show(root)
+    }
+
+    @Test
     fun testAddNode() {
         val a = Node(8)
         a.apply {
@@ -392,45 +355,24 @@ class Test2_Search {
     }
 
     @Test
+    fun testAddMulNode() {
+        root.addNode(8, root)
+        root.addNode(3, root)
+        root.addNode(3, root)
+        TreeBeauty.show(root)
+    }
+
+    @Test
     fun testFindNode() {
-        val find = 9
-        assertEquals(find, root.findNode(find, root)?.data)
-        assertNull(root.findNode(20, root))
-    }
+        root.addNode(8, root)
+        root.addNode(3, root)
+        root.addNode(3, root)
 
-    @Test
-    fun testRemoveWhenNodeNoChildren() {
         TreeBeauty.show(root)
-        root.deleteNode(9, root)
-        TreeBeauty.show(root)
-    }
 
-    @Test
-    fun testRemoveWhenNodeHasLeftChild() {
-        TreeBeauty.show(root)
-        root.deleteNode(-1, root)
-        TreeBeauty.show(root)
-    }
-
-    @Test
-    fun testRemoveWhenNodeHasRightChild() {
-        TreeBeauty.show(root)
-        root.deleteNode(3, root)
-        TreeBeauty.show(root)
-    }
-
-    @Test
-    fun testRemoveWhenNodeHasTwoChildren() {
-        TreeBeauty.show(root)
-        root.deleteNode(8, root)
-        TreeBeauty.show(root)
-    }
-
-    @Test
-    fun testGetMaxMinNode() {
-        TreeBeauty.show(root)
-        Assert.assertEquals(10, root.getMaxNode(root)?.data)
-        Assert.assertEquals(-3, root.getMinNode(root)?.data)
+        val find = 3
+        root.findNode(find, root)
+        root.findNode(8, root)
     }
 
     /**
@@ -453,5 +395,11 @@ class Test2_Search {
         Assert.assertEquals(9, root.prevNode(10, root)?.data)      // no right
         Assert.assertEquals(5, root.prevNode(8, root)?.data)       //  has left
         Assert.assertEquals(8, root.prevNode(9, root)?.data)       //  no right, get the first smaller parent.
+    }
+
+    @Test
+    fun testGetHeight() {
+        TreeBeauty.show(root)
+        println(root.getHeight(root))
     }
 }
