@@ -154,7 +154,7 @@ private class Node<T : Comparable<T>>(var data: T) {
             } else if (it.left != null && it.right != null) {
                 // 2. left与right都存在的情况，从右孩子对应的左子树种找到最小节点
                 var min = it.right
-                var minP = min
+                var minP = parent
                 while (min?.left != null) {
                     minP = min
                     min = min.left
