@@ -182,3 +182,11 @@
 50. 2020-02-08
     a.修复二叉查找树，删除重复节点问题
     b.求二叉树的高度
+51. 2020-02-09
+    a.hash函数的理解，参考：
+        https://blog.csdn.net/mxw2552261/article/details/91349677
+    b.HashTable的简单实现
+        hash/Test3_HashTable
+52. 2020-02-10
+    a.LruBaseHashTable
+       hash/Test4_LruBaseHashTable

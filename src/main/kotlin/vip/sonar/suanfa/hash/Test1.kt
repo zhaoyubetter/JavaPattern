@@ -22,6 +22,7 @@ import java.util.LinkedHashMap
        // 先右移16位，再与本身进行异或，即：hashcode ^ (hashcode >>> 16)
        // 1. 将高16位无符号位移(高位补0)到低16位，也就是高16位全部是0
        // 2. 将自己的高位与地位异或获得结果，实际上高位还是保留了；
+       //  也就是更好的均匀散列表的下标
 
        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
  }
@@ -52,6 +53,9 @@ public int hashCode() {
 
         // s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
         // 31 的二进制是 0001 1111
+
+
+        // 字符串的每个字符char的int值（ASCII值）与前一个 h 相乘 并 叠加加得到
         for (int i = 0; i < value.length; i++) {
             h = 31 * h + val[i];  // 字符串比较长时，会溢出，形成负数
         }
@@ -64,6 +68,7 @@ public int hashCode() {
 
  */
 fun main() {
+    var obje = Object()
     val map = HashMap<String, String>()
     val str = java.lang.String("abcde")
     var h = 0
@@ -75,4 +80,7 @@ fun main() {
 
     val linkmap = LinkedHashMap<String, String>()
 
+    // 为何使用31
+    // 31 * i == (i << 5）- i
+    println((6 shl 5) )
 }
