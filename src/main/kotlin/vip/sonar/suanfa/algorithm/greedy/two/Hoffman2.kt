@@ -2,10 +2,7 @@ package vip.sonar.suanfa.algorithm.greedy.two
 
 import org.junit.Before
 import org.junit.Test
-import sun.misc.Queue
-import vip.sonar.suanfa.binarytree.two.Test2_Search2_repeat
 import java.io.File
-import java.lang.StringBuilder
 import java.util.*
 
 /**
@@ -20,7 +17,7 @@ import java.util.*
     则利用该树对应的哈夫曼编码对文件进行编码，能使该文件压缩后对应的二进制文件的长度最短。
 为何前缀码不一样：因为哈夫曼编码的是叶子节点
  */
-class Hofuman2 {
+class Hoffman2 {
 
     private class TreeBeauty {
         companion object {
@@ -102,7 +99,7 @@ class Hofuman2 {
     @Before
     fun getLetterCount() {
         val letterCounts = Array(6) { 0 }
-        val filePath = Hofuman2::class.java.getResource("../../../../../../files/hofuman.txt").path
+        val filePath = Hoffman2::class.java.getResource("../../../../../../files/hofuman.txt").path
         File(filePath).readText().forEach {
             letterCounts[it - 'a'] += 1
         }

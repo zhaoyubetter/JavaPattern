@@ -12,7 +12,7 @@ import java.lang.StringBuilder
  *   我们只要识别出第一个编码，将它翻译成原文字符，再对余下的编码文件重复这个解码过程即可
 *  3. I'm failed use array to implement
  */
-class Hofuman {
+class Hofuman1 {
 
     @Test
     fun testGenerateString() {
@@ -43,7 +43,7 @@ class Hofuman {
 
     @Before
     fun getLetterCount() {
-        val filePath = Hofuman::class.java.getResource("../../../../../../files/hofuman.txt").path
+        val filePath = Hofuman1::class.java.getResource("../../../../../../files/hofuman.txt").path
         File(filePath).readText().forEach {
             letterCounts[it - 'a'] += 1
         }

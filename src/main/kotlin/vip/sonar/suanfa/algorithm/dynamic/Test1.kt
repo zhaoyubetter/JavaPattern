@@ -21,7 +21,7 @@ class Test1 {
 
         // 第一行数据特殊处理
         states[0][0] = true
-        if (weight[0] <= w) {
+        if (weight[0] <= w) {  // 第1个物品
             states[0][weight[0]] = true
         }
 

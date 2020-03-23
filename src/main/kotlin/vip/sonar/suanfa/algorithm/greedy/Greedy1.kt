@@ -5,7 +5,6 @@ import org.junit.Test
 
 /**
 解法来自：
-https://github.com/kkzfl22/datastruct/blob/master/src/main/java/com/liujun/datastruct/algorithm/greedyAlgorithm/case1/discribe.txt
 
  * 背包问题
 假设我们有一个可以容纳 100kg 物品的背包，
@@ -49,19 +48,22 @@ class Greedy1 {
 
         // 3.模拟取货
         while (beans.isNotEmpty()) {
-            val bean = beans.removeAt(0)    // 取第一个，单价最高的
-            if (currentWeight >= bean.weight) {
-                currentWeight -= bean.weight
-                resultList.add(bean)
-            } else {
-                val leftWeight = bean.weight - currentWeight   // 剩下能装的大小
-                bean.weight = leftWeight
-                beans.add(0, bean)
-                resultList.add(Bean(bean.name, leftWeight, bean.value))
-                break
+            if(currentWeight > 0) {
+                val bean = beans.removeAt(0)    // 取第一个，单价最高的
+                if (currentWeight >= bean.weight) {
+                    currentWeight -= bean.weight
+                    resultList.add(bean)
+                } else {
+                    val leftWeight =  currentWeight   // 剩下能装的大小
+                    resultList.add(Bean(bean.name, leftWeight, bean.unitPrice * leftWeight))
+                    break
+                }
             }
         }
 
+        resultList.forEach {
+            println("${it.name} -- ${it.weight} -- ${it.unitPrice}")
+        }
         println(resultList.sumBy { it.unitPrice * it.weight })
     }
 
