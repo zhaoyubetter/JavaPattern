@@ -18,7 +18,7 @@ class HeapTest {
             }
             // 1. 先添加到数组尾部
             a[++n] = data
-            // 2.交换
+            // 2.交换 从下往上 堆化
             var i = n
             while (i / 2 > 0 && a[i] > a[i / 2]) {  // 下标比父大，下标节点值比父大，交换
                 val tmp = a[i / 2]
@@ -37,11 +37,11 @@ class HeapTest {
             // 头部即最大
             val rootV = a[1]
             a[1] = a[n--]
-            headify(n, 1)
+            headify(n, 1)   // 删除时，从上往下
             return rootV
         }
 
-        // 堆化
+        // 从上往下堆化
         private fun headify(n: Int, i: Int) {
             var i = i
             while (true) {
