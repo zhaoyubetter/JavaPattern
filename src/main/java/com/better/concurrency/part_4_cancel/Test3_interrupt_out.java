@@ -20,6 +20,11 @@ public class Test3_interrupt_out {
             public void run() {
                 // 没有中断，一直运行
                 while(!Thread.currentThread().isInterrupted()) {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                     Utils.println("running....");
                 }
 
@@ -31,12 +36,15 @@ public class Test3_interrupt_out {
     public static void timedRun(Runnable r,
                                 long timeout, TimeUnit unit) {
         final Thread taskThread = Thread.currentThread();
+        Utils.print("currentThread : " + taskThread.getName());
+
         executor.schedule(new Runnable() {
             @Override
             public void run() {
                 taskThread.interrupt();     // 中断
             }
         }, timeout, unit);
+
         r.run();
     }
 }

@@ -32,7 +32,7 @@ class Test5_B_plus {
      * 这个定义里，每个叶子节点存储3个数据行的键值及地址信息。
      *
      * k值是事先计算得到的，计算的依据是让所有信息的大小正好等于页的大小：
-     * PAGE_SIZE = k*4[keyw...大小]+k*8[dataAd..大小]+8[prev大小]+8[next大小]
+     * PAGE_SIZE = k*4[keyw/..大小]+k*8[dataAd/..大小]+8[prev大小]+8[next大小]
      */
     class BPlusTreeLeafNode {
         val k = 3
