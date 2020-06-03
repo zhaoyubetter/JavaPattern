@@ -1,0 +1,45 @@
+设计原则：
+1. 单一职责原则：Single Responsibility Principle，缩写为 SRP
+    一个类只负责完成一个职责或者功能。不要设计大而全的类，要设计粒度小、功能单一的类。
+    单一职责原则是为了实现代码高内聚、低耦合，提高代码的复用性、可读性、可维护性。
+
+    判断一个类或模块是否单一？
+    a).类中的代码行数、函数或者属性过多;
+    b).类依赖的其他类过多，或者依赖类的其他类过多；
+2.对扩展开放、对修改关闭，典型的如 okhttp；
+3.里式替换原则；
+    里式替换是一种设计原则，是用来指导继承关系中子类该如何设计的，
+    子类的设计要保证在替换父类的时候，不改变原有程序的逻辑以及不破坏原有程序的正确性。
+    有点类似装饰模式；
+4.接口隔离原则；
+5.控制反转（Inversion Of Control - IOC）依赖反转
+  依赖注入（DI）：不通过 new() 的方式在类内部创建依赖类对象，而是将依赖的类对象在外部创建好之后，
+    通过构造函数、函数参数等方式传递（或注入）给类使用。；
+6.控制反转原则（依赖倒置原则）：Dependency Inversion Principle
+    High-level modules shouldn’t depend on low-level modules. Both modules should depend on abstractions.
+    In addition, abstractions shouldn’t depend on details. Details depend on abstractions.
+7.KISS 原则：尽量保持简单。
+8.DRY (Don’t Repeat Yourself) 原则：不要重复
+9.迪米特法则
+    Each unit should have only limited knowledge about other units: only units “closely” related to the current unit.
+    Or: Each unit should only talk to its friends; Don’t talk to strangers.
+10.
+     1.单一职责原则
+     适用对象:模块，类，接口
+     侧重点:高内聚，低耦合
+     思考角度:自身
+
+     2.接口隔离原则
+     适用对象:接口，函数
+     侧重点:低耦合
+     思考角度:调用者
+
+     3.基于接口而非实现编程
+     适用对象:接口，抽象类
+     侧重点:低耦合
+     思考角度:调用者
+
+     4.迪米特法则
+     适用对象:模块，类
+     侧重点:低耦合
+     思考角度:类关系

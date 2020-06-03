@@ -2,6 +2,10 @@ package com.better.pattern.two.a_auth
 
 import org.junit.Test
 
+/**
+ * 面向对象形式的需求分析与程序设计
+ * https://time.geekbang.org/column/article/171767
+ */
 class Test {
     @Test
     fun test1() {
