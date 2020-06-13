@@ -28,6 +28,8 @@ dependencies {
     compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.squareup:javapoet:1.11.1'
+    // okio 2.0 之后就是 kt 版本了
+    compile('com.squareup.okio:okio:1.15.0')
     compile project(':android-commons')
 }
 repositories {

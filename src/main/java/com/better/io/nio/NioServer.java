@@ -38,7 +38,10 @@ public class NioServer {
         // 3.事件处理，使用死循环
         while (true) {
             // 返回关注事件的数量
-            selector.select();
+            int  num = selector.select();
+            if(num == 0) {
+                continue;
+            }
             // 获取关注SelectionKey的集合对象（之前注册好的）
             Set<SelectionKey> selectedKeys = selector.selectedKeys();
             selectedKeys.forEach(selectionKey -> {
