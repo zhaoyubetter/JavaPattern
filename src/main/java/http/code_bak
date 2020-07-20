@@ -1,0 +1,31 @@
+ BufferedReader br = new BufferedReader(Channels.newReader(client, "utf-8"));
+                String line = br.readLine();
+                final String[] statuses = line.split(" ");
+
+                // request line, such as: GET / HTTP/1.1
+                /*
+                    GET / HTTP/1.1
+                    Host: localhost:8080
+                 */
+
+                // 0.request line
+                method = statuses[0];
+                path = statuses[1];
+                version = statuses[2];
+
+                // 1. header data handler
+                while ((line = br.readLine()) != null) {
+                    if (line.isEmpty()) {
+                        break;
+                    } else {
+                        final String[] h = line.split(":");
+                        headers.put(h[0].toLowerCase().trim(), h[1].trim());
+                    }
+                }
+
+                // 2. body data handler
+                StringBuilder payload = new StringBuilder();
+                while (br.ready()) {
+                    payload.append((char) br.read());
+                }
+                System.out.println("Payload data is: " + payload.toString());

@@ -1,0 +1,8 @@
+GET / HTTP/1.1
+User-Agent: PostmanRuntime/7.26.1
+Accept: */*
+Cache-Control: no-cache
+Postman-Token: cb2d2e2c-514e-4783-9932-09786d8c2040
+Host: localhost.charlesproxy.com:8899
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
