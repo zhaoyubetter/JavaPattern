@@ -1,0 +1,61 @@
+
+```java
+public abstract class CharBuffer extends Buffer implements CharSequence, Comparable {
+  	// This is a partial API listing
+    public static CharBuffer wrap(char [] array, int offset, int length)
+    public static CharBuffer allocate(int capacity)
+    public static CharBuffer wrap(char [] array)
+    public final boolean hasArray()
+    public final char[] array()
+    public final int arrayOffset()
+}
+```
+
+
+CharBuffer buffer = CharBuffer.allocate(100);
+```
+
+
+char [] myArray = new char [100];
+CharBuffer charbuffer = CharBuffer.wrap (myArray);
+```
+
+
+
+
+```java
+public abstract class CharBuffer extends Buffer implements CharSequence, Comparable {
+	// This is a partial API listing
+	public abstract CharBuffer duplicate();
+  public abstract CharBuffer asReadOnlyBuffer( );
+  public abstract CharBuffer slice();
+}
+```
+
+duplicate()
+
+```java
+CharBuffer buffer = CharBuffer.allocate(10);
+buffer.put("Hello");
+CharBuffer dupeBuffer = buffer.duplicate();
+dupeBuffer.put("ooo");
+Utils.println(Arrays.toString(buffer.array()));  // Helloooo
+```
+
+asReadOnlyBuffer()
+
+```java
+CharBuffer buffer = CharBuffer.allocate(10);
+buffer.put("Hello");
+CharBuffer dupeBuffer = buffer.asReadOnlyBuffer();
+Utils.println(Arrays.toString(buffer.array()));
+
+dupeBuffer.flip();	//
+while (dupeBuffer.hasRemaining()) {
+  Utils.println(dupeBuffer.get());
+}
+```
+
+## 2.4
+
+###2.4.1
