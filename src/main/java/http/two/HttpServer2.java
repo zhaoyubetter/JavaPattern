@@ -1,15 +1,10 @@
 package http.two;
 
-import com.sun.net.httpserver.HttpServer;
-import org.apache.groovy.json.internal.IO;
-import org.jetbrains.annotations.NotNull;
-
 import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,7 +12,8 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Simple http server
@@ -32,6 +28,8 @@ public class HttpServer2 {
         private final String LINE_SEP = "\r\n";
         private final String METHOD_GET = "GET";
         private final String METHOD_POST = "POST";
+        // Content-Disposition: form-data; name="cccc"
+        private static final Pattern FORM_FIELD_FILE_PATTERN = Pattern.compile("([\\w-]+):\\s([\\w-]+);\\s(\\w+)=\"([^\"]+)\"(;\\s+(\\w+)=\"([^\"]+)\")?");
         private final ExecutorService executors = Executors.newFixedThreadPool(10);
 
         private static final MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
@@ -82,138 +80,116 @@ public class HttpServer2 {
             Map<String, String> bodyParam;
             try {
                 SocketChannel client = (SocketChannel) selectionKey.channel();
-                ByteBuffer byteBuffer = ByteBuffer.allocate(128);       // 故意使用 128
+                BufferedChannelReader brReader = new BufferedChannelReader(client);
                 StringBuilder headerSb = new StringBuilder();
+                String statusLine = brReader.readLine();
 
-                int lastChar = -1;
-                while (client.read(byteBuffer) > 0) {
-                    byteBuffer.flip();
-                    while (byteBuffer.hasRemaining()) {
-                        char c = (char) byteBuffer.get();
-                        headerSb.append(c);
-                        // c is return, last is nextLine
-                        if (c == '\r' && lastChar == '\n') {  // header area is end
-                            headerSb.deleteCharAt(headerSb.length() - 1);
-                            headers = getHeaderMap(headerSb.toString());
-                            final byte[] remain = new byte[byteBuffer.limit() - byteBuffer.position()];
-                            byteBuffer.get(remain, 0, remain.length);
-                            body(client, headers, remain);
-                            byteBuffer.clear();
-                            break;
-                        }
-                        lastChar = c;
+                // 1.status line parse
+                final String[] statuses = statusLine.split(" ");
+                method = statuses[0];
+                path = statuses[1];
+                version = statuses[2];
+                pathParam = getPathParam(path);
+
+                // 2. header area
+                String line = null;
+                while (!LINE_SEP.equals(line = brReader.readLine())) {
+                    if (null == statusLine) {
+                        statusLine = line;
+                    } else {
+                        headerSb.append(line);
                     }
-                    byteBuffer.clear();
                 }
+                headers = getHeaderMap(headerSb.toString());
 
+                if (METHOD_GET.equals(method)) {
+
+                } else if (METHOD_POST.equals(method)) {
+                    // 3. parse parseBody
+                    parseBody(headers, brReader);
+                }
                 sendResponse(client, "404 Not Found", "text/html", "ok".getBytes());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        private Map<String, String> getHeaderMap(String headerSb) {
-            final String[] lines = headerSb.split(LINE_SEP);
-            final String[] statuses = lines[0].split(" ");
-            Map<String, String> headers = new HashMap<>();
-            for (int i = 1; i < lines.length; i++) {
-                if (lines[i] != null && !lines[i].isEmpty()) {
-                    final String[] h = lines[i].split(":");
-                    headers.put(h[0].toLowerCase().trim(), h[1].trim());
-                }
-            }
-            return headers;
-        }
-
-        private void body(final SocketChannel client, final Map<String, String> headers, final byte[] remainBytes)
+        private void parseBody(final Map<String, String> headers, final BufferedChannelReader bufferedChannelReader)
                 throws IOException {
-            ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-            StringBuilder sb = new StringBuilder();
-            sb.append(new String(remainBytes, "utf-8"));
-            long contentLength = 0;
-            if (headers.containsKey("content-length")) {
-                contentLength = Integer.parseInt(headers.get("content-length"));
+            long contentLength = headers.containsKey("content-length") ? Integer.parseInt(headers.get("content-length")) : 0;
+            String contentType = headers.containsKey("content-type") ? headers.get("content-type") : "";
+            ByteBuffer buffer = bufferedChannelReader.getBuffer();
+            byte[] bytes = null;
+            if (buffer.remaining() > 0) {
+                bytes = new byte[buffer.limit() - buffer.position()];
+                buffer.get(bytes, 0, bytes.length);
             }
 
-            if (headers.containsKey("content-type")) {
-                String headerValue = headers.get("content-type");
-                if (!headers.isEmpty()) {
-                    if (headerValue.contains("multipart/form-data")) {
-                        String boundary = headerValue.substring(headerValue.indexOf("boundary") + 9);
-                        byteBuffer.put(remainBytes);    // remains
-                        // analyze form data
-                        while (client.read(byteBuffer) > 0) {
-                            final Reader reader = Channels.newReader(Channels.newChannel(new ByteArrayInputStream(byteBuffer.array())), "utf-8");
-                            final BufferedReader bufferedReader = new BufferedReader(reader);
-                            String line = null;
-                            while ((line = bufferedReader.readLine()) != null) {
-                                /*
-                                 ----------------------------088394715640614921034561
-                                 Content-Disposition: form-data; name="abb"
-                                 Content-Type: text/plain
+            // form-bean
+            if (contentType.contains("multipart/form-data")) {
+                List<MultiPart> multiParts = new ArrayList<>();
+                String boundary = contentType.substring(contentType.indexOf("boundary") + 9);
+                MultipartStream multipart = new MultipartStream(bufferedChannelReader.getChannel(), boundary.getBytes("ISO-8859-1"), bytes);
+                boolean nextPart = multipart.skipPreamble();
+                while (nextPart) {
+                    MultiPart item = new MultiPart();
+                    // 1. header
+                    String header = multipart.readHeaders();
+                    parseMultiItemHeader(header, item);
 
-                                 bbb
-                                 */
-                                if(line.startsWith("--") && line.indexOf(boundary) > 2) {
+                    // 2. body content
+                    parseMultiItemContent(item, multipart);
 
-                                }
-
-                            }
-                            if (null == line || line.isEmpty()) {
-                                break;
-//                            } else if (line.indexOf("Content-Length") != -1) {
-//                                this.contentLength = Integer.parseInt(line.substring(line.indexOf("Content-Length") + 16));
-//                                System.out.println("contentLength: " + this.contentLength);
-//                            } else if (line.indexOf("boundary") != -1) {
-//                                this.boundary = line.substring(line.indexOf("boundary") + 9);
-//                                System.out.println("********" + boundary);
-//                            }
-
-                            }
-                            byteBuffer.clear();
-//                            final Map<String, String> mapParam = getMapParam(sb.toString().trim());
-                            return;
-                        }
-                    } else {
-                        while (client.read(byteBuffer) > 0) {
-                            byteBuffer.flip();
-                            sb.append(new String(byteBuffer.array(), "utf-8"));
-                            byteBuffer.clear();
-                        }
-                        final Map<String, String> mapParam = getMapParam(sb.toString().trim());
-                    }
+                    // 3. has next?
+                    nextPart = multipart.readBoundary();
+                    multiParts.add(item);
                 }
+                System.out.println(multiParts);
             } else {
                 // all is text/plain
+                // application/x-www-form-urlencoded
             }
         }
 
-        private void handleMethodGet(SocketChannel client, String path) throws Exception {
-            Path filePath = getFilePath(path);
-            if (Files.exists(filePath)) {
-                String contentType = fileTypeMap.getContentType(filePath.toFile());
-                sendResponse(client, "200 OK", contentType, Files.readAllBytes(filePath));
+        private void parseMultiItemContent(MultiPart item, MultipartStream multipart) throws IOException {
+            if(!item.isFile) {
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                int size = multipart.readBodyData(outputStream);
+                item.value = new String(outputStream.toByteArray(), "utf-8");
+                item.length = size;
             } else {
-                // 404
-                byte[] notFoundContent = "<h1>Not found :(</h1>".getBytes();
-                sendResponse(client, "404 Not Found", "text/html", notFoundContent);
+                // upload files
+                File uploadFile = new File(item.filename);
+                FileOutputStream fos = new FileOutputStream(uploadFile);
+                item.length = multipart.readBodyData(fos);
             }
         }
 
-        private void handleMethodPost(SocketChannel client, String path) throws Exception {
-            // 1.part 1: analyze path, such as ?a=b&b=c
-            final Map<String, String> pathParam = getPathParam(path);
-
-            // 2.part 2: analyze body
-            ByteBuffer byteBuffer = ByteBuffer.allocate(2048);
-            while (client.read(byteBuffer) > 0) {
-                byteBuffer.flip();
-                final String result = new String(byteBuffer.array());
-                System.out.println(result);
-                byteBuffer.clear();
+        private void parseMultiItemHeader(String header, MultiPart item) {
+            final String[] split = header.split(LINE_SEP);
+            Matcher matcher = null;
+            for (String line : split) {
+                if (line.startsWith("Content-Disposition")) {
+                    // Content-Disposition: form-data; name="abb"
+                    // Content-Disposition: form-data; name="file1"; filename="XmlReader.java"
+                    matcher = FORM_FIELD_FILE_PATTERN.matcher(line);
+                    if (matcher.find()) {
+                        item.name = matcher.group(4);
+                        String filename = matcher.group(7);
+                        if (filename != null) {
+                            item.isFile = true;
+                            item.filename = filename;
+                        }
+                    }
+                } else if (line.startsWith("Content-Type")) {
+                    //Content-Type: text/plain; charset=UTF-8
+                    Pattern pattern = Pattern.compile("([\\w-]+):\\s([^;]+);?\\s?((.+))?");
+                    matcher = pattern.matcher(line);
+                    if (matcher.find()) {
+                        item.contentType = matcher.group(2);
+                    }
+                }
             }
-
-            sendResponse(client, "200 OK", "text/html", "ok".getBytes());
         }
 
         private Map<String, String> getPathParam(String path) {
@@ -237,6 +213,17 @@ public class HttpServer2 {
             return paramsMap;
         }
 
+        private Map<String, String> getHeaderMap(String headerSb) {
+            final String[] lines = headerSb.split(LINE_SEP);
+            Map<String, String> headers = new HashMap<>();
+            for (int i = 0; i < lines.length; i++) {
+                if (lines[i] != null && !lines[i].isEmpty()) {
+                    final String[] h = lines[i].split(":");
+                    headers.put(h[0].toLowerCase().trim(), h[1].trim());
+                }
+            }
+            return headers;
+        }
 
         private static Path getFilePath(String path) {
             if ("/".equals(path)) {
@@ -262,3 +249,121 @@ public class HttpServer2 {
         }
     }
 }
+
+
+////////////////////
+       /*
+       以下代码作废
+       private void uploadFile(String filename, String boundary,
+                               BufferedChannelReader channelReader) throws FileNotFoundException {
+           final byte[] boundaryBytes = ("--" + boundary).getBytes();
+           int head = 0;
+           int tail = 0;
+           File uploadFile = new File(filename);
+           long fileSize = 0;
+           try (FileChannel uploadChannel = new FileOutputStream(uploadFile).getChannel()) {
+               int size = 0;
+               while ((size = channelReader.readBytes()) > 0) {
+                   byte[] arr = new byte[size];
+                   channelReader.getBuffer().get(arr);
+
+                   System.out.print(new String(arr));
+               }
+
+//                char c = (char)channelReader.read();
+//                while (null != (line = channelReader.readLine())) {
+//                    // end the file
+//                    if(line.startsWith("--" + boundary)) {
+//                        break;
+//                    }
+//                    uploadChannel.write(ByteBuffer.wrap(line.getBytes()));
+//                    System.out.print(line);
+//                }
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+       }
+
+    private void handleMethodGet(SocketChannel client, String path) throws Exception {
+        Path filePath = getFilePath(path);
+        if (Files.exists(filePath)) {
+            String contentType = fileTypeMap.getContentType(filePath.toFile());
+            sendResponse(client, "200 OK", contentType, Files.readAllBytes(filePath));
+        } else {
+            // 404
+            byte[] notFoundContent = "<h1>Not found :(</h1>".getBytes();
+            sendResponse(client, "404 Not Found", "text/html", notFoundContent);
+        }
+    }
+
+    private void handleMethodPost(SocketChannel client, String path) throws Exception {
+        // 1.part 1: analyze path, such as ?a=b&b=c
+        final Map<String, String> pathParam = getPathParam(path);
+
+        // 2.part 2: analyze parseBody
+        ByteBuffer byteBuffer = ByteBuffer.allocate(2048);
+        while (client.read(byteBuffer) > 0) {
+            byteBuffer.flip();
+            final String result = new String(byteBuffer.array());
+            System.out.println(result);
+            byteBuffer.clear();
+        }
+
+        sendResponse(client, "200 OK", "text/html", "ok".getBytes());
+    }
+
+        private void parseBody(final Map<String, String> headers, final BufferedChannelReader channelReader)
+                throws IOException {
+            long contentLength = headers.containsKey("content-length") ? Integer.parseInt(headers.get("content-length")) : 0;
+            String contentType = headers.containsKey("content-type") ? headers.get("content-type") : "";
+            // form-bean
+            if (contentType.contains("multipart/form-data")) {
+                List<MultiPart> multiParts = new ArrayList<>();
+                String boundary = contentType.substring(contentType.indexOf("boundary") + 9);
+                String line = null;
+                Matcher matcher = null;
+                MultiPart multiPart = null;
+                while (null != (line = channelReader.readLine())) {
+                    if (line.startsWith("--") && line.startsWith(boundary)) {
+                        multiPart = new MultiPart();
+                    } else if (line.startsWith("Content-Disposition")) {
+                        // Content-Disposition: form-data; name="abb"
+                        // Content-Disposition: form-data; name="file1"; filename="XmlReader.java"
+                        matcher = FORM_FIELD_FILE_PATTERN.matcher(line);
+                        if (matcher.find()) {
+                            multiPart.name = matcher.group(4);
+                            String filename = matcher.group(7);
+                            if (filename != null) {
+                                multiPart.isFile = true;
+                                multiPart.filename = filename;
+                            }
+                        }
+                    } else if (line.startsWith("Content-Type")) {
+                        //Content-Type: text/plain; charset=UTF-8
+                        Pattern pattern = Pattern.compile("([\\w-]+):\\s([^;]+);?\\s?((.+))?");
+                        matcher = pattern.matcher(line);
+                        if (matcher.find()) {
+                            multiPart.contentType = matcher.group(2);
+                        }
+                    } else if (LINE_SEP.equals(line)) {
+                        // 以下内容就是文件
+                        multiParts.add(multiPart);
+                        if (!multiPart.isFile) {
+                            line = channelReader.readLine();
+                            if (null == multiPart.value) {
+                                multiPart.value = line;
+                            } else {
+                                multiPart.value += line;
+                            }
+                        } else {
+                            uploadFile(multiPart.filename, boundary, channelReader);
+                        }
+                    }
+                }
+                System.out.println(multiParts);
+            } else {
+                // all is text/plain
+                // application/x-www-form-urlencoded
+            }
+        }
+         */

@@ -1,12 +1,19 @@
 package http.two;
 
+
+import org.apache.commons.fileupload.MultipartStream;
+import org.apache.commons.fileupload.util.Streams;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 public class MultiPart {
 
     /**
      * The Carriage Return ASCII character value.
      */
     public static final byte CR = 0x0D;
-
 
     /**
      * The Line Feed ASCII character value.
@@ -35,8 +42,24 @@ public class MultiPart {
     public static final String ATTACHMENT = "attachment";
 
 
+    ///----------------
+    /**
+     * The dash (-) ASCII character value.
+     */
+    public static final byte DASH = 0x2D;
+    /**
+     * A byte sequence that precedes a boundary (<code>CRLF--</code>).
+     */
+    protected static final byte[] BOUNDARY_PREFIX = {CR, LF, DASH, DASH};
+
+
     public String contentType;
     public String contentDisposition;
     public String name;
-    public Object value;
+    public String filename;
+    public String value;
+    public boolean isFile = false;
+    public long length;
+
+
 }

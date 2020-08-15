@@ -4,27 +4,28 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.SocketChannel;
 
 /**
  * by better
  */
 public final class BufferedChannelReader {
-    private static int defaultSize = 4096;
+    private static int defaultSize = 128;
     private ByteBuffer byteBuffer;
-    private ReadableByteChannel channel;
+    private SocketChannel channel;
 
     public void test() {
     }
 
-    public BufferedChannelReader(ReadableByteChannel channel) {
+    public BufferedChannelReader(SocketChannel channel) {
         this(channel, defaultSize, null);
     }
 
-    public BufferedChannelReader(ReadableByteChannel channel, int bufferSize) {
+    public BufferedChannelReader(SocketChannel channel, int bufferSize) {
         this(channel, bufferSize, null);
     }
 
-    public BufferedChannelReader(ReadableByteChannel channel, int bufferSize, byte[] remainByte) {
+    public BufferedChannelReader(SocketChannel channel, int bufferSize, byte[] remainByte) {
         this.channel = channel;
         byteBuffer = ByteBuffer.allocate(bufferSize);
         if (remainByte != null && remainByte.length > bufferSize) {
@@ -33,6 +34,14 @@ public final class BufferedChannelReader {
         }
         // default set buffer is full
         byteBuffer.position(byteBuffer.limit());
+    }
+
+    public ByteBuffer getBuffer() {
+        return byteBuffer;
+    }
+
+    public SocketChannel getChannel() {
+        return this.channel;
     }
 
     /**
@@ -51,6 +60,14 @@ public final class BufferedChannelReader {
         return byteBuffer.get();
     }
 
+    public int readBytes() throws IOException {
+        ensureOpen();
+        byteBuffer.clear();
+        int size = channel.read(byteBuffer);
+        byteBuffer.flip();
+        return size;
+    }
+
     public String readLine() throws IOException {
         ensureOpen();
         StringBuilder remainStr = new StringBuilder();
@@ -64,7 +81,7 @@ public final class BufferedChannelReader {
         while ((byteBuffer.hasRemaining()) && null != (line = readByteBuffer(byteBuffer))) {
             if ('\n' == line.charAt(line.length() - 1)) {
                 // End with line feeds, just return the line.
-                if(remainStr.length() > 0) {
+                if (remainStr.length() > 0) {
                     return remainStr.toString() + line;
                 } else {
                     return line;
@@ -76,7 +93,7 @@ public final class BufferedChannelReader {
                 remainStr.append(line);
                 byteBuffer.clear();
                 // Continue to read
-                if(channel.read(byteBuffer) < 0) {
+                if (channel.read(byteBuffer) < 0) {
                     // if channel has not byte, then return remainStr
                     // set buffer is full, as init's status
                     byteBuffer.position(byteBuffer.limit());

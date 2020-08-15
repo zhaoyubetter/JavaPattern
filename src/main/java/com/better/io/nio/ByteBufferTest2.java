@@ -20,14 +20,13 @@ public class ByteBufferTest2 {
     public void testReadLine() throws IOException {
         URL resource = com.better.io.okio.Test.class.getClassLoader().getResource("files/nio.txt");
         File file = new File(resource.getPath());
-
         FileChannel channel = new RandomAccessFile(file, "r").getChannel();
 //        BufferedChannelReaderCZ reader = new BufferedChannelReaderCZ(channel, 50);
-        BufferedChannelReader reader = new BufferedChannelReader(channel, 50);
-        String line = null;
-        while(null != (line = reader.readLine())) {
-            Utils.print(line);
-        }
+//        BufferedChannelReader reader = new BufferedChannelReader(channel, 50);
+//        String line = null;
+//        while (null != (line = reader.readLine())) {
+//            Utils.print(line);
+//        }
         channel.close();
     }
 
@@ -46,20 +45,24 @@ public class ByteBufferTest2 {
         new String(byteBuffer.array());
     }
 
-    private String readByteBuffer(ByteBuffer byteBuffer) throws EOFException {
-        StringBuilder sb = new StringBuilder(80);
+    /**
+     * readLine 测试
+     *
+     * @throws EOFException
+     */
+    @Test
+    public void testReadBuffer() throws IOException {
+        URL resource = com.better.io.okio.Test.class.getClassLoader().getResource("files/nio.txt");
+        File file = new File(resource.getPath());
 
-        while (byteBuffer.hasRemaining()) {
-            char c = (char) byteBuffer.get();
-            sb.append(c);
-            if (c == -1) {
-                throw new EOFException();
-            } else if (c == '\n') {
-                break;
-            }
-        }
-        return sb.toString();
+        FileChannel channel = new RandomAccessFile(file, "r").getChannel();
+//        BufferedChannelReader reader = new BufferedChannelReader(channel, 20);
+//        int size = 0;
+//        while ((size = reader.readBytes()) > 0) {
+//            byte[] arr = new byte[size];
+//            reader.getBuffer().get(arr);
+//            System.out.print(new String(arr));
+//        }
+//        channel.close();
     }
-
-
 }

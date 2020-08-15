@@ -18,5 +18,33 @@ bbb
 Content-Disposition: form-data; name="cccc"
 Content-Type: text/plain
 
-ddddwerrrrrrrrrwrzsfdsf sadf s dsfdssfsdfsd dsfewfsfds fsd fwefdsf sfwfdsf sdfds sdfsd fsd fds sdfds f sdfwedsfasd dsfds fdsf sd dsfewrewr23423sdfdsfdsgdsfd fdsfds
+ddddwerrrrrrrrrwrzsfdsf sadf s dsfdssfsdfsd dsfewfsfds fsd fwefdsf sfwfdsf sdfds sdfsd fsd fds sdfds f sdfwedsfasd dsfds fdsf sd dsfewrewr23423sdfdsfdsgdsfd
 ----------------------------082027979888165320628853--
+
+
+
+////////////////// 如果含有文件上传 ///////////
+header 区域
+Connection: keep-alive
+
+----------------------------266757166532818395818207
+Content-Disposition: form-data; name="abb"
+Content-Type: text/plain
+
+bbb
+----------------------------266757166532818395818207
+Content-Disposition: form-data; name="cccc"
+Content-Type: text/plain
+
+ddddwerrrrrrrrrwrzsfdsf sadf s dsfdssfsdfsd dsfewfsfds fsd fwefdsf sfwfdsf sdfds sdfsd fsd fds sdfds f sdfwedsfasd dsfds fdsf sd dsfewrewr23423sdfdsfdsgdsfd fdsfds
+----------------------------266757166532818395818207
+Content-Disposition: form-data; name="file1"; filename="XmlReader.java"
+Content-Type: text/x-java-source
+
+文件内容。。。。。
+----------------------------266757166532818395818207
+Content-Disposition: form-data; name="file2"; filename="2018äº¬ä¸ææ¯è-è¡éä¼.pptx"; filename*="UTF-8''2018%E4%BA%AC%E4%B8%9C%E6%8A%80%E6%9C%AF%E8%8A%82-%E8%83%A1%E9%9B%84%E4%BC%9F.pptx"
+Content-Type: application/vnd.openxmlformats-officedocument.presentationml.presentation
+
+文件内容。。。。。。
+----------------------------266757166532818395818207--
