@@ -1,5 +1,7 @@
-package http.two;
+package http.two.upload;
 
+import http.two.BufferedChannelReader;
+import http.two.MultiPart;
 import org.codehaus.groovy.runtime.wrappers.ByteWrapper;
 import org.yaml.snakeyaml.util.UriEncoder;
 
@@ -20,6 +22,11 @@ import java.util.regex.Pattern;
 
 /**
  * Simple http server
+ *
+ * https://blog.csdn.net/cuidongdong1234/article/details/17083123
+ *
+ * https://blog.csdn.net/zuguorui/article/details/60145796
+ *
  */
 public class HttpServer2 {
     public static void main(String[] args) {
@@ -111,7 +118,7 @@ public class HttpServer2 {
                     // 3. parse parseBody
                     parseBody(headers, brReader);
                 }
-                sendResponse(client, "404 Not Found", "text/html", "ok".getBytes());
+                sendResponse(client, "200 ok", "text/html", "ok".getBytes());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -119,6 +126,13 @@ public class HttpServer2 {
 
         private void parseBody(final Map<String, String> headers, final BufferedChannelReader bufferedChannelReader)
                 throws IOException {
+            // checked if is Chunked
+            String transferEncoding = headers.get("transfer-encoding");
+            if("chunked".equalsIgnoreCase(transferEncoding)){
+                // 大文件分块上传
+                handlePostWithChunked(headers, bufferedChannelReader);
+                return;
+            }
             long contentLength = headers.containsKey("content-length") ? Integer.parseInt(headers.get("content-length")) : 0;
             String contentType = headers.containsKey("content-type") ? headers.get("content-type") : "";
             ByteBuffer buffer = bufferedChannelReader.getBuffer();
@@ -170,6 +184,24 @@ public class HttpServer2 {
                 System.out.println("contentType:" + contentType);
                 System.out.println(bodyContent);
             }
+        }
+
+        private void handlePostWithChunked(final Map<String, String> headers, final BufferedChannelReader bufferedChannelReader) throws IOException {
+            // 编码规则
+            String contentType = headers.containsKey("content-type") ? headers.get("content-type") : "";
+            String line = "";
+            while((line = bufferedChannelReader.readLine() )!= null) {
+                System.out.println(line);
+            }
+
+            List<Chunk> list = new ArrayList<>();
+//            while(bufferedChannelReader.hasNextChunk()) {
+//                Chunk chunk = new Chunk();
+//                int chunkSize = bufferedChannelReader.readChunkSize();
+////                bufferedChannelReader.readChunkData(chunkSize);
+//            }
+//            // 获取内容
+
         }
 
         private void parseMultiItemContent(MultiPart item, MultipartStream multipart) throws IOException {

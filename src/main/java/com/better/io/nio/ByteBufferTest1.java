@@ -120,6 +120,35 @@ public class ByteBufferTest1 {
      */
     @Test
     public void test7() {
+        ByteBuffer buffer = ByteBuffer.allocate(15);
+        buffer.put("zhaoyubetter".getBytes());
+        buffer.flip();
+        int c = buffer.get();
+        int b = buffer.get();
+        System.out.print((char) c);
+        System.out.print((char) b);
+        System.out.println();
 
+        System.out.println(buffer.position());
+        System.out.println(buffer.limit());
+
+        buffer = buffer.slice();
+//        buffer.flip();
+        System.out.println(buffer.position());
+        System.out.println(buffer.limit());
+
+    }
+
+    @Test
+    public void testSystemCopy() {
+        ByteBuffer buffer = ByteBuffer.allocate(15);
+        buffer.put("zhaoyubetter".getBytes());
+        buffer.flip();
+        byte[] origin = new byte[buffer.remaining()];
+        buffer.get(origin);
+
+        byte[] a = new byte[5];
+        System.arraycopy(origin, 0, a, 0, a.length);
+        System.out.println(buffer.position());      // position 会变；
     }
 }

@@ -43,6 +43,14 @@ public class HttpClient {
         }
     }
 
+    /**
+     * with
+     * @throws IOException
+     */
+    private static void httpPostChunked() throws IOException {
+
+    }
+
     private static void httpPost() throws IOException{
         URL url = new URL("http://localhost:8090/");
         HttpURLConnection httpURLConnection =(HttpURLConnection) url.openConnection();

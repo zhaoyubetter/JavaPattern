@@ -1,6 +1,5 @@
-package http.two;
+package http.two.upload;
 
-import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.util.Closeable;
 import org.apache.commons.fileupload.util.Streams;

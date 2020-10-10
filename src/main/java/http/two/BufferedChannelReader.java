@@ -3,14 +3,13 @@ package http.two;
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SocketChannel;
 
 /**
  * by better
  */
 public final class BufferedChannelReader {
-    private static int defaultSize = 128;
+    private static int defaultSize = 512;
     private ByteBuffer byteBuffer;
     private SocketChannel channel;
 
@@ -106,6 +105,66 @@ public final class BufferedChannelReader {
 
         return null;
     }
+
+    /*
+        /r/n/r/n
+
+        7\r\n
+        Mozilla\r\n
+        9\r\n
+        Developer\r\n
+        7\r\n
+        Network\r\n
+        0\r\n
+        \r\n
+     */
+    // use for chunk, header must contain Transfer-Encoding
+
+
+
+    public boolean hasNextChunk() throws IOException {
+        if (byteBuffer.remaining() == 0) {
+            readBytes();
+        } else {
+            byteBuffer = byteBuffer.slice(); // 切割
+        }
+        return byteBuffer.remaining() > 5;      // 这里不能这么判断
+    }
+
+    public int readChunkSize() throws IOException {
+        String a = readLine();
+        int size = byteBuffer.getInt();
+        // skip a line
+        if (byteBuffer.remaining() >= 2) {
+            byte[] line = new byte[2];
+            byteBuffer.get(line);
+        }
+        return size;
+    }
+
+    public byte[] readChunkData(final int size) throws IOException {
+        byte[] bytes = new byte[size];
+        final int limit = byteBuffer.limit();
+        int targetRemainSize = size;
+        if (byteBuffer.remaining() > 0) {
+            byteBuffer = byteBuffer.slice();    // slice
+            byteBuffer.get(bytes, 0, limit < size ? limit : size);
+            targetRemainSize -= limit < size ? limit : size;
+        }
+        while (targetRemainSize > 0) {
+            int readSize = readBytes();
+            byte[] temp;
+            if (readSize > targetRemainSize) {
+                temp = new byte[targetRemainSize];
+            } else {
+                temp = new byte[byteBuffer.remaining()];
+            }
+            System.arraycopy(temp, 0, bytes, size - targetRemainSize, temp.length);
+            targetRemainSize -= temp.length;
+        }
+        return bytes;
+    }
+    // use for chunk
 
     private String readByteBuffer(ByteBuffer byteBuffer) throws EOFException {
         StringBuilder sb = new StringBuilder(80);
