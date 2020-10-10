@@ -1,5 +1,8 @@
 package http.two;
 
+import org.codehaus.groovy.runtime.wrappers.ByteWrapper;
+import org.yaml.snakeyaml.util.UriEncoder;
+
 import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -148,11 +151,29 @@ public class HttpServer2 {
             } else {
                 // all is text/plain
                 // application/x-www-form-urlencoded
+                final SocketChannel channel = bufferedChannelReader.getChannel();
+                final ByteArrayOutputStream baos = new ByteArrayOutputStream(contentLength > 0 ?
+                        ((int) contentLength) : 512);
+                if (bytes != null) {
+                    baos.write(bytes, 0, bytes.length);
+                }
+                ByteBuffer bs = ByteBuffer.allocate(512);
+                while (channel.read(bs) > 0) {
+                    bs.flip();
+                    byte[] read = new byte[bs.limit()];
+                    bs.get(read);
+                    baos.write(read);
+                    bs.clear();
+                }
+                // 在 decode 之前，应该先根据 contentType 进行 bodyContent 的内容分割
+                String bodyContent = URLDecoder.decode(new String(baos.toByteArray()), "utf-8");
+                System.out.println("contentType:" + contentType);
+                System.out.println(bodyContent);
             }
         }
 
         private void parseMultiItemContent(MultiPart item, MultipartStream multipart) throws IOException {
-            if(!item.isFile) {
+            if (!item.isFile) {
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 int size = multipart.readBodyData(outputStream);
                 item.value = new String(outputStream.toByteArray(), "utf-8");
