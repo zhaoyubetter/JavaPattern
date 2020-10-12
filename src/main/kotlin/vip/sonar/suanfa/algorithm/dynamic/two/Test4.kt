@@ -130,7 +130,7 @@ class Test4 {
             }
 
             // 递归出栈是 i,j 会从 [0, 0] 开始
-            val currMinDist = matrix[i][j] + min(minLeft, minUp)
+            val currMinDist = matrix[i][j] + Math.min(minLeft, minUp)
             // 备忘录记录当前最短路径
             mem[i][j] = currMinDist
 
