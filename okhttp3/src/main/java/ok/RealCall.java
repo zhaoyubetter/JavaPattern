@@ -1,7 +1,7 @@
 package ok;
 
 import ok.interceptor.Interceptor;
-import ok.interceptor.Interceptor1;
+import ok.interceptor.LastInterceptor;
 import ok.interceptor.RealInterceptorChain;
 import ok.interceptor.RetryAndFollowUpInterceptor;
 
@@ -88,10 +88,9 @@ final class RealCall implements Call {
         List<Interceptor> interceptors = new ArrayList<>();
         interceptors.addAll(client.interceptors);
         interceptors.add(retryAndFollowUpInterceptor);
-        interceptors.add(new Interceptor1());
+        interceptors.add(new LastInterceptor());
 //        interceptors.add(new CallServerInterceptor(forWebSocket));
-        Interceptor.Chain chain = new RealInterceptorChain(
-                interceptors, 0, originalRequest);
+        Interceptor.Chain chain = new RealInterceptorChain(interceptors, 0, originalRequest);
         return chain.proceed(originalRequest);
     }
 
