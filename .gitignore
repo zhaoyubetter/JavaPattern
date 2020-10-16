@@ -5,3 +5,8 @@
 /build
 out/
 build/
+.classpath
+.project
+bin/*
+.settings/
+*/bin/
