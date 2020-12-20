@@ -1,8 +1,13 @@
 package com.better.concurrency.two;
 
 import com.better.Utils;
+import com.better.groovy.app.lineCount.Main;
 import org.junit.Test;
 
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.StampedLock;
 
 /**
@@ -13,22 +18,37 @@ public class Test6_StampedLock1 {
     @Test
     public void test() throws InterruptedException {
         final Point p = new Point();
-        final Thread t1 = new Thread(() -> {
-            p.setXY(10, 10);
-
-        });
-        final Thread t2 = new Thread(() -> {
+        final Runnable t1 = () -> p.setXY(10, 10);
+        final Runnable t2 = () -> {
             try {
                 Utils.println(p.distanceFromOrigin());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        });
+        };
 
         p.setXY(2, 2);
-        t2.start();
-        t1.start();
+        final CountDownLatch latch = new CountDownLatch(1);
+        final ExecutorService executorService = Executors.newFixedThreadPool(3);
+        for (int i = 0; i < 10; i++) {
+            executorService.submit(
+                    () -> {
+                        try {
+                            latch.await();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if (new Random().nextInt(10) > 5) {
+                            t1.run();
+                        } else {
+                            t2.run();
+                        }
+                    }
+            );
+        }
 
+
+        latch.countDown();
         Thread.sleep(1000);
     }
 
@@ -59,6 +79,8 @@ public class Test6_StampedLock1 {
                     // 释放悲观读锁
                     sl.unlockRead(stamp);
                 }
+            } else {
+                Utils.println("Another Thread was writing value during " + Thread.currentThread().getName() + " reading...");
             }
 
             return (int) Math.sqrt(curX * curX + curY * curY);

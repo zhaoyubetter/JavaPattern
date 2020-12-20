@@ -120,10 +120,12 @@ public class Test8_AtomicInteger {
         // 实现count+=1
         public void addOne() throws InterruptedException {
             int newValue;
-            do {        // 这里不会死循环的
-                newValue = count + 1;
-                Thread.sleep(5);
-            } while (count != cas(count, newValue)); //②
+            // 自旋
+            do {        // 这里不会死循环的，每次都获取最新值，循环就是 CPU 空转
+                newValue = count + 1;        // ①
+                Thread.sleep(5);        // 这里可能线程修改了 count 值
+                Utils.println("count: " + count);
+            } while (count != cas(count, newValue)); //② 如果不相同，get the newest value again.
         }
 
         // 模拟实现CAS，仅用来帮助理解
@@ -132,10 +134,11 @@ public class Test8_AtomicInteger {
             int curValue = count;
             // 比较目前count值是否==期望值
             if (curValue == expect) {
+                Utils.println(Thread.currentThread().getName() + " count:" + count + ", cur:" + curValue + ", expect:" + expect);
                 // 如果是，则更新count的值
                 count = newValue;
             } else {
-                Utils.println(String.format("count:%s, except:%s, newvalue:%s", curValue, expect, newValue));
+                Utils.println(Thread.currentThread().getName() + String.format("count:%s, except:%s, newvalue:%s", curValue, expect, newValue));
             }
             // 返回写入前的值
             return curValue;
