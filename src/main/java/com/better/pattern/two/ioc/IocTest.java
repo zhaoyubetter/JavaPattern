@@ -1,7 +1,7 @@
 package com.better.pattern.two.ioc;
 
 import com.better.Utils;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;

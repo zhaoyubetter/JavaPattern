@@ -38,7 +38,7 @@ CharBuffer buffer = CharBuffer.allocate(10);
 buffer.put("Hello");
 CharBuffer dupeBuffer = buffer.duplicate();
 dupeBuffer.put("ooo");
-Utils.println(Arrays.toString(buffer.array()));  // Helloooo
+util.Utils.println(Arrays.toString(buffer.array()));  // Helloooo
 ```
 
 asReadOnlyBuffer()
@@ -47,11 +47,11 @@ asReadOnlyBuffer()
 CharBuffer buffer = CharBuffer.allocate(10);
 buffer.put("Hello");
 CharBuffer dupeBuffer = buffer.asReadOnlyBuffer();
-Utils.println(Arrays.toString(buffer.array()));
+util.Utils.println(Arrays.toString(buffer.array()));
 
 dupeBuffer.flip();	//
 while (dupeBuffer.hasRemaining()) {
-  Utils.println(dupeBuffer.get());
+  util.Utils.println(dupeBuffer.get());
 }
 ```
 
