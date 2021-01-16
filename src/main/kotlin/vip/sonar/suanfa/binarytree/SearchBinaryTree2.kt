@@ -108,7 +108,8 @@ class SearchBinaryTree2 {
                         node = min              // 下面就变成了删除 min 了
                         parent = minP           // 改变父，类似于条件2
                     } else {
-                        // 3.left or right 有一个不为null
+
+
                         child = if (it.left != null) it.left else it.right
                     }
                 }

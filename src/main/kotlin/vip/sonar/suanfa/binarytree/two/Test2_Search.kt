@@ -227,7 +227,7 @@ class Test2_Search {
                 node.data = min?.data!!
 
                 node = min
-                child = null
+                child = min.right
                 p = minP!!
             } else {
                 // 2. node has a child either left or right （有一个孩子）
@@ -408,7 +408,7 @@ class Test2_Search {
     @Test
     fun testRemoveWhenNodeHasLeftChild() {
         TreeBeauty.show(root)
-        root.deleteNode(-1, root)
+        root.deleteNode(2, root)
         TreeBeauty.show(root)
     }
 
