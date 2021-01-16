@@ -107,6 +107,7 @@ class BinarySearchTreeTest {
 
         /**
          *  return the new node of the subtree
+         *  这个递归思路很厉害
          */
         private fun remove2(node: Node<T>?, data: T): Node<T>? {
             var node = node
@@ -121,9 +122,11 @@ class BinarySearchTreeTest {
                 // found,but has two children.
                 val rightMin = findMin(node.right!!)
                 node.data = rightMin
+                // 因为从右边找最小，所以这里递归到右边了
                 node.right = remove2(node.right, rightMin)
             } else {
                 // found, no children or only has one child.
+                // 删除的入口在这里
                 node = if (node.left != null) node.left else node.right
             }
 
