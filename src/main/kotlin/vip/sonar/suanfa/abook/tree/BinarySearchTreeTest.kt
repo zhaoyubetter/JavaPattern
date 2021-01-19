@@ -29,6 +29,16 @@ class BinarySearchTreeTest {
 
     @Test
     fun testInsert() {
+        root.empty()
+        root.apply {
+            insert2(6)
+            insert2(0)
+
+            insert2(10)
+            insert2(7)
+            insert2(16)
+            insert2(15)
+        }
         TreeBeauty.show(root.root)
     }
 
