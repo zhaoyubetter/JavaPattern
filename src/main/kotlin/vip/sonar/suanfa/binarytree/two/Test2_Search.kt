@@ -59,7 +59,7 @@ class Test2_Search {
                     val res = Array(arrayHeight) { Array(arrayWidth) { " " } }
 
                     // 从根节点开始，递归处理整个树
-                    // res[0][(arrayWidth + 1)/ 2] = root.data.toString();
+                    // res[0][(arrayWidth + 1)/ 2] = tree.data.toString();
                     writeArray(this, 0, arrayWidth / 2, res, treeDeep)
 
                     // 此时，已经将所有需要显示的元素储存到了二维数组中，将其拼接并打印即可
@@ -127,9 +127,9 @@ class Test2_Search {
         }
 
         /* delete Node，删除比较复杂点
-        fun deleteNode(data: T, root: Node<T>): Boolean {
-            var c: Node<T>? = root
-            var p: Node<T> = root    // parent
+        fun deleteNode(data: T, tree: Node<T>): Boolean {
+            var c: Node<T>? = tree
+            var p: Node<T> = tree    // parent
             var node: Node<T>? = null
 
             while (c != null) {
@@ -236,7 +236,7 @@ class Test2_Search {
 
             // to delete
             if (p == null) {
-                // to delete is root node
+                // to delete is tree node
                 println("删除的是根节点")
             } else {
                 if (p.left == node) {

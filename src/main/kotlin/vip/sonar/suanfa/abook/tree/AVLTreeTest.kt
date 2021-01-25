@@ -92,7 +92,7 @@ class AVLTreeTest {
         /**
          * Rotate binary tree node with left child
          * For AVL trees, this is a single rotation for case 1.(左儿子的左子树添加一个节点)
-         * Update heights, then return  new root.
+         * Update heights, then return  new tree.
          *
          * case 1: 右旋转
          * 左到右单旋, For Example:
@@ -125,7 +125,7 @@ class AVLTreeTest {
         /**
          * Rotate binary tree node with right child
          * For AVL trees, this is a single rotation for case 4.(右儿子的右子树添加一个节点)
-         * Update heights, then return  new root.
+         * Update heights, then return  new tree.
          *
          * 右到左单旋, For Example:
          * 假设添加 12，这里 6 为 k2，将 6 的右孩子(k1) 10 往左旋转
@@ -160,7 +160,7 @@ class AVLTreeTest {
          * Double rotate binary tree: first left child
          * with it's right child; then k3 with new left child.
          * For AVL Tree, this is a double rotation for case 2.(左儿子的右子树添加一个节点)
-         * Update heights, then return new root.
+         * Update heights, then return new tree.
          *
          * <pre>
          * 在【20】的左孩子【15】添加节点【16】，在【20】处失去平衡，需要对左孩子【15】左旋转，变成下图左，
@@ -232,7 +232,7 @@ class AVLTreeTest {
 
             private fun <T : Comparable<T>> getDeep(root: AVLTree.AVLNode<T>?): Int {
                 return if (root == null) 0 else 1 + Math.max(getDeep(root.left), getDeep(root.right))
-//                return if (root == null) 0 else root.height
+//                return if (tree == null) 0 else tree.height
             }
 
             fun <T : Comparable<T>> writeArray(currNode: AVLTree.AVLNode<T>?, rowIndex: Int, colIndex: Int, res: Array<Array<String>>, treeDeep: Int) {
@@ -275,7 +275,7 @@ class AVLTreeTest {
                     val res = Array(arrayHeight) { Array(arrayWidth) { " " } }
 
                     // 从根节点开始，递归处理整个树
-                    // res[0][(arrayWidth + 1)/ 2] = root.data.toString();
+                    // res[0][(arrayWidth + 1)/ 2] = tree.data.toString();
                     writeArray(this, 0, arrayWidth / 2, res, treeDeep)
 
                     // 此时，已经将所有需要显示的元素储存到了二维数组中，将其拼接并打印即可

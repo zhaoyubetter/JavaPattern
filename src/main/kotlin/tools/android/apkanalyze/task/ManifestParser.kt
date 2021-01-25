@@ -78,7 +78,7 @@ class ManifestParser(manifestFile: File) {
         val name = resourceParser.name
         val jsonObject = jsonStack.pop()
 
-        if (jsonStack.isEmpty()) {                                      //root element
+        if (jsonStack.isEmpty()) {                                      //tree element
             result = jsonObject   // result
         } else {
             val preObject = jsonStack.peek()

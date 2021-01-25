@@ -4,9 +4,9 @@ package vip.sonar.suanfa.rb.two
  * https://www.youtube.com/watch?v=nMExd4DthdA&t=18s
  * Six rules:
  * 1. Every node is either red or black.
- * 2. The root node is always black.
+ * 2. The tree node is always black.
  * 3. New insertions ara always red.
- * 4. Every path from root - leaf has the same number of BLACK.
+ * 4. Every path from tree - leaf has the same number of BLACK.
  * 5. No path can have two consecutive red nodes.
  * 6. Nulls ara black.'
  *

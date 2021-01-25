@@ -136,7 +136,7 @@ class BinarySearchTreeTest {
                 node.right = remove2(node.right, rightMin)
             } else {
                 // found, no children or only has one child.
-                // 删除的入口在这里
+                // 删除 n，返回 n 的孩子
                 node = if (node.left != null) node.left else node.right
             }
 
@@ -363,7 +363,7 @@ class TreeBeauty {
                 val res = Array(arrayHeight) { Array(arrayWidth) { " " } }
 
                 // 从根节点开始，递归处理整个树
-                // res[0][(arrayWidth + 1)/ 2] = root.data.toString();
+                // res[0][(arrayWidth + 1)/ 2] = tree.data.toString();
                 writeArray(this, 0, arrayWidth / 2, res, treeDeep)
 
                 // 此时，已经将所有需要显示的元素储存到了二维数组中，将其拼接并打印即可

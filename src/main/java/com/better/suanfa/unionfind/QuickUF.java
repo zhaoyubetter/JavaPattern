@@ -28,7 +28,7 @@ public class QuickUF {
      * @return
      */
     public int find(int p) {
-        // 寻找p节点所在组的根节点，根节点具有性质id[root] = root
+        // 寻找p节点所在组的根节点，根节点具有性质id[tree] = tree
         while (p != id[p]) {
             p = id[p];
         }

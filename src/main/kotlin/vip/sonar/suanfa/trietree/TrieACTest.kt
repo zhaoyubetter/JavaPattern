@@ -72,7 +72,7 @@ class TrieACTest {
                             q = q.fail
                         }
                         if (q == null) {
-                            pc.fail = root  // 都没有找到，设置为 root
+                            pc.fail = root  // 都没有找到，设置为 tree
                         }
                     }
                     queue.add(pc)
