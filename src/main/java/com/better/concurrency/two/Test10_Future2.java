@@ -2,12 +2,12 @@ package com.better.concurrency.two;
 
 
 import com.better.Utils;
-import com.sun.xml.internal.ws.util.CompletedFuture;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 
 public class Test10_Future2 {
 

@@ -1,7 +1,5 @@
 package com.better.concurrency.two;
 
-import com.better.groovy.app.lineCount.Main;
-import org.junit.Test;
 
 /**
  * 来自郭林的例子

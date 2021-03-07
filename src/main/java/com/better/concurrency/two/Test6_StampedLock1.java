@@ -1,7 +1,6 @@
 package com.better.concurrency.two;
 
 import com.better.Utils;
-import com.better.groovy.app.lineCount.Main;
 import org.junit.Test;
 
 import java.util.Random;
