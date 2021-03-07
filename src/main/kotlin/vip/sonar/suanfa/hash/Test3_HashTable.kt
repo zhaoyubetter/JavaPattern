@@ -1,8 +1,8 @@
 package vip.sonar.suanfa.hash
 
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.testng.Assert
 
 
 /**

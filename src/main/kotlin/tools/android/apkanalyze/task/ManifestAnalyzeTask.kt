@@ -45,6 +45,7 @@ class ManifestAnalyzeTask(config: JobConfig, params: Map<String, String>)
 
     @Throws(TaskExecuteException::class)
     override fun call(): TaskResult {
+        /*
         val manifestParser = if (arscFile.isLegal()) ManifestParser(manifestFile)
         else ManifestParser(manifestFile, arscFile)
 
@@ -59,8 +60,9 @@ class ManifestAnalyzeTask(config: JobConfig, params: Map<String, String>)
             taskResult.setEndTime(System.currentTimeMillis())
             return taskResult
         }
-
+*/
         throw  TaskExecuteException("$TAG  taskResult is null.")
+
     }
 
 }
