@@ -2,7 +2,6 @@ package vip.sonar.suanfa.algorithm.dynamic.two
 
 import org.junit.Test
 import java.lang.Math.min
-import kotlin.math.min
 
 class Test4 {
 

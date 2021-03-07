@@ -1,7 +1,6 @@
 package vip.sonar.math
 
 import java.lang.StringBuilder
-import kotlin.math.max
 
 /**
  * 迭代法

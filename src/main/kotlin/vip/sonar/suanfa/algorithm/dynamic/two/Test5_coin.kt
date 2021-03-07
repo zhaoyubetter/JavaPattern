@@ -1,7 +1,6 @@
 package vip.sonar.suanfa.algorithm.dynamic.two
 
 import org.junit.Test
-import kotlin.math.min
 
 // 我们有 3 种不同的硬币，1 元、3 元、5 元，我们要支付 9 元，最少需要 3 个硬币（3 个 3 元的硬币）
 // 😂，做不出来，

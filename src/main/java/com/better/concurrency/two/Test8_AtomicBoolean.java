@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * https://www.jianshu.com/p/ae25eb3cfb5d
+ * 乐观锁
  */
 public class Test8_AtomicBoolean {
     @Test
@@ -39,7 +40,7 @@ public class Test8_AtomicBoolean {
             } else {
                 System.out.println("retry thread:" + Thread.currentThread().getName() + ";flag:" + flag.get());
                 try {
-                    Thread.sleep(400);
+                    Thread.sleep(800);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

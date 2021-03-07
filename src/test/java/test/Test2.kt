@@ -12,7 +12,7 @@ class Test2 {
 
     @Test
     fun testReturn() {
-        listOf(1, 2, 3, 4, 5).forEach{
+        listOf(1, 2, 3, 4, 5).forEach {
             if (it == 3) return@forEach // local return to the caller of the lambda, i.e. the forEach loop
             print(it)  // 1,2,4,5
         }
@@ -21,8 +21,8 @@ class Test2 {
 
     @Test
     fun testBreak() {
-        run loop@ {
-            listOf(1, 2, 3, 4, 5).forEach{
+        run loop@{
+            listOf(1, 2, 3, 4, 5).forEach {
                 if (it == 3) return@loop // local return to the caller of the lambda, i.e. the forEach loop
                 print(it)  // 1,2
             }
@@ -30,4 +30,10 @@ class Test2 {
         println("ok")
     }
 
+    @Test
+    fun testMap() {
+        val map = HashMap<String, Int>()
+        println(map.put("aaa", 111))
+        println(map.put("aaa", 222))
+    }
 }
